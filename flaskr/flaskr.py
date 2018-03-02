@@ -127,7 +127,7 @@ def getTweets(event):
 
 @app.route('/abstract/<event>')
 @app.route('/abstract/<event>/<int:per_page>')
-def getTweets4Event(event, per_page=10):
+def getTweets4Event(event, per_page=5):
     """Get the details for event gabapentin."""
     global PER_PAGE
     global PRO
@@ -173,6 +173,7 @@ def show_tweets(event, attitude, page):
     return render_template('detail.html',
                            data=tweets,
                            pagination=pagination,
+                           event=event,
                            attitude=attitude
                            )
 
@@ -180,17 +181,21 @@ def show_tweets(event, attitude, page):
 @app.route('/loadmore')
 def load_more():
     """Load more data and return jsonified data to js function."""
-    if session.get('event') and session.get('per_page'):
-        # print(session.get('per_page'))
-        global PER_PAGE
-        global PRO
-        global CON
-        print(PER_PAGE)
-        # per_page = session.get('per_page')
-        # pro_res = session['pro'][PER_PAGE:PER_PAGE+5]
-        # con_res = session['con'][PER_PAGE:PER_PAGE+5]
-        # session['per_page'] = per_page + 5
-        pro_res = PRO[PER_PAGE:PER_PAGE+5]
-        con_res = CON[PER_PAGE:PER_PAGE+5]
-        PER_PAGE += 5
-        return jsonify(pro=pro_res, con=con_res)
+    # if session.get('event') and session.get('per_page'):
+    # print(session.get('per_page'))
+    global PER_PAGE
+    global PRO
+    global CON
+    # print(PER_PAGE)
+    # per_page = session.get('per_page')
+    # pro_res = session['pro'][PER_PAGE:PER_PAGE+5]
+    # con_res = session['con'][PER_PAGE:PER_PAGE+5]
+    # session['per_page'] = per_page + 5
+    augument = PER_PAGE + 5
+    if augument > len(PRO):
+        augument = len(PRO)
+    pro_res = PRO[PER_PAGE:augument]
+    con_res = CON[PER_PAGE:augument]
+    PER_PAGE = augument
+    print(PER_PAGE)
+    return jsonify(pro=pro_res, con=con_res)
