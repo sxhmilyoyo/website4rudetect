@@ -1,0 +1,77 @@
+{% extends "layout.html" %} {% block page_title %}
+<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+  <img class="mr-3" src="https://getbootstrap.com/assets/brand/bootstrap-outline.svg" alt="" width="48" height="48">
+  <div class="lh-100">
+    <h6 class="mb-0 text-white lh-100">{{ event }}</h6>
+    <small>Since 2011</small>
+  </div>
+</div>
+{% endblock %} {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="../static/js/holder.min.js"></script>
+<script src="../static/js/scroll2loadmore.js"></script>
+
+<div class="row">
+  <div class="col-md-6">
+    <!-- Content Pro -->
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+      <h6 class="border-bottom border-gray pb-2 mb-0">Favored Tweets</h6>
+      <!-- {{ pro | length }} -->
+      <span id=listProOrigin>
+        {% for item in pro %}
+          <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
+            <div class="media text-muted pt-3">
+              <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                  {{ item[2] }}
+              </p>
+            </div>
+          </a>
+        {% endfor %}
+        </span>
+      <span id=listPro>
+        </span>
+      <!-- <div class="text-center mt-4">
+          <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
+        </div> -->
+      <small class="d-block text-right mt-3">
+          <a href="{{ url_for('show_tweets', event=event, attitude='pro') }}">All Favored Tweets</a>
+        </small>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <!-- Content Con -->
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+      <h6 class="border-bottom border-gray pb-2 mb-0">Against Tweets</h6> {% for item in con %}
+      <a class="post list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <!-- <span class="d-block">{{ item[2] }}</span> -->
+            <strong class="d-block text-gray-dark">@username</strong> {{ item[2] }}
+          </p>
+        </div>
+      </a>
+      {% endfor %}
+      </span>
+      <span id=listCon>
+      </span>
+      <!-- <div class="text-center mt-4">
+        <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
+      </div> -->
+      <!-- <form action="{{ url_for('load_more') }}" method=get>
+        <button type="submit" class="btn btn-primary">Primary</button>
+      </form> -->
+      <small class="d-block text-right mt-3">
+          <a href="{{ url_for('show_tweets', event=event, attitude='con') }}">All Against Tweets</a>
+        </small>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="text-center my-4">
+      <button id=loadmore class="btn btn-outline-secondary">Loadmore</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
