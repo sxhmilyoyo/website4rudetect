@@ -3,6 +3,7 @@ $(window).scroll(function() {
   console.log("1:"+$(window).scrollTop());
   console.log("2:"+$(document).height());
   console.log("3:"+$(window).height());
+  console.log("3:" + $SCRIPT_ROOT + 'loadmore');
   if ($(window).scrollTop()>0 && $(window).scrollTop() == $(document).height() - $(window).height()) {
     $.getJSON($SCRIPT_ROOT + '/loadmore',
       function(data) {
@@ -22,7 +23,7 @@ $(window).scroll(function() {
             <a class="list-link-item" href="https://twitter.com/anyuser/status/${pro[i][0]}">
               <div class="media text-muted pt-3">
                 <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-                <p class="text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+                <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
                   <strong class="d-block text-gray-dark">@username</strong>
                     ${pro[i][2]}
                 </p>
@@ -37,7 +38,7 @@ $(window).scroll(function() {
             <a class="list-link-item" href="https://twitter.com/anyuser/status/${con[i][0]}">
               <div class="media text-muted pt-3">
                 <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-                <p class="text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+                <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
                   <strong class="d-block text-gray-dark">@username</strong>
                     ${con[i][2]}
                 </p>
