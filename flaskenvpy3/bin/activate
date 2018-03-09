@@ -39,7 +39,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/xuhao/Workplace/flaskr/flaskenvpy3"
+VIRTUAL_ENV="/Users/xuhao/Workplace/Rudetect_website/flaskr/flaskenvpy3"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

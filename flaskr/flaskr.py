@@ -11,9 +11,12 @@ from flask import url_for
 from flask_bootstrap import Bootstrap
 # from flask_paginate import get_page_parameter
 from flask_paginate import Pagination
+from flaskr.database import db_session
+from flaskr.database import init_db, reinit_db
+from flaskr.models import Event
 import json
 import os
-import sqlite3
+from sqlalchemy import event
 
 PER_PAGE = 5
 PRO = []
@@ -32,20 +35,6 @@ app.config.update(dict(
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
-def connect_db():
-    """Connect to the specific database."""
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv
-
-
-def get_db():
-    """Open a new database connection for the current application context."""
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
-
-
 @app.cli.command('initdb')
 def initd_command():
     """Initialize the databse."""
@@ -53,19 +42,10 @@ def initd_command():
     print("Initialized the databse.")
 
 
-def init_db():
-    """Initialize the database."""
-    db = get_db()
-    with app.open_resource('schema.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
-
-
 @app.teardown_appcontext
-def close_db(error):
+def shutdown_session(exception=None):
     """Close the database again at the end of the request."""
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
+    db_session.remove()
 
 
 @app.route('/')
@@ -74,7 +54,7 @@ def show_rumors():
     # db = get_db()
     # cur = db.execute('select title, text from entries order by id desc')
     # entries = cur.fetchall()
-    events = [event for event in os.listdir("data") if os.path.isdir('data/'+event)]
+    events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
     res = []
     for event in events:
         # head
@@ -84,10 +64,10 @@ def show_rumors():
                 tmp.append(i)
         head = "#"+''.join(tmp)
         # topics
-        clusters = [cluster for cluster in os.listdir('data/'+event) if os.path.isdir('data/'+event+'/'+cluster)]
+        clusters = [cluster for cluster in os.listdir('../data/'+event) if os.path.isdir('../data/'+event+'/'+cluster)]
         topics = []
         for cluster in clusters:
-            with open('data/'+event+'/'+cluster+'/targets.json') as fp:
+            with open('../data/'+event+'/'+cluster+'/targets.json') as fp:
                 topic = json.load(fp)
             topics.append(topic)
         res.append({'head': head, 'topics': topics})
@@ -139,7 +119,7 @@ def logout():
 def getTweets(event, cluster):
     """Get the details for event type."""
     details = []
-    with open(os.path.join(app.root_path, "data", event, cluster, "corpus.csv")) as fp:
+    with open(os.path.join("../data", event, cluster, "corpus.csv")) as fp:
         reader = csv.reader(fp, delimiter='\t')
         next(reader)
         for r in reader:
@@ -222,3 +202,16 @@ def load_more():
     print("="*100)
     print(PER_PAGE)
     return jsonify(pro=pro_res, con=con_res)
+
+
+@event.listens_for(Event.__table__, 'after_create')
+def initialize_data(*args, **kwargs):
+    print("before initialize data ", Event.query.all())
+    db_session.add(Event(name='e_init', cluster='0_init'))
+    db_session.commit()
+    print("after initialize data ", Event.query.all())
+
+
+@app.before_first_request
+def setup():
+    reinit_db()
