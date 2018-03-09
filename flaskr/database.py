@@ -13,10 +13,13 @@ Base.query = db_session.query_property()
 def init_db():
     """Import all modules that might define models."""
     import flaskr.models
+    import flaskr.loadData
     Base.metadata.create_all(bind=engine)
 
 
 def reinit_db():
+    """Delte databse and re-construct database."""
     import flaskr.models
+    import flaskr.loadData
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)

@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Table, event
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Table, event, UniqueConstraint
 from sqlalchemy.orm import relationship, backref
-from flaskr.database import Base
+from flaskr.database import Base, db_session
 
 
 association_table = Table('association', Base.metadata,
@@ -41,8 +41,9 @@ class Event(Base):
 
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
+    name = Column(String(50))
     cluster = Column(String(10))
+    __table__args__ = (UniqueConstraint('name', 'cluster', name='_name_cluster_ck'))
 
     def __repr__(self):
         """Show entries in this format."""

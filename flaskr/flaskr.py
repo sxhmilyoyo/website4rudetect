@@ -204,14 +204,7 @@ def load_more():
     return jsonify(pro=pro_res, con=con_res)
 
 
-@event.listens_for(Event.__table__, 'after_create')
-def initialize_data(*args, **kwargs):
-    print("before initialize data ", Event.query.all())
-    db_session.add(Event(name='e_init', cluster='0_init'))
-    db_session.commit()
-    print("after initialize data ", Event.query.all())
-
-
 @app.before_first_request
 def setup():
+    """Reconstruct data before first request for testing."""
     reinit_db()
