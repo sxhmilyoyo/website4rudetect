@@ -1,28 +1,59 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Table, event, UniqueConstraint
-from sqlalchemy.orm import relationship, backref
-from flaskr.database import Base, db_session
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Text
+from sqlalchemy import ForeignKey
+from sqlalchemy import Table
+from sqlalchemy import UniqueConstraint
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref
+from flaskr.database import Base
+from flaskr.database import db_session
+from sqlalchemy.ext.declarative import declared_attr
 
 
-association_table = Table('association', Base.metadata,
-                          Column('event_id', Integer, ForeignKey(
-                              'events.id'), primary_key=True),
-                          Column('rumor_id', Integer, ForeignKey(
-                              'rumors.id'), primary_key=True)
-                          )
+# class MyMixin(object):
+#
+#     @declared_attr
+#     def __tablename__(cls):
+#         return cls.__name__.lower()
+#
+#     __table_args__ = {'mysql_engine': 'InnoDB'}
+#     __mapper_args__= {'always_refresh': True}
+#
+#     id =  Column(Integer, primary_key=True)
 
 
 class Rumor(Base):
-    """Tweet model."""
+    """Rumor table."""
 
-    __tablename__ = 'rumors'
-    id = Column(Integer, primary_key=True)
+    __tablename__ = 'rumor'
+    id = Column(String(100), primary_key=True)
+    cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
+    event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
     tweet_id = Column(String(50), unique=True)
     target = Column(String(50))
     tweet = Column(Text)
     stance = Column(String(20))
+
+    __table__args__ = (UniqueConstraint('id', 'cluster_name', 'event_name', name='_id_cluster_event_ck'))
+    # rumor = relationship('Rumor', back_populates='events')
+    # cluster = relationship('Cluster', )
+    # event = relationship('Event', back_populates='rumors')
+
+    def __repr__(self):
+        return '<Record: cluster_id %r, event_id %r, rumor_id %r>' % (self.cluster_name, self.event_name, self.id)
+
+
+class Cluster(Base):
+    """Cluster model."""
+
+    __tablename__ = 'cluster'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(5), unique=True)
     # event_id = Column(Integer, ForeignKey('events.id'),
     #                   nullable=False)
-    events = relationship('Event', secondary=association_table, backref=backref('rumors', lazy=True))
+    events = relationship('Rumor', backref=backref('cluster', lazy=True))
 
     # def __init__(self, tweet_id=None, target=None, tweet=None, stance=None):
     #     """Construct the model."""
@@ -33,18 +64,17 @@ class Rumor(Base):
 
     def __repr__(self):
         """Show entries in this format."""
-        return '<Tweet ID %r>' % (self.tweet_id)
+        return '<Cluster Name %r>' % (self.name)
 
 
 class Event(Base):
     """Event model."""
 
-    __tablename__ = 'events'
+    __tablename__ = 'event'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    cluster = Column(String(10))
-    __table__args__ = (UniqueConstraint('name', 'cluster', name='_name_cluster_ck'))
+    name = Column(String(50), unique=True)
+    clusters = relationship('Rumor', backref=backref('event', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
-        return '<Event %r>' % (self.name)
+        return '<Event Name %r>' % (self.name)

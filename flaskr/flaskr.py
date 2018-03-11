@@ -12,8 +12,10 @@ from flask_bootstrap import Bootstrap
 # from flask_paginate import get_page_parameter
 from flask_paginate import Pagination
 from flaskr.database import db_session
-from flaskr.database import init_db, reinit_db
+from flaskr.database import init_db
+from flaskr.database import reinit_db
 from flaskr.models import Event
+from flaskr.models import Rumor
 import json
 import os
 from sqlalchemy import event
@@ -51,18 +53,12 @@ def shutdown_session(exception=None):
 @app.route('/')
 def show_rumors():
     """Show the rumors entries."""
-    # db = get_db()
-    # cur = db.execute('select title, text from entries order by id desc')
-    # entries = cur.fetchall()
-    events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
+    events = Event.query.all()
+    # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
     res = []
     for event in events:
         # head
-        tmp = []
-        for i in event.split('_'):
-            if not i.isdigit():
-                tmp.append(i)
-        head = "#"+''.join(tmp)
+        head = "#"+event
         # topics
         clusters = [cluster for cluster in os.listdir('../data/'+event) if os.path.isdir('../data/'+event+'/'+cluster)]
         topics = []
@@ -72,6 +68,7 @@ def show_rumors():
             topics.append(topic)
         res.append({'head': head, 'topics': topics})
     print(res)
+    # print(Rumor.query.all())
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
