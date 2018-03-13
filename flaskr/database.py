@@ -13,7 +13,7 @@ Base.query = db_session.query_property()
 def init_db():
     """Import all modules that might define models."""
     import flaskr.models
-    import flaskr.loadData
+    # import flaskr.loadData
     Base.metadata.create_all(bind=engine)
 
 

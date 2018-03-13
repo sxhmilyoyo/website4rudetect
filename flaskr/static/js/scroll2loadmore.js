@@ -25,7 +25,7 @@ $(window).scroll(function() {
                 <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
                   <strong class="d-block text-gray-dark">@username</strong>
-                    ${pro[i][2]}
+                    ${pro[i][1]}
                 </p>
               </div>
             </a>
@@ -40,7 +40,7 @@ $(window).scroll(function() {
                 <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
                   <strong class="d-block text-gray-dark">@username</strong>
-                    ${con[i][2]}
+                    ${con[i][1]}
                 </p>
               </div>
             </a>

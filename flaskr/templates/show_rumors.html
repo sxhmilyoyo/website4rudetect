@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
+
+{% block loginuser %}
+  <form class="form-inline my-2 my-lg-0">
+    <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"> -->
+    {% if current_user.is_authenticated %}
+      <p class="lead text-white text-center my-auto mr-4">{{ current_user.username }}</p>
+    {% endif %}
+    <!-- <label class="form-control mr-sm-2"></label> -->
+    <a class="btn btn-outline-danger my-2 my-sm-0" href="{{ url_for('logout') }}" role="button">Logout</a>
+  </form>
+{% endblock %}
+
 {% block root_page %}
 <!-- <link rel="stylesheet" href="{{ url_for('.static', filename = 'css/bootstrap.css') }}"> -->
 <!-- Main jumbotron for a primary marketing message or call to action -->
@@ -16,7 +28,7 @@
   <span id="origin">
     <div class="row">
       {% set n = 3 %}
-      {% if items[i:]|length < 2 %}
+      {% if items[i:]|length < 3 %}
         {% set n = items[i:]|length %}
       {% endif %}
       {% for j in range(n) %}
@@ -25,7 +37,7 @@
         <div class="list-group list-group-flush">
           {% for k in range(items[i+j]['topics']|length) if items[i+j]['topics'][k]|length > 0 %}
           <!-- <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p> -->
-          <a href="{{ url_for('getTweets4Event', event=events[i], cluster=k) }}" class="list-group-item list-group-item-action bg-light">
+          <a href="{{ url_for('getTweets4Event', event=events[i].name, cluster=k) }}" class="list-group-item list-group-item-action bg-light">
             <div class="container">
               <div class='row'>
                 <div class="col-3 mt-3">

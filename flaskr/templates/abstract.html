@@ -11,7 +11,7 @@
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="/static/js/holder.min.js"></script>
-<script src="/static/js/scroll2loadmore.js?1504"></script>
+<script src="/static/js/scroll2loadmore.js?1506"></script>
 
 
 <div class="row">
@@ -28,7 +28,7 @@
               <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
               <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
                 <strong class="d-block text-gray-dark">@username</strong>
-                  {{ item[2] }}
+                {{ item[1] }}
               </p>
             </div>
           </a>
@@ -54,7 +54,8 @@
           <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
           <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
             <!-- <span class="d-block">{{ item[2] }}</span> -->
-            <strong class="d-block text-gray-dark">@username</strong> {{ item[2] }}
+            <strong class="d-block text-gray-dark">@username</strong>
+            {{ item[1] }}
           </p>
         </div>
       </a>

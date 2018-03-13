@@ -28,7 +28,7 @@ def initialize_data(*args, **kwargs):
             clusterTable = Cluster(name=cluster.name)
             rumors = getRumors(cluster)
             for i, rumor in enumerate(rumors):
-                idx = edited_event + "_" + str(i)
+                idx = edited_event + "_" + str(i) + "_" + rumor[0]
                 rumorAssocTable = Rumor(
                     id=idx, tweet_id=rumor[0], target=rumor[1], tweet=rumor[2],
                     stance=rumor[3]
