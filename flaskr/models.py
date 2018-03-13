@@ -108,6 +108,7 @@ class Opinion(Base):
     stance = Column(String(10), primary_key=True)
 
     __table__args__ = (UniqueConstraint('user_name', 'rumor_name', 'stance', name='_user_rumor_stance_ck'))
+
     def __repr__(self):
         """Show entries in this format."""
         return '<Opinion %r, User %r, Rumor %r>' % (self.stance, self.user_name, self.rumor_name)

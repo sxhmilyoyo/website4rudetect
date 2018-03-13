@@ -1,13 +1,13 @@
 import csv
 from flaskr.database import db_session
+from flaskr.models import Cluster
 from flaskr.models import Event
 from flaskr.models import Rumor
-from flaskr.models import Cluster
+from flaskr.models import User
 # from flaskr.models import MyMixin
-from flaskr.database import Base
-import os
 from pathlib import Path
 from sqlalchemy import event
+from werkzeug.security import generate_password_hash
 
 
 # @event.listens_for(Event.__table__, 'after_create', propagate=True)
@@ -37,6 +37,12 @@ def initialize_data(*args, **kwargs):
                 tableEvent.clusters.append(rumorAssocTable)
         db_session.add(tableEvent)
         db_session.commit()
+
+    print("add admin...")
+    hashed_password = generate_password_hash('1234', method='sha256')
+    new_user = User(username='admin', email='admin@admin.com', password=hashed_password)
+    db_session.add(new_user)
+    db_session.commit()
 
 
 def getRumors(folderPath):

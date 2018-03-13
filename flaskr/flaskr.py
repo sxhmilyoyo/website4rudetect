@@ -19,8 +19,10 @@ from flaskr.forms import RegisterForm
 from flaskr.models import Event
 from flaskr.models import Rumor
 from flaskr.models import User
+from flaskr.models import Opinion
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import make_response
 import json
 import os
 
@@ -176,8 +178,8 @@ def get_tweets_for_page(event, data, page, per_page, count):
         return data[per_page * page:]
 
 
-@app.route('/detail/<event>/<cluster>/<attitude>', defaults={'page': 1})
-@app.route('/detail/<event>/<cluster>/<attitude>/<int:page>')
+@app.route('/detail/<event>/<cluster>/<attitude>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/detail/<event>/<cluster>/<attitude>/<int:page>', methods=['GET', 'POST'])
 def show_tweets(event, attitude, cluster, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
@@ -221,6 +223,23 @@ def load_more():
     print("="*100)
     print(PER_PAGE)
     return jsonify(pro=pro_res, con=con_res)
+
+
+@app.route('/addopinion/<tweet_id>/<opinion_value>')
+def add_opinion(tweet_id, opinion_value):
+    """Add user's opinion to rumor."""
+    r = make_response()
+    r.status = '200'
+    print("tweet_id", tweet_id)
+    print("opinion", opinion_value)
+    print("user_id", current_user.id)
+    opinion = Opinion(stance=opinion_value)
+    opinion.rumor = Rumor.query.filter_by(tweet_id=tweet_id).first()
+    current_user.rumors.append(opinion)
+    db_session.add(current_user)
+    db_session.commit()
+    return r
+
 
 
 @app.before_first_request
