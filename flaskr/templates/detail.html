@@ -11,8 +11,11 @@
 {% endblock %}
 
 {% block content %}
-<input type="submit" name="submit" value="test" id="test" tweet_id="951422124110983169" opinion="FAVOR">
-
+<div id="test">
+  <div class="wrapper">
+  <input type="submit" name="submit" value="test" id="test" tweet_id="951422124110983169" opinion="FAVOR">
+</div>
+</div>
 <div class="my-3 p-3 bg-white rounded box-shadow">
   {% if attitude == 'pro' %}
     <h6 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h6>

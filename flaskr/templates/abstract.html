@@ -9,9 +9,6 @@
 </div>
 {% endblock %}
 {% block content %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="/static/js/holder.min.js"></script>
-<script src="/static/js/scroll2loadmore.js?1506"></script>
 
 
 <div class="row">
@@ -22,7 +19,8 @@
       <!-- {{ pro | length }} -->
       <span id=listProOrigin>
         {% for item in pro %}
-          <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
+        <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}"> -->
+          <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
             <div class="media text-muted pt-3">
               <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
               <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
@@ -32,6 +30,23 @@
               </p>
             </div>
           </a>
+          <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="wrapper text-right">
+              <!-- <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">Favor</button>
+                <button type="button" class="btn btn-secondary">Against</button>
+                <button type="button" class="btn btn-secondary">Detail</button>
+              </div> -->
+              <!-- <div class="button-group">
+                <button type="button" class="button button-square button-primary button-large">1</button>
+                <button type="button" class="button button-square button-primary button-large">2</button>
+                <button type="button" class="button button-square button-primary button-large">3</button>
+              </div> -->
+              <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+              <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+              <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+            </div>
+          </div>
         {% endfor %}
       </span>
       <span id=listPro>
@@ -49,16 +64,33 @@
     <div class="my-3 p-3 bg-white rounded box-shadow">
       <h6 class="border-bottom border-gray pb-2 mb-0">Against Tweets</h6>
       {% for item in con %}
-      <a class="post list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-            <!-- <span class="d-block">{{ item[2] }}</span> -->
-            <strong class="d-block text-gray-dark">@username</strong>
-            {{ item[1] }}
-          </p>
+        <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
+          <div class="media text-muted pt-3">
+            <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+            <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+            <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+              <strong class="d-block text-gray-dark">@username</strong>
+              {{ item[1] }}
+            </p>
+          </div>
+        </a>
+        <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="wrapper text-right">
+            <!-- <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">Favor</button>
+              <button type="button" class="btn btn-secondary">Against</button>
+              <button type="button" class="btn btn-secondary">Detail</button>
+            </div> -->
+            <!-- <div class="button-group">
+              <button type="button" class="button button-square button-primary button-large">1</button>
+              <button type="button" class="button button-square button-primary button-large">2</button>
+              <button type="button" class="button button-square button-primary button-large">3</button>
+            </div> -->
+            <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+            <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+            <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+          </div>
         </div>
-      </a>
       {% endfor %}
       </span>
       <span id=listCon>

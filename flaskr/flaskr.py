@@ -25,6 +25,8 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from flask import make_response
 import json
 import os
+from sqlalchemy import exists
+from sqlalchemy import and_
 
 PER_PAGE = 5
 PRO = []
@@ -97,8 +99,10 @@ def signup():
 
     if form.validate_on_submit():
         print('test')
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        hashed_password = generate_password_hash(
+            form.password.data, method='sha256')
+        new_user = User(username=form.username.data,
+                        email=form.email.data, password=hashed_password)
         db_session.add(new_user)
         db_session.commit()
 
@@ -116,14 +120,15 @@ def show_rumors():
     res = []
     for event in events:
         # head
-        head = "#"+event.name
+        head = "#" + event.name
         # topics
         clusters = sorted(set([c.cluster_name for c in event.clusters]))
         topics = []
         for cluster in clusters:
             # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
             #     topic = json.load(fp)
-            topic = Rumor.query.filter_by(event_name=event.name, cluster_name=cluster).first().target.split(";")
+            topic = Rumor.query.filter_by(
+                event_name=event.name, cluster_name=cluster).first().target.split(";")
             print(event, cluster, topic)
             topics.append(topic)
         res.append({'head': head, 'topics': topics})
@@ -158,8 +163,10 @@ def getTweets4Event(event, cluster, per_page=5):
     PER_PAGE = per_page
     print(PER_PAGE)
     # print(session['per_page'])
-    pro = [(r.tweet_id, r.tweet) for r in Rumor.query.filter_by(stance='FAVOR').all()]
-    con = [(r.tweet_id, r.tweet) for r in Rumor.query.filter_by(stance='AGAINST').all()]
+    pro = [(r.tweet_id, r.tweet)
+           for r in Rumor.query.filter_by(stance='FAVOR').all()]
+    con = [(r.tweet_id, r.tweet)
+           for r in Rumor.query.filter_by(stance='AGAINST').all()]
     # pro, con = getTweets(event, cluster)
     PRO = pro[:]
     CON = con[:]
@@ -220,7 +227,7 @@ def load_more():
     pro_res = PRO[PER_PAGE:augument]
     con_res = CON[PER_PAGE:augument]
     PER_PAGE = augument
-    print("="*100)
+    print("=" * 100)
     print(PER_PAGE)
     return jsonify(pro=pro_res, con=con_res)
 
@@ -233,13 +240,41 @@ def add_opinion(tweet_id, opinion_value):
     print("tweet_id", tweet_id)
     print("opinion", opinion_value)
     print("user_id", current_user.id)
+    rumor = Rumor.query.filter_by(tweet_id=tweet_id).first()
+    rumor_name = rumor.id
+    # check if the record existance
+    existed = db_session.query(exists().where(and_(
+        Opinion.stance == opinion_value,
+        Opinion.rumor_name == rumor_name,
+        Opinion.user_name == current_user.username
+    ))).scalar()
+    if existed:
+        # record existed
+        print("record existed")
+        print("Opinion", Opinion.query.all())
+        return r
+    else:
+        # check if record updation
+        print("checking update")
+        q = db_session.query(Opinion).filter(and_(
+            Opinion.rumor_name == rumor_name,
+            Opinion.user_name == current_user.username
+            ))
+        if q.all():
+            # update record
+            print("updating record...")
+            q.update({"stance": opinion_value})
+            db_session.commit()
+            return r
+    # insert new record
+    print("insert record...")
     opinion = Opinion(stance=opinion_value)
-    opinion.rumor = Rumor.query.filter_by(tweet_id=tweet_id).first()
+    opinion.rumor = rumor
     current_user.rumors.append(opinion)
     db_session.add(current_user)
     db_session.commit()
+    print("Opinion", Opinion.query.all())
     return r
-
 
 
 @app.before_first_request
