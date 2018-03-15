@@ -23,7 +23,7 @@
     <h6 class="border-bottom border-gray pb-2 mb-0">Against Tweets</h6>
   {% endif %}
   {% for item in data %}
-    <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
+    <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
       <div class="media text-muted pt-3">
         <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
         <p class="text-justify media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
@@ -31,7 +31,24 @@
           {{ item[2] }}
         </p>
       </div>
+    </a> -->
+    <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
+      <div class="media text-muted pt-3">
+        <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+        <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+        <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+          <strong class="d-block text-gray-dark">@username</strong>
+          {{ item[1] }}
+        </p>
+      </div>
     </a>
+    <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="wrapper text-right">
+        <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+        <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+        <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+      </div>
+    </div>
   {% endfor %}
 </div>
 <div class="my-5">

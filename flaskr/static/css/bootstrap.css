@@ -4956,6 +4956,16 @@ tbody.collapse.show {
   border-radius: 0.25rem;
 }
 
+.alert-inline {
+  height: 64px;
+  display: inline-block;
+  position: relative;
+  padding: 1.30rem 1.40rem;
+  margin-bottom: 0;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
 .alert-heading {
   color: inherit;
 }
@@ -5371,7 +5381,7 @@ tbody.collapse.show {
   float: right;
   font-size: 1.5rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.5;
   color: #000;
   text-shadow: 0 1px 0 #fff;
   opacity: .5;

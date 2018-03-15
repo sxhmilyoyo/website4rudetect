@@ -164,9 +164,17 @@ def getTweets4Event(event, cluster, per_page=5):
     print(PER_PAGE)
     # print(session['per_page'])
     pro = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(stance='FAVOR').all()]
+           for r in Rumor.query.filter_by(event_name=event,
+                                          cluster_name=cluster,
+                                          stance='FAVOR'
+                                          ).all()
+           ]
     con = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(stance='AGAINST').all()]
+           for r in Rumor.query.filter_by(event_name=event,
+                                          cluster_name=cluster,
+                                          stance='AGAINST'
+                                          ).all()
+           ]
     # pro, con = getTweets(event, cluster)
     PRO = pro[:]
     CON = con[:]
@@ -190,7 +198,19 @@ def get_tweets_for_page(event, data, page, per_page, count):
 def show_tweets(event, attitude, cluster, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
-    pro, con = getTweets(event, cluster)
+    # pro, con = getTweets(event, cluster)
+    pro = [(r.tweet_id, r.tweet)
+           for r in Rumor.query.filter_by(event_name=event,
+                                          cluster_name=cluster,
+                                          stance='FAVOR'
+                                          ).all()
+           ]
+    con = [(r.tweet_id, r.tweet)
+           for r in Rumor.query.filter_by(event_name=event,
+                                          cluster_name=cluster,
+                                          stance='AGAINST'
+                                          ).all()
+           ]
     # print(getTweets('gabapentin'))
     if attitude == 'pro':
         count = len(pro)
@@ -235,8 +255,6 @@ def load_more():
 @app.route('/addopinion/<tweet_id>/<opinion_value>')
 def add_opinion(tweet_id, opinion_value):
     """Add user's opinion to rumor."""
-    r = make_response()
-    r.status = '200'
     print("tweet_id", tweet_id)
     print("opinion", opinion_value)
     print("user_id", current_user.id)
@@ -252,6 +270,7 @@ def add_opinion(tweet_id, opinion_value):
         # record existed
         print("record existed")
         print("Opinion", Opinion.query.all())
+        r = make_response('existed', 200)
         return r
     else:
         # check if record updation
@@ -259,12 +278,13 @@ def add_opinion(tweet_id, opinion_value):
         q = db_session.query(Opinion).filter(and_(
             Opinion.rumor_name == rumor_name,
             Opinion.user_name == current_user.username
-            ))
+        ))
         if q.all():
             # update record
             print("updating record...")
             q.update({"stance": opinion_value})
             db_session.commit()
+            r = make_response('updated', 200)
             return r
     # insert new record
     print("insert record...")
@@ -274,6 +294,7 @@ def add_opinion(tweet_id, opinion_value):
     db_session.add(current_user)
     db_session.commit()
     print("Opinion", Opinion.query.all())
+    r = make_response('inserted', 200)
     return r
 
 
