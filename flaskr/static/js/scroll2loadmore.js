@@ -31,13 +31,28 @@ $(window).scroll(function() {
               </div>
             </a>
             <div id="${pro[i][0]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="wrapper text-right">
-                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                <a href="https://twitter.com/anyuser/status/${pro[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                    <a href="https://twitter.com/anyuser/status/${pro[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                  </div>
+                </div>
               </div>
             </div>
-            <script src="/static/js/addopinion.js?1532"></script>
+
             `;
           $("#listPro").append(dom);
         }
@@ -55,13 +70,28 @@ $(window).scroll(function() {
               </div>
             </a>
             <div id="${con[i][0]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="wrapper text-right">
-                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                <a href="https://twitter.com/anyuser/status/${con[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                    <a href="https://twitter.com/anyuser/status/${con[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                  </div>
+                </div>
               </div>
             </div>
-            <script src="/static/js/addopinion.js?1532"></script>
+
             `;
           $("#listCon").append(dom);
         }

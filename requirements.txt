@@ -4,9 +4,12 @@ decorator==4.2.1
 dominate==2.3.1
 Flask==0.12.2
 Flask-Bootstrap==3.3.7.1
+Flask-Login==0.4.1
 flask-paginate==0.5.1
 Flask-SQLAlchemy==2.3.2
--e git+https://github.com/shmilyhh/website4rudetect.git@eef5073a8a54c5d2c7e9ee57b6f59d47ce3d730b#egg=flaskr
+Flask-WTF==0.14.2
+-e git+https://github.com/shmilyhh/website4rudetect.git@f1d760d4ee67e8a6f92087a9776d97ced6b6b1da#egg=flaskr
+gunicorn==19.7.1
 ipython==6.2.1
 ipython-genutils==0.2.0
 itsdangerous==0.24
@@ -14,15 +17,21 @@ jedi==0.11.1
 Jinja2==2.10
 MarkupSafe==1.0
 parso==0.1.1
+pbr==3.1.1
 pexpect==4.4.0
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
+psycopg2==2.7.4
 ptyprocess==0.5.2
 Pygments==2.2.0
 simplegeneric==0.8.1
 six==1.11.0
 SQLAlchemy==1.2.5
+sqlalchemy-migrate==0.11.0
+sqlparse==0.2.4
+Tempita==0.5.2
 traitlets==4.3.2
 visitor==0.1.3
 wcwidth==0.1.7
 Werkzeug==0.14.1
+WTForms==2.1

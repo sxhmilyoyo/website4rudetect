@@ -9,8 +9,8 @@
 </div>
 {% endblock %}
 {% block content %}
-
-
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="/static/js/scroll2loadmore.js?1572"></script>
 <div class="row">
   <div class="col-md-6">
     <!-- Content Pro -->
@@ -31,38 +31,36 @@
             </div>
           </a>
           <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
-            <!-- <div class="container"> -->
-              <div class="row">
-                <div class="col-7 alert_add">
-                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
-                    submitted successfully!
-                  </div>
-                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
-                    updated successfully!
-                  </div>
-                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
-                    duplicate action!
-                  </div>
+            <div class="row">
+              <div class="col-7 alert_add">
+                <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                  submitted successfully!
                 </div>
-                <div class="col-5">
-                  <div class="wrapper float-right">
-                    <!-- <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-secondary">Favor</button>
-                      <button type="button" class="btn btn-secondary">Against</button>
-                      <button type="button" class="btn btn-secondary">Detail</button>
-                    </div> -->
-                    <!-- <div class="button-group">
-                      <button type="button" class="button button-square button-primary button-large">1</button>
-                      <button type="button" class="button button-square button-primary button-large">2</button>
-                      <button type="button" class="button button-square button-primary button-large">3</button>
-                    </div> -->
-                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                    <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
-                  </div>
+                <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                  updated successfully!
+                </div>
+                <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                  duplicate action!
                 </div>
               </div>
-            <!-- </div> -->
+              <div class="col-5">
+                <div class="wrapper float-right">
+                  <!-- <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary">Favor</button>
+                    <button type="button" class="btn btn-secondary">Against</button>
+                    <button type="button" class="btn btn-secondary">Detail</button>
+                  </div> -->
+                  <!-- <div class="button-group">
+                    <button type="button" class="button button-square button-primary button-large">1</button>
+                    <button type="button" class="button button-square button-primary button-large">2</button>
+                    <button type="button" class="button button-square button-primary button-large">3</button>
+                  </div> -->
+                  <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+                  <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                  <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                </div>
+              </div>
+            </div>
           </div>
         {% endfor %}
       </span>
@@ -92,20 +90,25 @@
           </div>
         </a>
         <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="wrapper text-right">
-            <!-- <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary">Favor</button>
-              <button type="button" class="btn btn-secondary">Against</button>
-              <button type="button" class="btn btn-secondary">Detail</button>
-            </div> -->
-            <!-- <div class="button-group">
-              <button type="button" class="button button-square button-primary button-large">1</button>
-              <button type="button" class="button button-square button-primary button-large">2</button>
-              <button type="button" class="button button-square button-primary button-large">3</button>
-            </div> -->
-            <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-            <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-            <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+          <div class="row">
+            <div class="col-7 alert_add">
+              <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                submitted successfully!
+              </div>
+              <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                updated successfully!
+              </div>
+              <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                duplicate action!
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="wrapper float-right">
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                <a href="https://twitter.com/anyuser/status/{{ item[0] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+              </div>
+            </div>
           </div>
         </div>
       {% endfor %}

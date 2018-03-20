@@ -1,8 +1,12 @@
+from flaskr.config import SQLALCHEMY_DATABASE_URI
+from flaskr.config import SQLALCHEMY_MIGRATE_REPO
+from migrate.versioning import api
+import os
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:////Users/xuhao/Workplace/Rudetect_website/database/flask.db', convert_unicode=True)
+engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
@@ -15,6 +19,11 @@ def init_db():
     import flaskr.models
     # import flaskr.loadData
     Base.metadata.create_all(bind=engine)
+    if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
+        api.create(SQLALCHEMY_MIGRATE_REPO, 'databse repository')
+        api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
+    else:
+        api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, api.version(SQLALCHEMY_MIGRATE_REPO))
 
 
 def reinit_db():
