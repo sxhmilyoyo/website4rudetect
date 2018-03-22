@@ -57,7 +57,7 @@ def load_user(user_id):
 @app.cli.command('initdb')
 def initd_command():
     """Initialize the databse."""
-    init_db()
+    reinit_db()
     print("Initialized the databse.")
 
 

@@ -7,6 +7,7 @@ from flaskr.models import User
 # from flaskr.models import MyMixin
 from pathlib import Path
 from sqlalchemy import event
+from sqlalchemy import exists
 from werkzeug.security import generate_password_hash
 
 
@@ -25,7 +26,10 @@ def initialize_data(*args, **kwargs):
         clusters = [cluster for cluster in e.iterdir() if cluster.is_dir()]
         tableEvent = Event(name=edited_event)
         for cluster in clusters:
-            clusterTable = Cluster(name=cluster.name)
+            if db_session.query(exists().where(Cluster.name == cluster.name)).scalar():
+                clusterTable = db_session.query(Cluster).filter(Cluster.name == cluster.name).first()
+            else:
+                clusterTable = Cluster(name=cluster.name)
             rumors = getRumors(cluster)
             for i, rumor in enumerate(rumors):
                 idx = edited_event + "_" + str(i) + "_" + rumor[0]
