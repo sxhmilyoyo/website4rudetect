@@ -18,7 +18,8 @@ def initialize_data(*args, **kwargs):
     """Initialize the data in the database."""
     # load events
     print("initialize data...")
-    dataRootPath = Path("../data")
+    dataRootPath = Path("data")
+    print(str(dataRootPath))
     events = [e for e in dataRootPath.iterdir() if e.is_dir()]
     for e in events:
         terms = [term for term in e.name.split('_') if not term.isdigit()]
