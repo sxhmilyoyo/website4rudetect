@@ -29,10 +29,10 @@ class Rumor(Base):
     """Rumor association table."""
 
     __tablename__ = 'rumor'
-    id = Column(String(100), primary_key=True)
+    id = Column(String(100), primary_key=True, unique=True)
     cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
     event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
-    tweet_id = Column(String(50))
+    tweet_id = Column(String(50), unique=True)
     target = Column(String(50))
     tweet = Column(Text)
     stance = Column(String(20))
