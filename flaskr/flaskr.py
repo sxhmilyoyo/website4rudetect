@@ -120,6 +120,8 @@ def signup():
 @app.route('/')
 def show_rumors():
     """Show the rumors entries."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     events = Event.query.all()
     print(current_user.is_authenticated)
     print(current_user.username)
