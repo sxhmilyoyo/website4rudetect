@@ -53,11 +53,11 @@ class Cluster(Base):
 
     __tablename__ = 'cluster'
     id = Column(Integer, primary_key=True)
-    name = Column(String(5))
+    name = Column(String(5), unique=True)
     # event_id = Column(Integer, ForeignKey('events.id'),
     #                   nullable=False)
     events = relationship('Rumor', backref=backref('cluster', lazy=True))
-    __table__args__ = (UniqueConstraint('id', 'name', name='_id_name_ck'))
+    # __table__args__ = (UniqueConstraint('id', 'name', name='_id_name_ck'))
     # def __init__(self, tweet_id=None, target=None, tweet=None, stance=None):
     #     """Construct the model."""
     #     self.tweet_id = tweet_id
