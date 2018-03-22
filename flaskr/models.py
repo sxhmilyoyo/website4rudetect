@@ -39,7 +39,7 @@ class Rumor(Base):
 
     users = relationship('Opinion', backref=backref('rumor'), lazy=True)
 
-    __table__args__ = (UniqueConstraint('id', 'cluster_name', 'event_name', name='_id_cluster_event_ck'))
+    # __table__args__ = (UniqueConstraint('id', 'cluster_name', 'event_name', name='_id_cluster_event_ck'))
     # rumor = relationship('Rumor', back_populates='events')
     # cluster = relationship('Cluster', )
     # event = relationship('Event', back_populates='rumors')
