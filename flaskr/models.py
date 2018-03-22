@@ -90,7 +90,7 @@ class User(UserMixin, Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True)
     email = Column(String(50), unique=True)
-    password = Column(String(50))
+    password = Column(String(80))
 
     rumors = relationship('Opinion', backref=backref('user'), lazy=True)
 
