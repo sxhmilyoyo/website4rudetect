@@ -61,6 +61,13 @@ def initd_command():
     print("Initialized the databse.")
 
 
+@app.cli.command('reinitdb')
+def setup():
+    """Reconstruct data before first request for testing."""
+    reinit_db()
+    print("Re-Initialized the databse.")
+
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     """Close the database again at the end of the request."""
@@ -298,7 +305,7 @@ def add_opinion(tweet_id, opinion_value):
     return r
 
 
-@app.before_first_request
-def setup():
-    """Reconstruct data before first request for testing."""
-    reinit_db()
+# @app.before_first_request
+# def setup():
+#     """Reconstruct data before first request for testing."""
+#     reinit_db()
