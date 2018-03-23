@@ -1,9 +1,9 @@
 $(window).scroll(function() {
-  console.log("1");
-  console.log("1:"+$(window).scrollTop());
-  console.log("2:"+$(document).height());
-  console.log("3:"+$(window).height());
-  console.log("3:" + $SCRIPT_ROOT + 'loadmore');
+  // console.log("1");
+  // console.log("1:"+$(window).scrollTop());
+  // console.log("2:"+$(document).height());
+  // console.log("3:"+$(window).height());
+  // console.log("3:" + $SCRIPT_ROOT + 'loadmore');
   if ($(window).scrollTop()>0 && $(window).scrollTop() == $(document).height() - $(window).height()) {
     $.getJSON($SCRIPT_ROOT + '/loadmore',
       function(data) {
@@ -20,7 +20,7 @@ $(window).scroll(function() {
         for (var i = 0; i < pro.length; i++) {
           var dom =
             `
-            <a class="list-link-item" data-toggle="collapse" data-target="#${pro[i][0]}" aria-expanded="false" aria-controls="${pro[i][0]}">
+            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${pro[i][0]}" aria-expanded="false" aria-controls="${pro[i][0]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
@@ -55,11 +55,20 @@ $(window).scroll(function() {
 
             `;
           $("#listPro").append(dom);
+          $("#listPro > .list-link-item:hidden").each(function(i, obj) {
+            console.log("pro", i);
+            var row = $(this);
+            setTimeout(function() {
+              row.show(800);
+            }, 200*i);
+          });
+          // $('.list-link-item').show(1000);
+          // setTimeout(function() { $("#listPro").append(dom); }, 300);
         }
         for (var i = 0; i < con.length; i++) {
           var dom =
             `
-            <a class="list-link-item" data-toggle="collapse" data-target="#${con[i][0]}" aria-expanded="false" aria-controls="${con[i][0]}">
+            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${con[i][0]}" aria-expanded="false" aria-controls="${con[i][0]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
@@ -94,6 +103,13 @@ $(window).scroll(function() {
 
             `;
           $("#listCon").append(dom);
+          $("#listCon > .list-link-item:hidden").each(function(i, obj) {
+            console.log("con", i);
+            var row = $(this);
+            setTimeout(function() {
+              row.show(800);
+            }, 200*i);
+          });
         }
       });
   }
