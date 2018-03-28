@@ -4966,6 +4966,17 @@ tbody.collapse.show {
   border-radius: 0.25rem;
 }
 
+.alert-inline-label {
+  height: 40px;
+  display: inline-block;
+  position: relative;
+  padding: 0.45rem 1.40rem;
+  margin-bottom: 0;
+  margin-top: 0.05rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
 .alert-heading {
   color: inherit;
 }

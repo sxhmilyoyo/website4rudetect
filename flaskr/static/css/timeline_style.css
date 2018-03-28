@@ -33,13 +33,31 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
 
 .bg-darkblue { background-color: #2b2e48; }
 
-.na a {
+.nav a {
     color: #677077;
+    text-decoration: none;
+}
+
+.nav-big {
+    color: #9995A3;
+    font-size: 3.0em;
+    margin: .75em 0;
+    text-decoration: none;
+}
+
+.nav-small {
+    color: #9995A3;
+    font-size: 2.0em;
+    margin: .75em 0;
     text-decoration: none;
 }
 
 .tsp {
   word-break: break-all;
+}
+
+.nav .active {
+  font-size: 3.0em;
 }
 
 .container {

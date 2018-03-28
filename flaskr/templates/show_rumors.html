@@ -37,7 +37,7 @@
         <div class="list-group list-group-flush">
           {% for k in range(items[i+j]['topics']|length) if items[i+j]['topics'][k]|length > 0 %}
           <!-- <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p> -->
-          <a href="{{ url_for('getTweets4Event', event=events[i].name, cluster=k) }}" class="list-group-item list-group-item-action bg-light">
+          <a href="{{ url_for('getTweets4Event', event=events[i].name, cluster=k, topics=';'.join(items[i+j]['topics'][k])) }}" class="list-group-item list-group-item-action bg-light">
             <div class="container">
               <div class='row'>
                 <div class="col-3 mt-3">

@@ -160,9 +160,9 @@ def getTweets(event, cluster):
     return details[:len(details) // 2], details[len(details) // 2:]
 
 
-@app.route('/abstract/<event>/<cluster>')
-@app.route('/abstract/<event>/<cluster>/<int:per_page>')
-def getTweets4Event(event, cluster, per_page=5):
+@app.route('/abstract/<event>/<cluster>/<topics>')
+@app.route('/abstract/<event>/<cluster>/<topics>/<int:per_page>')
+def getTweets4Event(event, cluster, topics, per_page=5):
     """Get the details for event gabapentin."""
     global PER_PAGE
     global PRO
@@ -176,21 +176,23 @@ def getTweets4Event(event, cluster, per_page=5):
            for r in Rumor.query.filter_by(event_name=event,
                                           cluster_name=cluster,
                                           stance='FAVOR'
-                                          ).all()
+                                          ).order_by(Rumor.date).all()
            ]
     con = [(r.tweet_id, r.tweet)
            for r in Rumor.query.filter_by(event_name=event,
                                           cluster_name=cluster,
                                           stance='AGAINST'
-                                          ).all()
+                                          ).order_by(Rumor.date).all()
            ]
     # pro, con = getTweets(event, cluster)
     PRO = pro[:]
     CON = con[:]
     # session['pro'] = pro
     # session['con'] = con
+    tweets = getWholeTweets(event, cluster)
     return render_template('abstract.html', pro=pro[:PER_PAGE],
-                           con=con[:PER_PAGE], event=event, cluster=cluster)
+                           con=con[:PER_PAGE], event=event, cluster=cluster,
+                           tweets=tweets, topics=topics)
 
 
 def get_tweets_for_page(event, data, page, per_page, count):
@@ -202,9 +204,9 @@ def get_tweets_for_page(event, data, page, per_page, count):
         return data[per_page * page:]
 
 
-@app.route('/detail/<event>/<cluster>/<attitude>', defaults={'page': 1}, methods=['GET', 'POST'])
-@app.route('/detail/<event>/<cluster>/<attitude>/<int:page>', methods=['GET', 'POST'])
-def show_tweets(event, attitude, cluster, page):
+@app.route('/detail/<event>/<cluster>/<topics>/<attitude>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/detail/<event>/<cluster>/<topics>/<attitude>/<int:page>', methods=['GET', 'POST'])
+def show_tweets(event, attitude, cluster, topics, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
     # pro, con = getTweets(event, cluster)
@@ -233,7 +235,9 @@ def show_tweets(event, attitude, cluster, page):
                            data=tweets,
                            pagination=pagination,
                            event=event,
-                           attitude=attitude
+                           attitude=attitude,
+                           topics=topics,
+                           cluster=cluster
                            )
 
 
@@ -307,10 +311,10 @@ def add_opinion(tweet_id, opinion_value):
     return r
 
 
-def getWholeTweets(event):
+def getWholeTweets(event, cluster):
     """Get whole tweets of an event."""
     tweets = [(r.date, r.tweet_id, r.tweet) for r in db_session.query(
-        Rumor).filter(Rumor.event_name == event).order_by(Rumor.date).all()]
+        Rumor).filter(and_(Rumor.event_name == event, Rumor.cluster_name == cluster)).order_by(Rumor.date).all()]
     return tweets
 
 

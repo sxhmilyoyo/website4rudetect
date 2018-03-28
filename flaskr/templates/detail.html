@@ -1,21 +1,36 @@
 {% extends "layout.html" %}
 
 {% block page_title %}
+{% endblock %}
+
+{% block content %}
 <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-darkblue rounded box-shadow">
   <img class="mr-3" src="https://getbootstrap.com/assets/brand/bootstrap-outline.svg" alt="" width="48" height="48">
   <div class="lh-100">
     <h6 class="mb-0 text-white lh-100 mb-1">#{{ event }}</h6>
-    <small>Since 2011</small>
+      <small>
+        {% for topic in topics.split(";")%}
+          <!-- <span class="btn btn-primary btn-sm disabled" aria-disabled="true"> {{ topic }} </span> -->
+          <span class="my-1 badge badge-default badge-outlined"> {{ topic }} </span>
+        {% endfor%}
+      </small>
+    </div>
+    <nav>
+      {% if attitude == "pro" %}
+        {% set fs_favor = "nav-big" %}
+        {% set fs_against = "nav-small" %}
+      {% elif attitude == "con" %}
+        {% set fs_against = "nav-big" %}
+        {% set fs_favor = "nav-small" %}
+      {% endif %}
+      <div class="nav ml-3" id="nav-tab" role="tablist">
+        <a id="p" class="nav-link font-weight-light my-auto {{ fs_favor }}" href="{{ url_for('show_tweets', event=event, cluster=cluster, topics=topics, attitude='pro') }}" >FAVOR</a>
+        <a id="c" class="nav-link font-weight-light my-auto {{ fs_against }}" href="{{ url_for('show_tweets', event=event, cluster=cluster, topics=topics, attitude='con') }}" >AGAINST</a>
+      </div>
+    </nav>
   </div>
 </div>
-{% endblock %}
 
-{% block content %}
-<div id="test">
-  <div class="wrapper">
-  <input type="submit" name="submit" value="test" id="test" tweet_id="951422124110983169" opinion="FAVOR">
-</div>
-</div>
 <div class="my-3 p-3 bg-white rounded box-shadow">
   {% if attitude == 'pro' %}
     <h6 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h6>
