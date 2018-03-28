@@ -307,6 +307,19 @@ def add_opinion(tweet_id, opinion_value):
     return r
 
 
+def getWholeTweets(event):
+    """Get whole tweets of an event."""
+    tweets = [(r.date, r.tweet_id, r.tweet) for r in db_session.query(
+        Rumor).filter(Rumor.event_name == event).order_by(Rumor.date).all()]
+    return tweets
+
+
+@app.route('/label/<event>')
+def label_tweets(event):
+    """Show tweets of an event to label."""
+    tweets = getWholeTweets(event)
+    return render_template('label_data.html', tweets=tweets)
+
 # @app.before_first_request
 # def setup():
 #     """Reconstruct data before first request for testing."""

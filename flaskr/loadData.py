@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from flaskr.database import db_session
 from flaskr.models import Cluster
 from flaskr.models import Event
@@ -36,7 +37,7 @@ def initialize_data(*args, **kwargs):
                 idx = edited_event + "_" + str(i) + "_" + rumor[0]
                 rumorAssocTable = Rumor(
                     id=idx, tweet_id=rumor[0], target=rumor[1], tweet=rumor[2],
-                    stance=rumor[3]
+                    stance=rumor[3], date=datetime.strptime(rumor[4], '%Y-%m-%d %H:%M:%S')
                     )
                 rumorAssocTable.cluster = clusterTable
                 tableEvent.clusters.append(rumorAssocTable)

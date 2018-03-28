@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -5,6 +6,7 @@ from sqlalchemy import Text
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table
 from sqlalchemy import UniqueConstraint
+from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import backref
 from flaskr.database import Base
@@ -35,6 +37,7 @@ class Rumor(Base):
     tweet_id = Column(String(50))
     target = Column(String(50))
     tweet = Column(Text)
+    date = Column(DateTime, nullable=False, default=datetime.utcnow)
     stance = Column(String(20))
 
     users = relationship('Opinion', backref=backref('rumor'), lazy=True)
