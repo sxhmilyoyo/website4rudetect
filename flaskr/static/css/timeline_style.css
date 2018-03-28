@@ -38,6 +38,11 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
     text-decoration: none;
 }
 
+.timeline-content a {
+  color: #677077;
+  text-decoration: none;
+}
+
 .nav-big {
     color: #9995A3;
     font-size: 3.0em;
