@@ -190,9 +190,11 @@ def getTweets4Event(event, cluster, topics, per_page=5):
     # session['pro'] = pro
     # session['con'] = con
     tweets = getWholeTweets(event, cluster)
+    # charts = {'FAVOR': len(pro), 'AGAINST': len(con)}
+    print(len(pro))
     return render_template('abstract.html', pro=pro[:PER_PAGE],
                            con=con[:PER_PAGE], event=event, cluster=cluster,
-                           tweets=tweets, topics=topics)
+                           tweets=tweets, topics=topics, chart_p=str(len(pro)), chart_c=str(len(con)))
 
 
 def get_tweets_for_page(event, data, page, per_page, count):
@@ -237,7 +239,8 @@ def show_tweets(event, attitude, cluster, topics, page):
                            event=event,
                            attitude=attitude,
                            topics=topics,
-                           cluster=cluster
+                           cluster=cluster,
+                           offset=(page-1)*per_page
                            )
 
 
@@ -254,6 +257,7 @@ def load_more():
     # pro_res = session['pro'][PER_PAGE:PER_PAGE+5]
     # con_res = session['con'][PER_PAGE:PER_PAGE+5]
     # session['per_page'] = per_page + 5
+    idx = PER_PAGE
     augument = PER_PAGE + 5
     if augument > len(PRO):
         augument = len(PRO)
@@ -262,7 +266,7 @@ def load_more():
     PER_PAGE = augument
     print("=" * 100)
     print(PER_PAGE)
-    return jsonify(pro=pro_res, con=con_res)
+    return jsonify(pro=pro_res, con=con_res, idx=idx)
 
 
 @app.route('/addopinion/<tweet_id>/<opinion_value>')

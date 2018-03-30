@@ -34,8 +34,10 @@
 <div class="my-3 p-3 bg-white rounded box-shadow">
   {% if attitude == 'pro' %}
     <h6 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h6>
+    {% set color="#ee4d4d" %}
   {% elif attitude == 'con' %}
     <h6 class="border-bottom border-gray pb-2 mb-0">Against Tweets</h6>
+    {% set color="#2b2e48" %}
   {% endif %}
   {% for item in data %}
     <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[0] }}">
@@ -51,8 +53,9 @@
       <div class="media text-muted pt-3">
         <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
         <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+        <div class="color-box mr-2 rounded text-white text-center" style="background-color: {{ color }};">{{ loop.index+offset }}</div>
         <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-          <strong class="d-block text-gray-dark">@username</strong>
+          <!-- <strong class="d-block text-gray-dark">@username</strong> -->
           {{ item[1] }}
         </p>
       </div>

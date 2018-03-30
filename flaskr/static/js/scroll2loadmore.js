@@ -17,15 +17,16 @@ $(window).scroll(function() {
         // console.log(e.data.flag);
         var pro = data.pro;
         var con = data.con;
+        var idx = data.idx;
         for (var i = 0; i < pro.length; i++) {
           var dom =
             `
             <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${pro[i][0]}" aria-expanded="false" aria-controls="${pro[i][0]}">
               <div class="media text-muted pt-3">
-                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">${i+idx+1}</div>
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">@username</strong>
                   ${pro[i][1]}
                 </p>
               </div>
@@ -70,10 +71,10 @@ $(window).scroll(function() {
             `
             <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${con[i][0]}" aria-expanded="false" aria-controls="${con[i][0]}">
               <div class="media text-muted pt-3">
-                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">${i+idx+1}</div>
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">@username</strong>
                   ${con[i][1]}
                 </p>
               </div>
@@ -134,7 +135,7 @@ $(window).scroll(function() {
 //           var dom = `
 //               <a class="list-link-item" href="https://twitter.com/anyuser/status/${pro[i][0]}">
 //                 <div class="media text-muted pt-3">
-//                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+//                   <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
 //                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 //                     <strong class="d-block text-gray-dark">@username</strong>
 //                       ${pro[i][2]}
@@ -142,14 +143,14 @@ $(window).scroll(function() {
 //                 </div>
 //               </a>
 //               `;
-//           // var dom = '<a class="list-link-item" href="https://twitter.com/anyuser/status/"><div class="media text-muted pt-3"><img data-src="holder.min.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"><p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray"><strong class="d-block text-gray-dark">@username</strong>' + pro[i][2] + '</p></div></a>'
+//           // var dom = '<a class="list-link-item" href="https://twitter.com/anyuser/status/"><div class="media text-muted pt-3"><img data-src="der.min.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"><p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray"><strong class="d-block text-gray-dark">@username</strong>' + pro[i][2] + '</p></div></a>'
 //           $("#listPro").append(dom);
 //         }
 //         for (var i = 0; i < con.length; i++) {
 //           var dom = `
 //               <a class="list-link-item" href="https://twitter.com/anyuser/status/${con[i][0]}">
 //                 <div class="media text-muted pt-3">
-//                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+//                   <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
 //                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 //                     <strong class="d-block text-gray-dark">@username</strong>
 //                       ${con[i][2]}
@@ -157,7 +158,7 @@ $(window).scroll(function() {
 //                 </div>
 //               </a>
 //               `;
-//           // var dom = '<a class="list-link-item" href="https://twitter.com/anyuser/status/"><div class="media text-muted pt-3"><img data-src="holder.min.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"><p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray"><strong class="d-block text-gray-dark">@username</strong>' + pro[i][2] + '</p></div></a>'
+//           // var dom = '<a class="list-link-item" href="https://twitter.com/anyuser/status/"><div class="media text-muted pt-3"><img data-src="der.min.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"><p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray"><strong class="d-block text-gray-dark">@username</strong>' + pro[i][2] + '</p></div></a>'
 //           $("#listCon").append(dom);
 //         }
 //         // $('#listPro').text(pro[i]);

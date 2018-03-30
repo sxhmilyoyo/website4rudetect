@@ -3,9 +3,6 @@
 {% endblock %}
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="/static/js/scroll2loadmore.js?1613"></script>
-
 <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-darkblue rounded box-shadow">
   <img class="mr-3" src="https://getbootstrap.com/assets/brand/bootstrap-outline.svg" alt="" width="48" height="48">
   <div class="lh-100">
@@ -13,14 +10,15 @@
     <small>
       {% for topic in topics.split(";")%}
         <!-- <span class="btn btn-primary btn-sm disabled" aria-disabled="true"> {{ topic }} </span> -->
-        <span class="my-1 badge badge-default badge-outlined"> {{ topic }} </span>
+        <span class="my-auto badge badge-default badge-outlined"> {{ topic }} </span>
       {% endfor%}
     </small>
   </div>
   <nav>
     <div class="nav ml-3" id="nav-tab" role="tablist">
       <a class="nav-link nav-small active font-weight-light my-auto" id="nav-abstract-tab" data-toggle="tab" href="#nav-abstract" role="tab" aria-controls="nav-abstract" aria-selected="true">ABSTRACT</a>
-      <a class="nav-link nav-small font-weight-light my-auto" id="nav-timeline-tab font-weight-light" data-toggle="tab" href="#nav-timeline" role="tab" aria-controls="nav-timeline" aria-selected="false">TIMELINE</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab" aria-controls="nav-chart" aria-selected="false">CHART</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-timeline-tab" data-toggle="tab" href="#nav-timeline" role="tab" aria-controls="nav-timeline" aria-selected="false">TIMELINE</a>
     </div>
   </nav>
 </div>
@@ -39,9 +37,10 @@
               <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
                 <div class="media text-muted pt-3">
                   <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">{{ loop.index }}</div>
                   <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
                   <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
+                    <!-- <strong class="d-block text-gray-dark">@username</strong> -->
                     {{ item[1] }}
                   </p>
                 </div>
@@ -99,8 +98,9 @@
               <div class="media text-muted pt-3">
                 <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">{{ loop.index }}</div>
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">@username</strong>
+                  <!-- <strong class="d-block text-gray-dark">@username</strong> -->
                   {{ item[1] }}
                 </p>
               </div>
@@ -148,6 +148,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="tab-pane fade" id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
+    <canvas id="myChart" width="1070px" height="500px"></canvas>
   </div>
   <div class="tab-pane fade" id="nav-timeline" role="tabpanel" aria-labelledby="nav-timeline-tab">
       <div id="timeline">
@@ -200,5 +203,63 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<!-- <script src="/static/js/bootstrap.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<script src="/static/js/scroll2loadmore.js?1613"></script>
+<script>
+  $('#nav-tab #nav-chart-tab').on('shown.bs.tab', function (e) {
+  // $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+    console.log("test");
+    var ctx = $("#myChart");
+    var data = {
+      datasets: [{
+          label: "Percentage of Stance",
+          data: [{{ chart_p|int }}, {{ chart_c|int }}],
+          backgroundColor: [
+                  'rgb(255, 205, 86)',
+                  'rgb(255, 99, 132)'
+              ],
+          borderWidth: 3
+      }],
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [
+          'FAVOR',
+          'AGAINST'
+      ]
+    };
+    var options = {
+      responsive: true,
+      animation: {
+        animateRotate: true
+      },
+      layout: {
+              padding: {
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 10
+              }
+      },
+      title: {
+              display: true,
+              text: 'Percentage of Stance',
+              padding: 20,
+              fontSize: 20,
+              lineHeight: 2.0
+      },
+      legend: {
+              display: true,
+              position: 'top',
+              fullWidth: true
+      }
+    };
+    var myPieChart = new Chart(ctx,{
+      type: 'pie',
+      data: data,
+      options: options
+    });
 
+  })
+</script>
 {% endblock %}

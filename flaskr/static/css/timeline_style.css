@@ -52,7 +52,7 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
 
 .nav-small {
     color: #9995A3;
-    font-size: 2.0em;
+    font-size: 1.0em;
     margin: .75em 0;
     text-decoration: none;
 }
@@ -62,7 +62,14 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
 }
 
 .nav .active {
-  font-size: 3.0em;
+  font-size: 2.0em;
+}
+
+.color-box {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    padding: 4px
 }
 
 .container {
