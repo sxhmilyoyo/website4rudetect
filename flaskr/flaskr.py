@@ -20,6 +20,7 @@ from flaskr.models import Event
 from flaskr.models import Rumor
 from flaskr.models import User
 from flaskr.models import Opinion
+from flaskr.models import Svo
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask import make_response
@@ -57,7 +58,7 @@ def load_user(user_id):
 @app.cli.command('initdb')
 def initd_command():
     """Initialize the databse."""
-    reinit_db()
+    init_db()
     print("Initialized the databse.")
 
 
@@ -136,8 +137,9 @@ def show_rumors():
         for cluster in clusters:
             # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
             #     topic = json.load(fp)
-            topic = Rumor.query.filter_by(
-                event_name=event.name, cluster_name=cluster).first().target.split(";")
+            svo = Svo.query.filter_by(
+                event_name=event.name, cluster_name=cluster).first()
+            topic = svo.rumors[0].target.split(";")
             print(event, cluster, topic)
             topics.append(topic)
         res.append({'head': head, 'topics': topics})
@@ -172,29 +174,20 @@ def getTweets4Event(event, cluster, topics, per_page=5):
     PER_PAGE = per_page
     print(PER_PAGE)
     # print(session['per_page'])
-    pro = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(event_name=event,
-                                          cluster_name=cluster,
-                                          stance='FAVOR'
-                                          ).order_by(Rumor.date).all()
-           ]
-    con = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(event_name=event,
-                                          cluster_name=cluster,
-                                          stance='AGAINST'
-                                          ).order_by(Rumor.date).all()
-           ]
+    pro = getTweetsFromDB(event, cluster, 'FAVOR')
+    con = getTweetsFromDB(event, cluster, 'AGAINST')
     # pro, con = getTweets(event, cluster)
     PRO = pro[:]
     CON = con[:]
     # session['pro'] = pro
     # session['con'] = con
-    tweets = getWholeTweets(event, cluster)
+    tweets = getTweetsFromDB(event, cluster)
     # charts = {'FAVOR': len(pro), 'AGAINST': len(con)}
     print(len(pro))
+    svo_dict, snippets = getSvoFromDB(event, cluster)
     return render_template('abstract.html', pro=pro[:PER_PAGE],
                            con=con[:PER_PAGE], event=event, cluster=cluster,
-                           tweets=tweets, topics=topics, chart_p=str(len(pro)), chart_c=str(len(con)))
+                           tweets=tweets, topics=topics, chart_p=len(pro), chart_c=len(con), svo_dict=svo_dict, snippets=snippets)
 
 
 def get_tweets_for_page(event, data, page, per_page, count):
@@ -212,18 +205,8 @@ def show_tweets(event, attitude, cluster, topics, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
     # pro, con = getTweets(event, cluster)
-    pro = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(event_name=event,
-                                          cluster_name=cluster,
-                                          stance='FAVOR'
-                                          ).all()
-           ]
-    con = [(r.tweet_id, r.tweet)
-           for r in Rumor.query.filter_by(event_name=event,
-                                          cluster_name=cluster,
-                                          stance='AGAINST'
-                                          ).all()
-           ]
+    pro = getTweetsFromDB(event, attitude, 'FAVOR')
+    con = getTweetsFromDB(event, attitude, 'CON')
     # print(getTweets('gabapentin'))
     if attitude == 'pro':
         count = len(pro)
@@ -276,11 +259,11 @@ def add_opinion(tweet_id, opinion_value):
     print("opinion", opinion_value)
     print("user_id", current_user.id)
     rumor = Rumor.query.filter_by(tweet_id=tweet_id).first()
-    rumor_name = rumor.id
+    rumor_id = rumor.id
     # check if the record existance
     existed = db_session.query(exists().where(and_(
         Opinion.stance == opinion_value,
-        Opinion.rumor_name == rumor_name,
+        Opinion.rumor_id == rumor_id,
         Opinion.user_name == current_user.username
     ))).scalar()
     if existed:
@@ -293,7 +276,7 @@ def add_opinion(tweet_id, opinion_value):
         # check if record updation
         print("checking update")
         q = db_session.query(Opinion).filter(and_(
-            Opinion.rumor_name == rumor_name,
+            Opinion.rumor_id == rumor_id,
             Opinion.user_name == current_user.username
         ))
         if q.all():
@@ -315,19 +298,45 @@ def add_opinion(tweet_id, opinion_value):
     return r
 
 
-def getWholeTweets(event, cluster):
-    """Get whole tweets of an event."""
-    tweets = [(r.date, r.tweet_id, r.tweet) for r in db_session.query(
-        Rumor).filter(and_(Rumor.event_name == event, Rumor.cluster_name == cluster)).order_by(Rumor.date).all()]
-    return tweets
+# def getWholeTweets(event, cluster):
+#     """Get whole tweets of an event."""
+#     tweets = [(r.date, r.tweet_id, r.tweet) for r in db_session.query(
+#         Rumor).filter(and_(Rumor.event_name == event, Rumor.cluster_name == cluster)).order_by(Rumor.date).all()]
+#     return tweets
 
 
-@app.route('/label/<event>')
-def label_tweets(event):
+@app.route('/label/<event>/<cluster>')
+def label_tweets(event, cluster):
     """Show tweets of an event to label."""
-    tweets = getWholeTweets(event)
+    tweets = getTweetsFromDB(event, cluster)
     return render_template('label_data.html', tweets=tweets)
 
+
+def getTweetsFromDB(event, cluster, stance=None):
+    """Get tweets from database."""
+    svo_id = Svo.query.filter_by(event_name=event,
+                                 cluster_name=cluster).first().id
+    if stance:
+        res = [(str(r.date), r.tweet_id, r.tweet)
+               for r in Rumor.query.filter_by(svo_id=svo_id,
+                                              stance=stance
+                                              ).order_by(Rumor.date).all()
+               ]
+    else:
+        res = [(str(r.date), r.tweet_id, r.tweet)
+               for r in Rumor.query.filter_by(svo_id=svo_id
+                                              ).order_by(Rumor.date).all()
+               ]
+    return res
+
+
+def getSvoFromDB(event, cluster):
+    """Get svo from database."""
+    svo_dict = Svo.query.filter_by(event_name=event,
+                                   cluster_name=cluster).first().svo_dict
+    snippets = Svo.query.filter_by(event_name=event,
+                                   cluster_name=cluster).first().snippets
+    return svo_dict, snippets
 # @app.before_first_request
 # def setup():
 #     """Reconstruct data before first request for testing."""

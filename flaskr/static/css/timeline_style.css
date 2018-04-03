@@ -33,6 +33,16 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
 
 .bg-darkblue { background-color: #2b2e48; }
 
+.list-group a {
+  color: #677077;
+  text-decoration: none;
+}
+
+.card-body a {
+  color: #677077;
+  text-decoration: none;
+}
+
 .nav a {
     color: #677077;
     text-decoration: none;

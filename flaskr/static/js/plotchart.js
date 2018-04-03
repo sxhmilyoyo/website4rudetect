@@ -1,11 +1,13 @@
 $('#nav-tab #nav-chart-tab').on('shown.bs.tab', function (e) {
 // $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
   console.log("test");
+  var num_pro = $("#listProOrigin").attr('class');
+  var num_con = $("#listConOrigin").attr('class');
   var ctx = $("#myChart");
   var data = {
     datasets: [{
         label: "Percentage of Stance",
-        data: [10, 20],
+        data: [parseInt(num_pro), parseInt(num_con)],
         backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(255, 205, 86)'

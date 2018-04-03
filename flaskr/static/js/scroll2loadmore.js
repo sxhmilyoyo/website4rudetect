@@ -21,17 +21,18 @@ $(window).scroll(function() {
         for (var i = 0; i < pro.length; i++) {
           var dom =
             `
-            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${pro[i][0]}" aria-expanded="false" aria-controls="${pro[i][0]}">
+            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${pro[i][1]}" aria-expanded="false" aria-controls="${pro[i][1]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
                 <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">${i+idx+1}</div>
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  ${pro[i][1]}
+                  <strong class="d-block text-gray-dark">${pro[i][0]}</strong>
+                  ${pro[i][2]}
                 </p>
               </div>
             </a>
-            <div id="${pro[i][0]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="${pro[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="row">
                 <div class="col-7 alert_add">
                   <div class="inserted alert-inline alert-success" role="alert" style="display: none">
@@ -48,7 +49,7 @@ $(window).scroll(function() {
                   <div class="wrapper float-right">
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                    <a href="https://twitter.com/anyuser/status/${pro[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    <a href="https://twitter.com/anyuser/status/${pro[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                   </div>
                 </div>
               </div>
@@ -69,17 +70,18 @@ $(window).scroll(function() {
         for (var i = 0; i < con.length; i++) {
           var dom =
             `
-            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${con[i][0]}" aria-expanded="false" aria-controls="${con[i][0]}">
+            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${con[i][1]}" aria-expanded="false" aria-controls="${con[i][1]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
                 <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">${i+idx+1}</div>
                 <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  ${con[i][1]}
+                  <strong class="d-block text-gray-dark">${con[i][0]}</strong>
+                  ${con[i][2]}
                 </p>
               </div>
             </a>
-            <div id="${con[i][0]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="${con[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="row">
                 <div class="col-7 alert_add">
                   <div class="inserted alert-inline alert-success" role="alert" style="display: none">
@@ -96,7 +98,7 @@ $(window).scroll(function() {
                   <div class="wrapper float-right">
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                    <a href="https://twitter.com/anyuser/status/${con[i][0]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    <a href="https://twitter.com/anyuser/status/${con[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                   </div>
                 </div>
               </div>
@@ -133,7 +135,7 @@ $(window).scroll(function() {
 //         for (var i = 0; i < pro.length; i++) {
 //
 //           var dom = `
-//               <a class="list-link-item" href="https://twitter.com/anyuser/status/${pro[i][0]}">
+//               <a class="list-link-item" href="https://twitter.com/anyuser/status/${pro[i][1]}">
 //                 <div class="media text-muted pt-3">
 //                   <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
 //                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -148,7 +150,7 @@ $(window).scroll(function() {
 //         }
 //         for (var i = 0; i < con.length; i++) {
 //           var dom = `
-//               <a class="list-link-item" href="https://twitter.com/anyuser/status/${con[i][0]}">
+//               <a class="list-link-item" href="https://twitter.com/anyuser/status/${con[i][1]}">
 //                 <div class="media text-muted pt-3">
 //                   <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
 //                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">

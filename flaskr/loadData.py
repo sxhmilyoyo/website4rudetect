@@ -1,9 +1,11 @@
 import csv
 from datetime import datetime
+import json
 from flaskr.database import db_session
 from flaskr.models import Cluster
 from flaskr.models import Event
 from flaskr.models import Rumor
+from flaskr.models import Svo
 from flaskr.models import User
 # from flaskr.models import MyMixin
 from pathlib import Path
@@ -26,23 +28,32 @@ def initialize_data(*args, **kwargs):
         terms = [term for term in e.name.split('_') if not term.isdigit()]
         edited_event = " ".join(terms)
         clusters = [cluster for cluster in e.iterdir() if cluster.is_dir()]
-        tableEvent = Event(name=edited_event)
+        if db_session.query(exists().where(Event.name == Event.name)).scalar():
+            clusterTable = db_session.query(Event).filter(Event.name == edited_event).first()
+        else:
+            tableEvent = Event(name=edited_event)
         for cluster in clusters:
             if db_session.query(exists().where(Cluster.name == cluster.name)).scalar():
                 clusterTable = db_session.query(Cluster).filter(Cluster.name == cluster.name).first()
             else:
                 clusterTable = Cluster(name=cluster.name)
+            idx = edited_event + "_" + cluster.name
+            svo_query = getSvoQuery(cluster)
+            snippets = getSnippets(cluster, cluster.name)
+            tableSvo = Svo(id=idx, svo_dict=svo_query, snippets=snippets)
+            tableSvo.cluster = clusterTable
+            tableEvent.clusters.append(tableSvo)
+
             rumors = getRumors(cluster)
             for i, rumor in enumerate(rumors):
-                idx = edited_event + "_" + str(i) + "_" + rumor[0]
-                rumorAssocTable = Rumor(
-                    id=idx, tweet_id=rumor[0], target=rumor[1], tweet=rumor[2],
+                # idx = edited_event + "_" + str(i) + "_" + rumor[0]
+                tableRumor = Rumor(
+                    tweet_id=rumor[0], target=rumor[1], tweet=rumor[2],
                     stance=rumor[3], date=datetime.strptime(rumor[4], '%Y-%m-%d %H:%M:%S')
                     )
-                rumorAssocTable.cluster = clusterTable
-                tableEvent.clusters.append(rumorAssocTable)
-        db_session.add(tableEvent)
-        db_session.commit()
+                tableSvo.rumors.append(tableRumor)
+            db_session.add(tableSvo)
+            db_session.commit()
 
     print("add admin...")
     hashed_password = generate_password_hash('1234', method='sha256')
@@ -52,7 +63,7 @@ def initialize_data(*args, **kwargs):
 
 
 def getRumors(folderPath):
-    """Get the details for event type."""
+    """Get the details for each cluster."""
     details = []
     with (folderPath / "corpus.csv").open() as fp:
         reader = csv.reader(fp, delimiter='\t')
@@ -61,3 +72,17 @@ def getRumors(folderPath):
             details.append(r)
     return details
 # event.listen(MyMixin, 'after_create', initialize_data)
+
+
+def getSvoQuery(folderPath):
+    """Get the svo and query for each cluster."""
+    with (folderPath / "subject2svoqueries.json").open() as fp:
+        svo_query = json.load(fp)
+    return svo_query
+
+
+def getSnippets(folderPath, cluster_name):
+    """Get snippets for each cluster."""
+    with (folderPath / "snippets.json").open() as fp:
+        snippets = json.load(fp)
+    return snippets

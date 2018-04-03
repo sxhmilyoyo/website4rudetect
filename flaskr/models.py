@@ -13,6 +13,9 @@ from flaskr.database import Base
 from flaskr.database import db_session
 from sqlalchemy.ext.declarative import declared_attr
 from flask_login import UserMixin
+from sqlalchemy_utils import JSONType
+from sqlalchemy_utils import force_auto_coercion
+from sqlalchemy_json import NestedMutable
 
 
 # class MyMixin(object):
@@ -31,24 +34,25 @@ class Rumor(Base):
     """Rumor association table."""
 
     __tablename__ = 'rumor'
-    id = Column(String(100), primary_key=True, unique=True)
-    cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
-    event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
-    tweet_id = Column(String(50))
+    id = Column(Integer, primary_key=True)
+    # cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
+    # event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
+    tweet_id = Column(String(50), unique=True)
     target = Column(String(50))
     tweet = Column(Text)
     date = Column(DateTime, nullable=False, default=datetime.utcnow)
     stance = Column(String(20))
 
     users = relationship('Opinion', backref=backref('rumor'), lazy=True)
-
     # __table__args__ = (UniqueConstraint('id', 'cluster_name', 'event_name', name='_id_cluster_event_ck'))
     # rumor = relationship('Rumor', back_populates='events')
     # cluster = relationship('Cluster', )
     # event = relationship('Event', back_populates='rumors')
+    svo_id = Column(String(100), ForeignKey('svo.id'))
+    svo = relationship("Svo", backref="rumors")
 
     def __repr__(self):
-        return '<Record: cluster_name %r, event_name %r, rumor_id %r>' % (self.cluster_name, self.event_name, self.id)
+        return '<Record: cluster_name %r, event_name %r, rumor_id %r>' % (self.svo.cluster_name, self.svo.event_name, self.id)
 
 
 class Cluster(Base):
@@ -59,7 +63,7 @@ class Cluster(Base):
     name = Column(String(5), unique=True)
     # event_id = Column(Integer, ForeignKey('events.id'),
     #                   nullable=False)
-    events = relationship('Rumor', backref=backref('cluster', lazy=True))
+    # events = relationship('Rumor', backref=backref('cluster', lazy=True))
     # __table__args__ = (UniqueConstraint('id', 'name', name='_id_name_ck'))
     # def __init__(self, tweet_id=None, target=None, tweet=None, stance=None):
     #     """Construct the model."""
@@ -67,6 +71,7 @@ class Cluster(Base):
     #     self.target = target
     #     self.tweet = tweet
     #     self.stance = stance
+    events = relationship('Svo', backref=backref('cluster', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -79,7 +84,8 @@ class Event(Base):
     __tablename__ = 'event'
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
-    clusters = relationship('Rumor', backref=backref('event', lazy=True))
+    # clusters = relationship('Rumor', backref=backref('event', lazy=True))
+    clusters = relationship('Svo', backref=backref('event', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -107,11 +113,25 @@ class Opinion(Base):
 
     __tablename__ = 'opinion'
     user_name = Column(String(50), ForeignKey('user.username'), primary_key=True)
-    rumor_name = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
+    rumor_id = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
     stance = Column(String(10), primary_key=True)
 
-    __table__args__ = (UniqueConstraint('user_name', 'rumor_name', 'stance', name='_user_rumor_stance_ck'))
+    __table__args__ = (UniqueConstraint('user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
 
     def __repr__(self):
         """Show entries in this format."""
-        return '<Opinion %r, User %r, Rumor %r>' % (self.stance, self.user_name, self.rumor_name)
+        return '<Opinion %r, User %r, Rumor %r>' % (self.stance, self.user_name, self.rumor_id)
+
+
+class Svo(Base):
+    """Association table between cluster and event with svo as extra info."""
+
+    __tablename__ = 'svo'
+    id = Column(String(100), primary_key=True)
+    cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
+    event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
+    svo_dict = Column(NestedMutable.as_mutable(JSONType))
+    snippets = Column(NestedMutable.as_mutable(JSONType))
+
+    def __repr__(self):
+        return '<Record: id %r, cluster_name %r, event_name %r, svo_dict %r>' % (self.id, self.cluster_name, self.event_name, self.svo_dict)
