@@ -4956,7 +4956,7 @@ tbody.collapse.show {
   border-radius: 0.25rem;
 }
 
-.alert-inline {
+.al {
   height: 64px;
   display: inline-block;
   position: relative;
@@ -4966,7 +4966,7 @@ tbody.collapse.show {
   border-radius: 0.25rem;
 }
 
-.alert-inline-label {
+.al-label {
   height: 40px;
   display: inline-block;
   position: relative;

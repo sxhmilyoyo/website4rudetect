@@ -15,24 +15,28 @@ $(window).scroll(function() {
         //   var tag = '#listCon
         // }
         // console.log(e.data.flag);
-        var pro = data.pro;
-        var con = data.con;
+        var support = data.support;
+        var oppose = data.oppose;
         var idx = data.idx;
-        for (var i = 0; i < pro.length; i++) {
+        for (var i = 0; i < support.length; i++) {
           var dom =
             `
-            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${pro[i][1]}" aria-expanded="false" aria-controls="${pro[i][1]}">
+            <a class="list-link-item border-bottom border-gray" style="display: none;" data-toggle="collapse" data-target="#${support[i][1]}" aria-expanded="false" aria-controls="${support[i][1]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">${i+idx+1}</div>
-                <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">${pro[i][0]}</strong>
-                  ${pro[i][2]}
+                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                  <p class="mt-1">
+                    ${i+idx+1}
+                  </p>
+                </div>
+                <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                  <strong class="d-block text-gray-dark">${support[i][0]}</strong>
+                  ${support[i][2]}
                 </p>
               </div>
             </a>
-            <div id="${pro[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="${support[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="row">
                 <div class="col-7 alert_add">
                   <div class="inserted alert-inline alert-success" role="alert" style="display: none">
@@ -49,15 +53,15 @@ $(window).scroll(function() {
                   <div class="wrapper float-right">
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                    <a href="https://twitter.com/anyuser/status/${pro[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    <a href="https://twitter.com/anyuser/status/${support[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                   </div>
                 </div>
               </div>
             </div>
 
             `;
-          $("#listPro").append(dom);
-          $("#listPro > .list-link-item:hidden").each(function(i, obj) {
+          $("#listSupport").append(dom);
+          $("#listSupport > .list-link-item:hidden").each(function(i, obj) {
             console.log("pro", i);
             var row = $(this);
             setTimeout(function() {
@@ -67,21 +71,25 @@ $(window).scroll(function() {
           // $('.list-link-item').show(1000);
           // setTimeout(function() { $("#listPro").append(dom); }, 300);
         }
-        for (var i = 0; i < con.length; i++) {
+        for (var i = 0; i < oppose.length; i++) {
           var dom =
             `
-            <a class="list-link-item" style="display: none;" data-toggle="collapse" data-target="#${con[i][1]}" aria-expanded="false" aria-controls="${con[i][1]}">
+            <a class="list-link-item border-bottom border-gray" style="display: none;" data-toggle="collapse" data-target="#${oppose[i][1]}" aria-expanded="false" aria-opposetrols="${oppose[i][1]}">
               <div class="media text-muted pt-3">
                 <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">${i+idx+1}</div>
-                <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-                  <strong class="d-block text-gray-dark">${con[i][0]}</strong>
-                  ${con[i][2]}
+                <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+                  <p class="mt-1">
+                    ${i+idx+1}
+                  </p>
+                </div>
+                <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                  <strong class="d-block text-gray-dark">${oppose[i][0]}</strong>
+                  ${oppose[i][2]}
                 </p>
               </div>
             </a>
-            <div id="${con[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="${oppose[i][1]}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
               <div class="row">
                 <div class="col-7 alert_add">
                   <div class="inserted alert-inline alert-success" role="alert" style="display: none">
@@ -98,15 +106,15 @@ $(window).scroll(function() {
                   <div class="wrapper float-right">
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                     <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                    <a href="https://twitter.com/anyuser/status/${con[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    <a href="https://twitter.com/anyuser/status/${oppose[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                   </div>
                 </div>
               </div>
             </div>
 
             `;
-          $("#listCon").append(dom);
-          $("#listCon > .list-link-item:hidden").each(function(i, obj) {
+          $("#listOppose").append(dom);
+          $("#listOppose > .list-link-item:hidden").each(function(i, obj) {
             console.log("con", i);
             var row = $(this);
             setTimeout(function() {

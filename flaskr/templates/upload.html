@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="upload-body">
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Upload</h1>
+    <p class="lead">
+      The file extention is .txt and the format is one tweet for each line.
+    </p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <!-- <strong>Title</strong> --> {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
+    <div class="file-upload">
+      <div class="file-select">
+        <div class="file-select-button" id="fileName">Choose File</div>
+        <div class="file-select-name" id="noFile">No file chosen...</div>
+        <input type="file" name="doc" id="chooseFile">
+      </div>
+    </div>
+    <div class="row">
+      <span class="col-md-4"></span>
+      <input class="col-md-4 my-3 button button-3d button-primary button-rounded" type="submit" value="Upload">
+    </div>
+  </form>
+
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Process</h1>
+    <p class="lead">
+      Processing data with our system.
+    </p>
+  </div>
+  <button id="start" class="leftm mb-3 button button-3d button-caution button-circle button-jumbo mr-2"><i class="fa fa-play"></i></i></button>
+
+</div>
+
+<!-- <div class="row"> -->
+  <!-- <div class="col-md-4 offset-md-4"> -->
+    <!-- <div class="card bg-light md-5 md-4 mx-auto text-center box-shadow" style="max-width: 18rem;">
+      <div class="card-header">
+        icon
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        </div>
+        <input class="button button-3d button-primary button-rounded" type="submit" value="Upload">
+      </div>
+    </div> -->
+  <!-- </div> -->
+<!-- </div> -->
+
+
+
+{% endblock %}

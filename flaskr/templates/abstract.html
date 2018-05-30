@@ -6,9 +6,9 @@
 <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-darkblue rounded box-shadow">
   <img class="mr-3" src="https://getbootstrap.com/assets/brand/bootstrap-outline.svg" alt="" width="48" height="48">
   <div class="lh-100">
-    <h6 class="mb-0 text-white lh-100 mb-1">#{{ event }}</h6>
+    <h6 class="mb-0 text-white lh-100 mb-1">{{ head }}</h6>
     <small>
-      {% for topic in topics.split(";")%}
+      {% for topic in topics %}
         <!-- <span class="btn btn-primary btn-sm disabled" aria-disabled="true"> {{ topic }} </span> -->
         <span class="my-auto badge badge-default badge-outlined"> {{ topic }} </span>
       {% endfor%}
@@ -16,9 +16,9 @@
   </div>
   <nav>
     <div class="nav ml-3" id="nav-tab" role="tablist">
-      <a class="nav-link nav-small active font-weight-light my-auto" id="nav-abstract-tab" data-toggle="tab" href="#nav-abstract" role="tab" aria-controls="nav-abstract" aria-selected="true">ABSTRACT</a>
+      <a class="nav-link nav-small active font-weight-light my-auto" id="nav-abstract-tab" data-toggle="tab" href="#nav-abstract" role="tab" aria-controls="nav-abstract" aria-selected="true">TWITTER</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-statement-tab" data-toggle="tab" href="#nav-statement" role="tab" aria-controls="nav-statement" aria-selected="false">GOOGLE</a>
       <a class="nav-link nav-small font-weight-light my-auto" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab" aria-controls="nav-chart" aria-selected="false">CHART</a>
-      <a class="nav-link nav-small font-weight-light my-auto" id="nav-statement-tab" data-toggle="tab" href="#nav-statement" role="tab" aria-controls="nav-statement" aria-selected="false">STATEMENT</a>
       <a class="nav-link nav-small font-weight-light my-auto" id="nav-timeline-tab" data-toggle="tab" href="#nav-timeline" role="tab" aria-controls="nav-timeline" aria-selected="false">TIMELINE</a>
     </div>
   </nav>
@@ -29,25 +29,36 @@
   <div class="tab-pane fade show active" id="nav-abstract" role="tabpanel" aria-labelledby="nav-abstract-tab">
     <div class="jumbotron">
       <div class="container">
-        <h1 class="display-4">TWEETS</h1>
-        <p class="lead">This page shows topics-relevant tweets. Left side presents tweets that are favored the topics and right side presents tweets that are against the topics. You can give us feedback and see the original content by clicking relevant buttons below the tweet.</p>
+        <h1 class="display-4">TWITTER</h1>
+        <p class="lead">This page shows statement-relevant tweets from Twitter. Left side presents tweets that support the statement and right side presents tweets that oppose the statement. You can give us feedback and see the original content by clicking relevant buttons below the tweet.</p>
       </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header abstract-statement-bg">
+          <h4 class="text-white mt-2">
+            {{ statement }}
+          </h4>
+        </div>
     </div>
     <div class="row">
       <div class="col-md-6">
         <!-- Content Pro -->
         <div class="my-3 p-3 bg-white rounded box-shadow">
-          <h6 class="border-bottom border-gray pb-2 mb-0">Favored Tweets</h6>
+          <h6 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h6>
           <!-- {{ pro | length }} -->
-          <span id=listProOrigin class="{{chart_p}}">
-            {% for item in pro %}
+          <span id=listSupportOriginTweets class="{{chart_support_tweets}}">
+            {% for item in support_tweets %}
             <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[1] }}"> -->
-              <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false" aria-controls="{{ item[1] }}">
+              <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false" aria-controls="{{ item[1] }}">
                 <div class="media text-muted pt-3">
                   <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
-                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">{{ loop.index }}</div>
+                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                    <p class="mt-1">
+                      {{ loop.index }}
+                    </p>
+                  </div>
                   <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-                  <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+                  <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
                     <strong class="d-block text-gray-dark">{{ item[0] }}</strong>
                     {{ item[2] }}
                   </p>
@@ -68,18 +79,8 @@
                   </div>
                   <div class="col-5">
                     <div class="wrapper float-right">
-                      <!-- <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-secondary">Favor</button>
-                        <button type="button" class="btn btn-secondary">Against</button>
-                        <button type="button" class="btn btn-secondary">Detail</button>
-                      </div> -->
-                      <!-- <div class="button-group">
-                        <button type="button" class="button button-square button-primary button-large">1</button>
-                        <button type="button" class="button button-square button-primary button-large">2</button>
-                        <button type="button" class="button button-square button-primary button-large">3</button>
-                      </div> -->
-                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE"><i class="fa fa-check"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE"><i class="fa fa-times"></i></button>
                       <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                     </div>
                   </div>
@@ -87,28 +88,32 @@
               </div>
             {% endfor %}
           </span>
-          <span id=listPro>
+          <span id=listSupportTweets>
           </span>
           <!-- <div class="text-center mt-4">
               <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
             </div> -->
           <small class="d-block text-right mt-3">
-              <a href="{{ url_for('show_tweets', event=event, cluster=cluster, topics=topics, attitude='pro') }}">All Favored Tweets</a>
+              <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='support') }}">All Supported Tweets</a>
             </small>
         </div>
       </div>
       <div class="col-md-6">
         <!-- Content Con -->
         <div class="my-3 p-3 bg-white rounded box-shadow">
-          <h6 class="border-bottom border-gray pb-2 mb-0">Against Tweets</h6>
-          <span id=listConOrigin class="{{chart_c}}">
-            {% for item in con %}
-              <a class="list-link-item" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false" aria-controls="{{ item[1] }}">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Opposed Tweets</h6>
+          <span id=listOpposeOriginTweets class="{{chart_oppose_tweets}}">
+            {% for item in oppose_tweets %}
+              <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false" aria-controls="{{ item[1] }}">
                 <div class="media text-muted pt-3">
                   <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
                   <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">{{ loop.index }}</div>
-                  <p class="text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
+                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+                    <p class="mt-1">
+                      {{ loop.index }}
+                    </p>
+                  </div>
+                  <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
                     <strong class="d-block text-gray-dark">{{ item[0] }}</strong>
                     {{ item[2] }}
                   </p>
@@ -129,8 +134,8 @@
                   </div>
                   <div class="col-5">
                     <div class="wrapper float-right">
-                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
-                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE"><i class="fa fa-check"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE"><i class="fa fa-times"></i></button>
                       <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                     </div>
                   </div>
@@ -138,7 +143,7 @@
               </div>
             {% endfor %}
           </span>
-          <span id=listCon>
+          <span id=listOpposeTweets>
           </span>
           <!-- <div class="text-center mt-4">
             <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
@@ -147,7 +152,7 @@
             <button type="submit" class="btn btn-primary">Primary</button>
           </form> -->
           <small class="d-block text-right mt-3">
-              <a href="{{ url_for('show_tweets', event=event, cluster=cluster, topics=topics, attitude='con') }}">All Against Tweets</a>
+              <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='oppose') }}">All Opposed Tweets</a>
             </small>
         </div>
       </div>
@@ -162,54 +167,161 @@
     <div class="jumbotron">
       <div class="container">
         <h1 class="display-4">CHART</h1>
-        <p class="lead">This page shows pie chart. It represents the percentage of tweets that are favored and against to topics.</p>
+        <p class="lead">This page shows two pie charts: the left one represents the percentage of tweets that support and oppose the statement; the right one represents the percentage of google snippets that support and oppose the statement.</p>
       </div>
     </div>
-    <canvas id="myChart" width="1070px" height="500px"></canvas>
+    <div class="card my-3">
+        <div class="card-header abstract-statement-bg">
+          <h4 class="text-white mt-2">
+            {{ statement }}
+          </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+          <canvas id="myChartTweet" width="545px" height="500px"></canvas>
+        </div>
+        <div class="col-6">
+          <canvas id="myChartSnippet" width="545px" height="500px"></canvas>
+        </div>
+    </div>
   </div>
   <div class="tab-pane fade" id="nav-statement" role="tabpanel" aria-labelledby="nav-statement-tab">
     <div class="jumbotron">
       <div class="container">
-        <h1 class="display-4">STATEMENTS</h1>
-        <p class="lead">This page shows 5 important statements, which are contained in raw tweets, for each topic. Below each statement there are some relevant informaion about it, and details can be explored by clicking them.</p>
+        <h1 class="display-4">GOOGLE</h1>
+        <p class="lead">This page shows statement-relevant google snippets from Google Search. Left side presents google snippets that support the statement and right side presents google snippets that oppose the statement. You can give us feedback and see the original content by clicking relevant buttons below the tweet.</p>
       </div>
     </div>
-    <div id="accordion">
-      {% for topic in topics.split(";") %}
-        <div class="card mt-4">
-          <div class="card-header bg-dark">
-            <h4 class="text-white mt-2">
-              Subject: {{ topic }}
-            </h4>
-          </div>
-          <ul class="list-group list-group-flush">
-            {% for sent in svo_dict[topic] %}
-            <!-- <a class="" data-toggle="collapse" data-target="#{{topic}}{{loop.index}}" aria-expanded="true" aria-controls="collapseOne"> -->
-
-              <li class="list-group-item">
-                <a class="" data-toggle="collapse" data-target="#{{topic}}{{loop.index}}" aria-expanded="true" aria-controls="collapseOne">
-                  {{ sent['svo'] }}
-                </a>
-
-                <div id="{{topic}}{{loop.index}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                  {% set idx = loop.index0|string %}
-                  {% for i in range(snippets[topic][idx]|length) %}
-                    <div class="card-body text-muted">
-                      <a href={{ snippets[topic][idx][i]["url"] }}>
-                        {{ snippets[topic][idx][i]["snippets"].encode('utf-8').decode('utf-8') }}
-                      </a>
-                    </div>
-                  {% endfor %}
-                </div>
-              </li>
-            </a>
-
-            {% endfor %}
-          </ul>
+    <div class="card my-3">
+        <div class="card-header abstract-statement-bg">
+          <h4 class="text-white mt-2">
+            {{ statement }}
+          </h4>
         </div>
-      {% endfor %}
-
-
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+          <!-- Content Pro -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Supported Google Snippets</h6>
+          <!-- {{ pro | length }} -->
+          <span id=listSupportOriginSnippet class="{{chart_support_snippets}}">
+            {% for item in support_snippets %}
+            <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[1] }}"> -->
+              <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
+                <div class="media text-muted pt-3">
+                  <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                    <p class="mt-1">
+                      {{ loop.index }}
+                    </p>
+                  </div>
+                  <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                  <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                    <!-- <strong class="d-block text-gray-dark">{{ item[0] }}</strong> -->
+                    {{ item[1] }}
+                  </p>
+                </div>
+              </a>
+              <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="row">
+                  <div class="col-7 alert_add">
+                    <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                      submitted successfully!
+                    </div>
+                    <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                      updated successfully!
+                    </div>
+                    <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                      duplicate action!
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="wrapper float-right">
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE"><i class="fa fa-check"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE"><i class="fa fa-times"></i></button>
+                      <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </span>
+          <span id=listSupportSnippet>
+          </span>
+          <!-- <div class="text-center mt-4">
+              <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
+            </div> -->
+          <small class="d-block text-right mt-3">
+              <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='support') }}">All Supported Google Snippets</a>
+            </small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- Content Con -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h6 class="border-bottom border-gray pb-2 mb-0">Opposed Google Snippets</h6>
+          <span id=listOpposeOriginSnippet class="{{chart_oppose_snippets}}">
+            {% for item in oppose_snippets %}
+              <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false" aria-controls="{{ item[0] }}">
+                <div class="media text-muted pt-3">
+                  <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                  <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                  <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+                    <p class="mt-1">
+                      {{ loop.index }}
+                    </p>
+                  </div>
+                  <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                    <!-- <strong class="d-block text-gray-dark">{{ item[0] }}</strong> -->
+                    {{ item[1] }}
+                  </p>
+                </div>
+              </a>
+              <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="row">
+                  <div class="col-7 alert_add">
+                    <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                      submitted successfully!
+                    </div>
+                    <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                      updated successfully!
+                    </div>
+                    <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                      duplicate action!
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="wrapper float-right">
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE"><i class="fa fa-check"></i></button>
+                      <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE"><i class="fa fa-times"></i></button>
+                      <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </span>
+          <span id=listOpposeSnippet>
+          </span>
+          <!-- <div class="text-center mt-4">
+            <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
+          </div> -->
+          <!-- <form action="{{ url_for('load_more') }}" method=get>
+            <button type="submit" class="btn btn-primary">Primary</button>
+          </form> -->
+          <small class="d-block text-right mt-3">
+              <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='oppose') }}">All Opposed Google Snippets</a>
+            </small>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="text-center my-4">
+          <button id=loadmore class="btn btn-outline-secondary">Loadmore</button>
+        </div>
+      </div>
+      
     </div>
   </div>
   <div class="tab-pane fade" id="nav-timeline" role="tabpanel" aria-labelledby="nav-timeline-tab">
@@ -218,6 +330,13 @@
         <h1 class="display-4">TIMELINE</h1>
         <p class="lead">This page shows the whole tweets about topics chronologically. You can judge the data about the topics.</p>
       </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-header abstract-statement-bg">
+          <h4 class="text-white mt-2">
+            {{ statement }}
+          </h4>
+        </div>
     </div>
     <div id="timeline">
         {% for i in range(tweets|length) %}
@@ -246,18 +365,18 @@
               </a>
               <div class="row">
                 <div class="col-8">
-                  <button class="tsbtn na mt-2 mr-2" stance="FAVOR"> FAVOR </button>
-                  <button class="tsbtn mt-2 mr-2" stance="AGAINST">AGAINST</button>
-                  <button class="tsbtn mt-2 mr-2" stance="NONE"> NONE </button>
+                  <button class="tsbtn na mt-2 mr-2" flag="timeline" stance="SUPPORT"> SUPPORT </button>
+                  <button class="tsbtn mt-2 mr-2" flag="timeline" stance="OPPOSE"> OPPOSE </button>
+                  <button class="tsbtn mt-2 mr-2" flag="timeline" stance="NONE"> NONE </button>
                 </div>
                 <div class="col-4 alert_add">
-                  <div class="inserted alert-inline-label alert-success" role="alert" style="display: none">
+                  <div class="inserted alert-inline-timeline alert-success" role="alert" style="display: none">
                     submitted!
                   </div>
-                  <div class="updated alert-inline-label alert-warning" role="alert" style="display: none">
+                  <div class="updated alert-inline-timeline alert-warning" role="alert" style="display: none">
                     updated!
                   </div>
-                  <div class="existed alert-inline-label alert-danger" role="alert" style="display: none">
+                  <div class="existed alert-inline-timeline alert-danger" role="alert" style="display: none">
                     duplicated!
                   </div>
                 </div>

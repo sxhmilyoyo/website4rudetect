@@ -55,16 +55,26 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
 
 .nav-big {
     color: #9995A3;
-    font-size: 3.0em;
+    font-size: 2.0em;
     margin: .75em 0;
     text-decoration: none;
 }
 
 .nav-small {
     color: #9995A3;
-    font-size: 1.0em;
+    font-size: 1.5em;
     margin: .75em 0;
     text-decoration: none;
+}
+
+.home-statement-bg {
+  background: #E8ECEF;
+  border-radius: 8px;
+}
+
+.abstract-statement-bg {
+  background: rgb(19, 80, 130);
+  border-radius: 8px;
 }
 
 .tsp {
@@ -75,11 +85,14 @@ header:after, #timeline .timeline-item:after, header:before, #timeline .timeline
   font-size: 2.0em;
 }
 
+.leftm {
+  margin-left: 165px;
+}
+
 .color-box {
     width: 32px;
     height: 32px;
     display: inline-block;
-    padding: 4px
 }
 
 .container {
@@ -254,6 +267,26 @@ header .social .btn {
   -moz-box-shadow: 2px 2px 0 transparent;
   -ms-box-shadow: 2px 2px 0 transparent;
   box-shadow: 2px 2px 0 transparent;
+}
+
+.alert-inline {
+  position: relative;
+  margin-bottom: 0rem;
+  height: 64px;
+  line-height: 64px;
+  padding: 0.05rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.alert-inline-timeline {
+  position: relative;
+  margin-bottom: 0rem;
+  height: 40px;
+  line-height: 40px;
+  padding: 0.02rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
 }
 
 @media screen and (max-width: 768px) {

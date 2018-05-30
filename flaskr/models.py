@@ -48,11 +48,17 @@ class Rumor(Base):
     # rumor = relationship('Rumor', back_populates='events')
     # cluster = relationship('Cluster', )
     # event = relationship('Event', back_populates='rumors')
-    svo_id = Column(String(100), ForeignKey('svo.id'))
-    svo = relationship("Svo", backref="rumors")
+
+    # Rumor to Event_Cluster: Many to One
+    event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
+    event_cluster = relationship("Event_Cluster", backref="rumors")
+
+    # Rumor to Statement: Many to One
+    statement_id = Column(String(100), ForeignKey('statement.id'))
+    statement = relationship("Statement", backref="rumors")
 
     def __repr__(self):
-        return '<Record: cluster_name %r, event_name %r, rumor_id %r>' % (self.svo.cluster_name, self.svo.event_name, self.id)
+        return '<Rumor: cluster_name %r, event_name %r, rumor_id %r>' % (self.event_cluster.cluster_name, self.event_cluster.event_name, self.id)
 
 
 class Cluster(Base):
@@ -71,7 +77,7 @@ class Cluster(Base):
     #     self.target = target
     #     self.tweet = tweet
     #     self.stance = stance
-    events = relationship('Svo', backref=backref('cluster', lazy=True))
+    events = relationship('Event_Cluster', backref=backref('cluster', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -85,7 +91,7 @@ class Event(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     # clusters = relationship('Rumor', backref=backref('event', lazy=True))
-    clusters = relationship('Svo', backref=backref('event', lazy=True))
+    clusters = relationship('Event_Cluster', backref=backref('event', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -100,6 +106,8 @@ class User(UserMixin, Base):
     username = Column(String(50), unique=True)
     email = Column(String(50), unique=True)
     password = Column(String(80))
+    file_name = Column(String(50), default=None, nullable=True)
+    file_url = Column(String(), default=None, nullable=True)
 
     rumors = relationship('Opinion', backref=backref('user'), lazy=True)
 
@@ -114,6 +122,7 @@ class Opinion(Base):
     __tablename__ = 'opinion'
     user_name = Column(String(50), ForeignKey('user.username'), primary_key=True)
     rumor_id = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
+    flag = Column(String(10), primary_key=True)
     stance = Column(String(10), primary_key=True)
 
     __table__args__ = (UniqueConstraint('user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
@@ -123,15 +132,48 @@ class Opinion(Base):
         return '<Opinion %r, User %r, Rumor %r>' % (self.stance, self.user_name, self.rumor_id)
 
 
-class Svo(Base):
-    """Association table between cluster and event with svo as extra info."""
+class Event_Cluster(Base):
+    """Association table between cluster and event"""
 
-    __tablename__ = 'svo'
+    __tablename__ = 'event_cluster'
     id = Column(String(100), primary_key=True)
     cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
     event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
-    svo_dict = Column(NestedMutable.as_mutable(JSONType))
-    snippets = Column(NestedMutable.as_mutable(JSONType))
+    # svo_dict = Column(NestedMutable.as_mutable(JSONType))
+    # snippets = Column(NestedMutable.as_mutable(JSONType))
 
     def __repr__(self):
-        return '<Record: id %r, cluster_name %r, event_name %r, svo_dict %r>' % (self.id, self.cluster_name, self.event_name, self.svo_dict)
+        return '<Event_Cluster: id %r, cluster_name %r, event_name %r>' % (self.id, self.cluster_name, self.event_name)
+
+class Statement(Base):
+    """Statement Model."""
+
+    __tablename__ = 'statement'
+    id = Column(String(200), primary_key=True)
+    content = Column(Text, unique=True)
+    target = Column(String(50))
+    stance = Column(String(20))
+    # snippets = Column(NestedMutable.as_mutable(JSONType))
+
+    # Statement to Event_Cluster: Many to One
+    event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
+    event_cluster = relationship("Event_Cluster", backref="statements")
+
+    def __repr__(self):
+        return '<Statement: id %r, event_cluster_id %r, content %r>' % (self.id, self.event_cluster_id, self.content)
+
+class Snippet(Base):
+    """Snippet Model."""
+
+    __tablename__ = 'snippet'
+    id = Column(String(200), primary_key=True)
+    content = Column(Text)
+    target = Column(String(50))
+    stance = Column(String(20))
+
+    # Snippet to Statement: Many to One
+    statement_id = Column(String(200), ForeignKey('statement.id'))
+    statement = relationship("Statement", backref="snippets")
+
+    def __repr__(self):
+        return '<Snippet : id %r, statement_id %r, content %r>' % (self.id, self.statement_id, self.content)

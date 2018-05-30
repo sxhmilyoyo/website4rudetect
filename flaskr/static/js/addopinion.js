@@ -17,8 +17,9 @@ $(".opinion").on('click', function(e) {
   }
   var content_element = button_element.parent().parent().parent().parent();
   var stance = button_element.attr('stance');
+  var flag = button_element.attr('flag');  
   var tweet_id = content_element.attr('id');
-  var url = '/addopinion/'+tweet_id+'/'+stance;
+  var url = '/addopinion/'+tweet_id+'/'+flag+'/'+stance;
 
   // $.get(url, function(data, status){
   //   var alert = button_element.parent().parent().siblings('.alert_add').find('.'+data);
