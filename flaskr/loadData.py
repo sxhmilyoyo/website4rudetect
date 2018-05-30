@@ -52,8 +52,8 @@ def initialize_data(*args, **kwargs):
             statements = getStatements(cluster)
             # get rumors
             rumors = getRumors(cluster)
-            # get index_statement_2_index_rumor
-            index_statement_2_index_rumor = getIndex(cluster)
+            # get index_tweet_2_index_candidate_statement
+            index_tweet_2_index_candidate_statement = getIndex(cluster)
             for index, rumor in enumerate(rumors):
                 # idx = edited_event + "_" + str(i) + "_" + rumor[0]
                 # associate rumors with event_cluster
@@ -67,44 +67,47 @@ def initialize_data(*args, **kwargs):
                 # tableSvo.rumors.append(tableRumor)
                 tableEvent_Cluster.rumors.append(tableRumor)
                 # associate rumors with statement
-                for index_statement in index_statement_2_index_rumor:
-                    if index in index_statement_2_index_rumor[index_statement]:
+                # for index_statement in index_statement_2_index_rumor:
+                    # if index in index_statement_2_index_rumor[index_statement]:
                         # print("statement index {}; rumor index {}".format(index_statement, index))
-                        statement_id = event_cluster_id + "_" + index_statement
+                index_statement = index_tweet_2_index_candidate_statement[str(index)]
+                statement_id = event_cluster_id + "_" + str(index_statement)
                         # print("statement id {}".format(statement_id))
                         # print(db_session.query(exists().where(Statement.id == statement_id)).scalar())
-                        if db_session.query(exists().where(Statement.id == statement_id)).scalar():
-                            tableStatement = db_session.query(Statement).filter(Statement.id == statement_id).first()
-                            # print("duplicated")
-                        else:
-                            if len(statements[int(index_statement)]) == 5 and statements[int(index_statement)][1] and statements[int(index_statement)][-1] and statements[int(index_statement)][3]:
-                                topic = statements[int(index_statement)][1]
-                                statement = statements[int(index_statement)][-1]
-                                stance = statements[int(index_statement)][3]
-                                tableStatement = Statement(id=statement_id, content=statement, target=topic, stance=stance)
-                            else:
-                                # print("invalid statement.")
-                                continue
+                if db_session.query(exists().where(Statement.id == statement_id)).scalar():
+                    tableStatement = db_session.query(Statement).filter(Statement.id == statement_id).first()
+                    # print("duplicated")
+                else:
+                    if len(statements[index_statement]) == 5 and statements[index_statement][1] and statements[index_statement][-1] and statements[index_statement][3]:
+                        topic = statements[index_statement][1]
+                        statement = statements[index_statement][-1]
+                        stance = statements[index_statement][3]
+                        tableStatement = Statement(id=statement_id, content=statement, target=topic, stance=stance)
+                    else:
+                        # print("invalid statement.")
+                        continue
 
-                        snippets = getSnippets(cluster, index_statement)
-                        for snippet in snippets:
-                            snippet_id = statement_id + "_" + snippet[0]
-                            if db_session.query(exists().where(Snippet.id == snippet_id)).scalar():
-                                tableSnippet = db_session.query(Snippet).filter(Snippet.id == snippet_id).first()
-                            else:
-                                if len(snippet) == 7 and snippet[4] and snippet[1] and snippet[3]:
-                                    content = snippet[4]
-                                    target = snippet[1]
-                                    stance = snippet[3]
-                                    tableSnippet = Snippet(id=snippet_id, content=content, target=target, stance=stance)
-                                else:
-                                    # print("invalid snippet.")
-                                    continue
-                            tableStatement.snippets.append(tableSnippet)
-                            tableStatement.rumors.append(tableRumor)
-                            tableEvent_Cluster.statements.append(tableStatement)
-                            db_session.add(tableEvent_Cluster)
-                            db_session.commit()
+                snippets = getSnippets(cluster, str(index_statement))
+                for snippet in snippets:
+                    # print("snippet")
+                    snippet_id = statement_id + "_" + snippet[0]
+                    if db_session.query(exists().where(Snippet.id == snippet_id)).scalar():
+                        tableSnippet = db_session.query(Snippet).filter(Snippet.id == snippet_id).first()
+                    else:
+                        if len(snippet) == 7 and snippet[4] and snippet[1] and snippet[3]:
+                            content = snippet[4]
+                            target = snippet[1]
+                            stance = snippet[3]
+                            tableSnippet = Snippet(id=snippet_id, content=content, target=target, stance=stance)
+                        else:
+                            # print("invalid snippet.")
+                            continue
+                    tableStatement.snippets.append(tableSnippet)
+                    tableStatement.rumors.append(tableRumor)
+                    tableEvent_Cluster.statements.append(tableStatement)
+                    db_session.add(tableEvent_Cluster)
+                    # print("commit")
+                    db_session.commit()
 
     print("add admin...")
     hashed_password = generate_password_hash('1234', method='sha256')
@@ -145,7 +148,7 @@ def add_data(eventName):
         # get rumors
         rumors = getRumors(cluster)
         # get index_statement_2_index_rumor
-        index_statement_2_index_rumor = getIndex(cluster)
+        index_tweet_2_index_candidate_statement = getIndex(cluster)
         for index, rumor in enumerate(rumors):
             # idx = edited_event + "_" + str(i) + "_" + rumor[0]
             # associate rumors with event_cluster
@@ -157,46 +160,50 @@ def add_data(eventName):
                     stance=rumor[3], date=datetime.strptime(rumor[4], '%Y-%m-%d %H:%M:%S')
                     )
             tableEvent_Cluster.rumors.append(tableRumor)
+            
             # associate rumors with statement
-            for index_statement in index_statement_2_index_rumor:
-                if index in index_statement_2_index_rumor[index_statement]:
-                    statement_id = event_cluster_id + "_" + index_statement
-                    
-                    if db_session.query(exists().where(Statement.id == statement_id)).scalar():
-                        tableStatement = db_session.query(Statement).filter(Statement.id == statement_id).first()
+            # for index_statement in index_statement_2_index_rumor:
+                # if index in index_statement_2_index_rumor[index_statement]:
+            index_statement = index_tweet_2_index_candidate_statement[str(index)]
+            statement_id = event_cluster_id + "_" + str(index_statement)
+            
+            if db_session.query(exists().where(Statement.id == statement_id)).scalar():
+                tableStatement = db_session.query(Statement).filter(Statement.id == statement_id).first()
+            else:
+                if len(statements[index_statement]) == 5 and statements[index_statement][1] and statements[index_statement][-1] and statements[index_statement][3]:
+                    topic = statements[int(index_statement)][1]
+                    statement = statements[int(index_statement)][-1]
+                    stance = statements[int(index_statement)][3]
+                    tableStatement = Statement(id=statement_id, content=statement, target=topic, stance=stance)
+                else:
+                    # print("invalid statement.")
+                    continue
+            # print("before snippet")
+            snippets = getSnippets(cluster, str(index_statement))
+            # print(snippets)
+            for snippet in snippets:
+                # print("snippet")
+                snippet_id = statement_id + '_' + snippet[0]
+                if db_session.query(exists().where(Snippet.id == snippet_id)).scalar():
+                    # print("1")
+                    tableSnippet = db_session.query(Snippet).filter(Snippet.id == snippet_id).first()
+                else:
+                    if len(snippet) == 7 and snippet[4] and snippet[1] and snippet[3]:
+                        # print("2")
+                        content = snippet[4]
+                        target = snippet[1]
+                        stance = snippet[3]
+                        tableSnippet = Snippet(id=snippet_id, content=content, target=target, stance=stance)
                     else:
-                        if len(statements[int(index_statement)]) == 5 and statements[int(index_statement)][1] and statements[int(index_statement)][-1] and statements[int(index_statement)][3]:
-                            topic = statements[int(index_statement)][1]
-                            statement = statements[int(index_statement)][-1]
-                            stance = statements[int(index_statement)][3]
-                            tableStatement = Statement(id=statement_id, content=statement, target=topic, stance=stance)
-                        else:
-                            # print("invalid statement.")
-                            continue
-
-                    snippets = getSnippets(cluster, index_statement)
-                    for snippet in snippets:
-                        snippet_id = statement_id + '_' + snippet[0]
-                        if db_session.query(exists().where(Snippet.id == snippet_id)).scalar():
-                            # print("1")
-                            tableSnippet = db_session.query(Snippet).filter(Snippet.id == snippet_id).first()
-                        else:
-                            if len(snippet) == 7 and snippet[4] and snippet[1] and snippet[3]:
-                                # print("2")
-                                content = snippet[4]
-                                target = snippet[1]
-                                stance = snippet[3]
-                                tableSnippet = Snippet(id=snippet_id, content=content, target=target, stance=stance)
-                            else:
-                                # print("invalid snippet.")
-                                continue
-                        # print("snippet {}".format(tableSnippet))
-                        tableStatement.snippets.append(tableSnippet)
-                        tableStatement.rumors.append(tableRumor)
-                        tableEvent_Cluster.statements.append(tableStatement)
-                        db_session.add(tableEvent_Cluster)
-                        db_session.commit()
-                        # print("commit.")
+                        # print("invalid snippet.")
+                        continue
+                # print("snippet {}".format(tableSnippet))
+                tableStatement.snippets.append(tableSnippet)
+                tableStatement.rumors.append(tableRumor)
+                tableEvent_Cluster.statements.append(tableStatement)
+                db_session.add(tableEvent_Cluster)
+                db_session.commit()
+                # print("commit.")
 
 
 
@@ -243,6 +250,6 @@ def getSnippets(folderPath, index_statement):
 
 def getIndex(folderPath):
     """Get index_statement_2_index_rumor for each cluster."""
-    with (folderPath / "index_candiadate_statement_2_index_tweet.json").open() as fp:
+    with (folderPath / "index_tweet_2_index_candidate_statement.json").open() as fp:
         index = json.load(fp)
     return index
