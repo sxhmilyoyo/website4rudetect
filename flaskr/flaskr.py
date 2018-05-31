@@ -31,7 +31,6 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from flask import make_response
 from flask_uploads import UploadSet, TEXT, configure_uploads, UploadNotAllowed
 from flaskr.config import UPLOADED_DATA_DIR, PROCESS_DATA_DIR
-from flaskr.loadData import add_data
 import json
 import os
 from sqlalchemy import exists
@@ -39,6 +38,8 @@ from sqlalchemy import and_
 from sqlalchemy import desc
 import shutil
 from werkzeug.utils import secure_filename
+
+from flaskr.LoadData import LoadData
 
 import sys
 sys.path.append("..")
@@ -99,13 +100,31 @@ def reinitd_command():
     print("Re-Initialized the databse.")
 
 
-@app.cli.command('addevent')
-@click.option('--event')
-def addevent_command(event):
+@app.cli.command('initdata')
+@click.option('--rootpath', '-r')
+def addevent_command(rootpath):
     """Add event data to DB."""
+    loadData = LoadData(rootpath)
     try:
         db_session.remove()
-        add_data(event)
+        loadData.initialize_data()
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        db_session.rollback()
+        db_session.remove()
+    print("initialize data in DB.")
+
+
+@app.cli.command('adddata')
+@click.option('--rootpath', '-r')
+@click.option('--event', '-e')
+def addevent_command(rootpath, event):
+    """Add event data to DB."""
+    loadData = LoadData(rootpath)
+    try:
+        db_session.remove()
+        loadData.add_data(event)
     except Exception as e:
         print(e)
         traceback.print_exc()
@@ -113,6 +132,18 @@ def addevent_command(event):
         db_session.remove()
     print("Load event{} to DB.".format(event))
 
+@app.cli.command('addadmin')
+def addadmin_command():
+    """Add admin to DB."""
+    try:
+        db_session.remove()
+        LoadData.add_user('1234', 'admin', 'admin@admin.com')
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        db_session.rollback()
+        db_session.remove()
+    print("Add admin: {} to DB.".format('admin'))
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
