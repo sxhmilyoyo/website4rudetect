@@ -97,7 +97,7 @@ class LoadData(object):
     
     @classmethod
     def delete_data(cls, eventname):
-        """Delete event data from database"""
+        """Delete event data from database: Snippet, Rumor, Statement, Event_Cluster, Event"""
         event_clusters = db_session.query(Event_Cluster).filter(Event_Cluster.event_name == eventname).all()
         for event_cluster in event_clusters:
             statements = db_session.query(Statement).filter(Statement.event_cluster_id == event_cluster.id).all()
