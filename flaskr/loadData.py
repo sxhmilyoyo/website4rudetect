@@ -37,14 +37,6 @@ class LoadData(object):
         # add data
         for e in events:
             self.add_data(e.name)
-    
-    @classmethod
-    def add_user(cls, password, username, email):
-        """Add user to the database"""
-        hashed_password = generate_password_hash(password, method='sha256')
-        new_user = User(username=username, email=email, password=hashed_password)
-        db_session.add(new_user)
-        db_session.commit()
 
     def add_data(self, eventName):
         """Initialize the data in the database."""
@@ -94,3 +86,31 @@ class LoadData(object):
                     db_session.add(tableEvent_Cluster)
                     # print("commit")
                     db_session.commit()
+    
+    @classmethod    
+    def add_user(cls, password, username, email):
+        """Add user to the database"""
+        hashed_password = generate_password_hash(password, method='sha256')
+        new_user = User(username=username, email=email, password=hashed_password)
+        db_session.add(new_user)
+        db_session.commit()
+    
+    @classmethod
+    def delete_data(cls, eventname):
+        """Delete event data from database"""
+        event_clusters = db_session.query(Event_Cluster).filter(Event_Cluster.event_name == eventname).all()
+        for event_cluster in event_clusters:
+            statements = db_session.query(Statement).filter(Statement.event_cluster_id == event_cluster.id).all()
+            for statement in statements:
+                # delete snippets
+                db_session.query(Snippet).filter(Snippet.statement_id == statement.id).delete()
+            # delete rumors
+            db_session.query(Rumor).filter(Rumor.event_cluster_id == event_cluster.id).delete()
+            # delete statements
+            db_session.query(Statement).filter(Statement.event_cluster_id == event_cluster.id).delete()
+        # delete event_clusters
+        db_session.query(Event_Cluster).filter(Event_Cluster.event_name == eventname).delete()        
+        # delete events
+        db_session.query(Event).filter(Event.name == eventname).delete()
+
+        db_session.commit()

@@ -145,6 +145,20 @@ def addadmin_command():
         db_session.remove()
     print("Add admin: {} to DB.".format('admin'))
 
+@app.cli.command('deletedata')
+@click.option('--event', '-e')
+def addevent_command(event):
+    """Delete event data to DB."""
+    try:
+        db_session.remove()
+        LoadData.delete_data(event)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        db_session.rollback()
+        db_session.remove()
+    print("Delete event{} to DB.".format(event))
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     """Close the database again at the end of the request."""
