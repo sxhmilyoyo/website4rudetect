@@ -109,7 +109,7 @@ class CreateDatabaseTable(object):
             tableStatement = db_session.query(Statement).filter(Statement.id == statement_id).first()
             # print("duplicated")
         else:
-            if len(statements[index_statement]) == 5 and statements[index_statement][1] and statements[index_statement][-1] and statements[index_statement][3]:
+            if index_statement < len(statements) and len(statements[index_statement]) == 5 and statements[index_statement][1] and statements[index_statement][-1] and statements[index_statement][3]:
                 topic = statements[index_statement][1]
                 statement = statements[index_statement][-1]
                 stance = statements[index_statement][3]

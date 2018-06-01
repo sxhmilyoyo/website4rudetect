@@ -464,10 +464,15 @@ def getStatementsFromDB(event, cluster):
 def getSupportOpposeSnippetsFromDB(statement_id):
     """Get Snippets for event_cluster from database."""
     statement_stance = Statement.query.filter_by(id=statement_id).first().stance
+    support = []
+    oppose = []
     if statement_stance == 'FAVOR':
         support = getSnippetsFromDB(statement_id, 'FAVOR')
         oppose = getSnippetsFromDB(statement_id, 'AGAINST')
     elif statement_stance == 'AGAINST':
+        support = getSnippetsFromDB(statement_id, 'AGAINST')
+        oppose = getSnippetsFromDB(statement_id, 'FAVOR')
+    elif statement_stance == 'NONE':
         support = getSnippetsFromDB(statement_id, 'AGAINST')
         oppose = getSnippetsFromDB(statement_id, 'FAVOR')
     return support, oppose
@@ -482,12 +487,17 @@ def getSnippetsFromDB(statement_id, stance=None):
 
 def getSupportOpposeTweetsFromDB(statement_id):
     statement_stance = Statement.query.filter_by(id=statement_id).first().stance
+    support = []
+    oppose = []
     if statement_stance == 'FAVOR':
         support = getTweetsFromDB(statement_id, 'FAVOR', 'desc')
         oppose = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
     elif statement_stance == 'AGAINST':
         support = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
         oppose = getTweetsFromDB(statement_id, 'FAVOR', 'desc')
+    elif statement_stance == 'NONE':
+        support = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
+        oppose = getTweetsFromDB(statement_id, 'FAVOR', 'desc')        
     return support, oppose
 
 @app.route('/upload', methods=['GET', 'POST'])
