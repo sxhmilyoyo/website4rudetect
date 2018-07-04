@@ -16,6 +16,7 @@ from flask_login import UserMixin
 from sqlalchemy_utils import JSONType
 from sqlalchemy_utils import force_auto_coercion
 from sqlalchemy_json import NestedMutable
+from sqlalchemy_utils import ScalarListType
 
 
 # class MyMixin(object):
@@ -77,7 +78,8 @@ class Cluster(Base):
     #     self.target = target
     #     self.tweet = tweet
     #     self.stance = stance
-    events = relationship('Event_Cluster', backref=backref('cluster', lazy=True))
+    events = relationship(
+        'Event_Cluster', backref=backref('cluster', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -91,7 +93,8 @@ class Event(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     # clusters = relationship('Rumor', backref=backref('event', lazy=True))
-    clusters = relationship('Event_Cluster', backref=backref('event', lazy=True))
+    clusters = relationship(
+        'Event_Cluster', backref=backref('event', lazy=True))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -120,12 +123,14 @@ class Opinion(Base):
     """Opinion association model."""
 
     __tablename__ = 'opinion'
-    user_name = Column(String(50), ForeignKey('user.username'), primary_key=True)
+    user_name = Column(String(50), ForeignKey(
+        'user.username'), primary_key=True)
     rumor_id = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
     flag = Column(String(10), primary_key=True)
     stance = Column(String(10), primary_key=True)
 
-    __table__args__ = (UniqueConstraint('user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
+    __table__args__ = (UniqueConstraint(
+        'user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -137,13 +142,15 @@ class Event_Cluster(Base):
 
     __tablename__ = 'event_cluster'
     id = Column(String(100), primary_key=True)
-    cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
+    cluster_name = Column(String(5), ForeignKey(
+        'cluster.name'), primary_key=True)
     event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
     # svo_dict = Column(NestedMutable.as_mutable(JSONType))
     # snippets = Column(NestedMutable.as_mutable(JSONType))
 
     def __repr__(self):
         return '<Event_Cluster: id %r, cluster_name %r, event_name %r>' % (self.id, self.cluster_name, self.event_name)
+
 
 class Statement(Base):
     """Statement Model."""
@@ -162,15 +169,16 @@ class Statement(Base):
     def __repr__(self):
         return '<Statement: id %r, event_cluster_id %r, content %r>' % (self.id, self.event_cluster_id, self.content)
 
+
 class Snippet(Base):
     """Snippet Model."""
 
     __tablename__ = 'snippet'
     id = Column(String(200), primary_key=True)
-    content = Column(Text)
-    target = Column(String(50))
-    stance = Column(String(20))
-
+    content = Column(NestedMutable.as_mutable(JSONType))
+    title_stance = Column(String(20))
+    body_stance = Column(String(20))
+    summary = Column(NestedMutable.as_mutable(JSONType))
     # Snippet to Statement: Many to One
     statement_id = Column(String(200), ForeignKey('statement.id'))
     statement = relationship("Statement", backref="snippets")

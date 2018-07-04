@@ -2,22 +2,23 @@ import csv
 import json
 from pathlib import Path
 
+
 class Helper(object):
     """Helper class.
-    
+
     """
     @classmethod
-    def getRumors(cls, folderPath):
-        """Get the tweets details for each cluster.
-        
+    def getClusterClaims(cls, folderPath):
+        """Get the cluster claims details for each cluster.
+
         Arguments:
             folderPath {Path} -- the path of data folder
-        
+
         Returns:
             list -- the list contains rumor information
         """
         details = []
-        with (folderPath / "corpus_classification.csv").open() as fp:
+        with (folderPath / "corpus_cluster_claims_classification.csv").open() as fp:
             reader = csv.reader(fp, delimiter='\t')
             next(reader)
             for r in reader:
@@ -25,50 +26,44 @@ class Helper(object):
         return details
 
     @classmethod
-    def getStatements(cls, folderPath):
-        """Get the statements details for each cluster.
-        
+    def getRepresentativeClaim(cls, folderPath):
+        """Get the representative claim details for each cluster.
+
         Arguments:
             folderPath {Path} -- the path of data folder
-        
+
         Returns:
             list -- the list contains statement inforamtion
         """
-        statements = []
-        with (folderPath / "corpus_statements_classification.csv").open() as fp:
+        with (folderPath / "corpus_representative_claims_classification.csv").open() as fp:
             reader = csv.reader(fp, delimiter='\t')
             next(reader)
             for r in reader:
-                statements.append(r)
-        return statements
+                statement = r
+        return statement
 
     @classmethod
-    def getSnippets(cls, folderPath, index_statement):
+    def getNews(cls, cluster, folderPath):
         """Get snippets for each statement.
-        
+
         Arguments:
             folderPath {Path} -- the path of data folder
             index_statement {int} -- index of statement in csv file
-        
+
         Returns:
             list -- the list contains statement information
         """
-        snippets = []
-        with (folderPath / "corpus_snippets_classification.csv").open() as fp:
-            reader = csv.reader(fp, delimiter='\t')
-            next(reader)
-            for r in reader:
-                if r[6][0] == index_statement:
-                    snippets.append(r)
-        return snippets
+        with (cluster / "news" / (folderPath + "_news.json")).open() as fp:
+            news = json.load(fp)
+        return news
 
     @classmethod
     def getIndex(cls, folderPath):
         """Get index_statement_2_index_rumor for each cluster.
-        
+
         Arguments:
             folderPath {Path} -- the path of data folder
-        
+
         Returns:
             dict -- {index_tweet: index_statement}
         """
