@@ -1,12 +1,17 @@
-$(window).scroll(function() {
+$(window).scroll(function () {
   // console.log("1");
   // console.log("1:"+$(window).scrollTop());
   // console.log("2:"+$(document).height());
   // console.log("3:"+$(window).height());
   // console.log("3:" + $SCRIPT_ROOT + 'loadmore');
-  if ($(window).scrollTop()>0 && $(window).scrollTop() == $(document).height() - $(window).height()) {
+  var activate_tab = $("a[aria-selected]")
+    .filter(function (index) {
+      return $(this).hasClass('active');
+    });
+
+  if ($(window).scrollTop() > 0 && $(window).scrollTop() == $(document).height() - $(window).height() && activate_tab.text()=="TWITTER") {
     $.getJSON($SCRIPT_ROOT + '/loadmore',
-      function(data) {
+      function (data) {
         // if (e.data.flag == 'pro') {
         //   var tweets = data.pro;
         //   var tag = '#listPro';
@@ -14,7 +19,8 @@ $(window).scroll(function() {
         //   var tweets = data.con;
         //   var tag = '#listCon
         // }
-        // console.log(e.data.flag);
+        console.log(data);
+        console.log("data");
         var support = data.support;
         var oppose = data.oppose;
         var idx = data.idx;
@@ -27,7 +33,7 @@ $(window).scroll(function() {
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
                 <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
                   <p class="mt-1">
-                    ${i+idx+1}
+                    ${i + idx + 1}
                   </p>
                 </div>
                 <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
@@ -60,13 +66,13 @@ $(window).scroll(function() {
             </div>
 
             `;
-          $("#listSupport").append(dom);
-          $("#listSupport > .list-link-item:hidden").each(function(i, obj) {
+          $("#listSupportTweets").append(dom);
+          $("#listSupportTweets > .list-link-item:hidden").each(function (i, obj) {
             console.log("pro", i);
             var row = $(this);
-            setTimeout(function() {
+            setTimeout(function () {
               row.show(800);
-            }, 200*i);
+            }, 200 * i);
           });
           // $('.list-link-item').show(1000);
           // setTimeout(function() { $("#listPro").append(dom); }, 300);
@@ -80,7 +86,7 @@ $(window).scroll(function() {
                 <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
                 <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
                   <p class="mt-1">
-                    ${i+idx+1}
+                    ${i + idx + 1}
                   </p>
                 </div>
                 <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
@@ -113,13 +119,13 @@ $(window).scroll(function() {
             </div>
 
             `;
-          $("#listOppose").append(dom);
-          $("#listOppose > .list-link-item:hidden").each(function(i, obj) {
+          $("#listOpposeTweets").append(dom);
+          $("#listOpposeTweets > .list-link-item:hidden").each(function (i, obj) {
             console.log("con", i);
             var row = $(this);
-            setTimeout(function() {
+            setTimeout(function () {
               row.show(800);
-            }, 200*i);
+            }, 200 * i);
           });
         }
       });

@@ -357,14 +357,27 @@ def load_more():
     # con_res = session['con'][PER_PAGE:PER_PAGE+5]
     # session['per_page'] = per_page + 5
     idx = PER_PAGE
-    augument = PER_PAGE + 5
-    if augument > len(SUPPORT_TWEETS):
-        augument = len(SUPPORT_TWEETS)
-    support_res = SUPPORT_TWEETS[PER_PAGE:augument]
-    oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
-    support_res = SUPPORT_TWEETS[PER_PAGE:augument]
-    oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
-    PER_PAGE = augument
+
+    augment_support = PER_PAGE + 5
+    if augment_support > len(SUPPORT_TWEETS):
+        augment_support = len(SUPPORT_TWEETS)
+    print("PER_PAGE ", PER_PAGE)
+    print("augment_support ", augment_support)
+    support_res = SUPPORT_TWEETS[PER_PAGE:augment_support]
+
+    augment_oppose = PER_PAGE + 5
+    if augment_oppose > len(OPPOSE_TWEETS):
+        augment_oppose = len(OPPOSE_TWEETS)
+    print("PER_PAGE ", PER_PAGE)
+    print("augment_oppose ", augment_oppose)
+    oppose_res = OPPOSE_TWEETS[PER_PAGE:augment_oppose]
+
+    print("support_res", support_res)
+    print("oppose_res", oppose_res)
+
+    # support_res = SUPPORT_TWEETS[PER_PAGE:augument]
+    # oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
+    PER_PAGE = max(augment_support, augment_oppose)
     print("=" * 100)
     print(PER_PAGE)
     return jsonify(support=support_res, oppose=oppose_res, idx=idx)
