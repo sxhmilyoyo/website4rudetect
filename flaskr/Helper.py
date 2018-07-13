@@ -17,6 +17,8 @@ class Helper(object):
         Returns:
             list -- the list contains rumor information
         """
+        if not (folderPath / "corpus_cluster_claims_classification.csv").exists():
+            return None
         details = []
         with (folderPath / "corpus_cluster_claims_classification.csv").open() as fp:
             reader = csv.reader(fp, delimiter='\t')
@@ -35,6 +37,8 @@ class Helper(object):
         Returns:
             list -- the list contains statement inforamtion
         """
+        if not (folderPath / "corpus_representative_claims_classification.csv").exists():
+            return None
         with (folderPath / "corpus_representative_claims_classification.csv").open() as fp:
             reader = csv.reader(fp, delimiter='\t')
             next(reader)
@@ -53,6 +57,8 @@ class Helper(object):
         Returns:
             list -- the list contains statement information
         """
+        if not (cluster / "news" / (folderPath + "_news.json")).exists():
+            return None
         with (cluster / "news" / (folderPath + "_news.json")).open() as fp:
             news = json.load(fp)
         return news

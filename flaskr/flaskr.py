@@ -149,7 +149,7 @@ def addadmin_command():
 
 @app.cli.command('deletedata')
 @click.option('--event', '-e')
-def addevent_command(event):
+def deleteevent_command(event):
     """Delete event data to DB."""
     try:
         db_session.remove()
@@ -240,7 +240,8 @@ def show_rumors():
                 set([statement.target for statement in statementsDB]))
             print(event, cluster, statements)
             statements[cluster] = statements_cluster
-            topics[cluster] = topics_cluster
+            # topics[cluster] = topics_cluster
+            topics[cluster] = []
         res.append({'head': head, 'statements': statements, 'topics': topics})
     print(res)
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
@@ -497,6 +498,11 @@ def getSnippetsFromDB(statement_id, stance=None):
                                        for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
                          for snippet in Snippet.query.filter_by(statement_id=statement_id,
                                                                 title_stance='negative',
+                                                                body_stance='neutral').all()]
+            snippets += [(snippet.id, [snippet.content['content'][index]
+                                       for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
+                         for snippet in Snippet.query.filter_by(statement_id=statement_id,
+                                                                title_stance='neutral',
                                                                 body_stance='neutral').all()]
         elif stance == 'AGAINST':
             snippets = [(snippet.id, [snippet.content['content'][index]

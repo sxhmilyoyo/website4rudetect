@@ -36,8 +36,8 @@ class LoadData(object):
 
         # add data
         for e in events:
-            if e.name != "BandyLee_0110_0115":
-                continue
+            # if e.name != "BandyLee_0110_0115":
+            #     continue
             self.add_data(e.name)
 
     def add_data(self, eventName):
@@ -62,9 +62,18 @@ class LoadData(object):
                 event_cluster_id, tableEvent, clusterTable)
             # get statements
             statementClusters = [statementCluster for statementCluster in (
-                cluster / "tweets").iterdir() if statementCluster.is_dir()]
+                cluster / "classification").iterdir() if statementCluster.is_dir()]
             for statementCluster in statementClusters:
+                # load data
                 statement = Helper.getRepresentativeClaim(statementCluster)
+                rumors = Helper.getClusterClaims(statementCluster)
+                snippets = Helper.getNews(cluster, statementCluster.name)
+
+                # check all data
+                if not (statement and rumors and snippets):
+                    continue
+
+                print("successfully load cluster data ", statementCluster)
                 # print("statement ", statement)
                 statement_id = event_cluster_id + "_" + statementCluster.name
                 tableStatement = CreateDatabaseTable.create_statement(
@@ -76,7 +85,7 @@ class LoadData(object):
                 # tableEvent_Cluster.rumors.append(tableRumor)
 
                 # get rumors
-                rumors = Helper.getClusterClaims(statementCluster)
+
                 for indexRumor, rumor in enumerate(rumors):
                     rumor_id = statement_id + "_" + str(indexRumor)
                     tableRumor = CreateDatabaseTable.create_rumor(
@@ -86,7 +95,6 @@ class LoadData(object):
                     tableEvent_Cluster.rumors.append(tableRumor)
                     tableStatement.rumors.append(tableRumor)
 
-                snippets = Helper.getNews(cluster, statementCluster.name)
                 for indexSnippet, snippet in enumerate(snippets):
                     snippet_id = statement_id + "_" + str(indexSnippet)
                     tableSnippet = CreateDatabaseTable.create_snippet(

@@ -115,12 +115,12 @@ class CreateDatabaseTable(object):
                 Statement.id == statement_id).first()
             # print("duplicated")
         else:
-            print("statement ", statement)
+            # print("statement ", statement)
             if len(statement) == 4:
                 topic = statement[1]
                 content = statement[2]
                 stance = statement[3]
-                print("stance ", stance)
+                # print("stance ", stance)
                 tableStatement = Statement(
                     id=statement_id, content=content, target=topic, stance=stance)
             else:
@@ -155,6 +155,7 @@ class CreateDatabaseTable(object):
                 highLightIndices = []
                 sentences = snippet["summary"]["sentences"]
 
+                end = 0
                 preEnd = 0
                 for sentence in sentences:
                     # print("sentence ", sentence)
@@ -170,6 +171,8 @@ class CreateDatabaseTable(object):
                     else:
                         print("missing sentence.")
                 bodyList.append(body[end:])
+                if len(sentences) == 0:
+                    highLightIndices.append(0)
                 # print("bodyList ==========")
                 # print(bodyList)
                 # print("highLightIndices ==========")
