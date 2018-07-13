@@ -39,7 +39,7 @@ from sqlalchemy import desc
 import shutil
 from werkzeug.utils import secure_filename
 
-from flaskr.LoadData import LoadData
+from flaskr.loadData import LoadData
 
 import sys
 sys.path.append("..")
