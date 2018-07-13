@@ -175,10 +175,9 @@ class Snippet(Base):
 
     __tablename__ = 'snippet'
     id = Column(String(200), primary_key=True)
-    content = Column(NestedMutable.as_mutable(JSONType))
-    title_stance = Column(String(20))
-    body_stance = Column(String(20))
-    summary = Column(NestedMutable.as_mutable(JSONType))
+    topic = Column(String(20))
+    content = Column(Text)
+    stance = Column(String(20))
     # Snippet to Statement: Many to One
     statement_id = Column(String(200), ForeignKey('statement.id'))
     statement = relationship("Statement", backref="snippets")

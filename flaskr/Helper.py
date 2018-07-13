@@ -48,7 +48,7 @@ class Helper(object):
 
     @classmethod
     def getNews(cls, cluster, folderPath):
-        """Get snippets for each statement.
+        """Get news for each statement.
 
         Arguments:
             folderPath {Path} -- the path of data folder
@@ -62,6 +62,27 @@ class Helper(object):
         with (cluster / "news" / (folderPath + "_news.json")).open() as fp:
             news = json.load(fp)
         return news
+
+    @classmethod
+    def getSnippets(cls, folderPath):
+        """Get snippets for each statement.
+
+        Arguments:
+            folderPath {Path} -- the path of data folder
+            index_statement {int} -- index of statement in csv file
+
+        Returns:
+            list -- the list contains statement information
+        """
+        if not (folderPath / "corpus_snippets_classification.csv").exists():
+            return None
+        snippets = []
+        with (folderPath / "corpus_snippets_classification.csv").open() as fp:
+            reader = csv.reader(fp, delimiter='\t')
+            next(reader)
+            for r in reader:
+                snippets.append(r)
+        return snippets
 
     @classmethod
     def getIndex(cls, folderPath):

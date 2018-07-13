@@ -67,8 +67,8 @@ class LoadData(object):
                 # load data
                 statement = Helper.getRepresentativeClaim(statementCluster)
                 rumors = Helper.getClusterClaims(statementCluster)
-                snippets = Helper.getNews(cluster, statementCluster.name)
-
+                # snippets = Helper.getNews(cluster, statementCluster.name)
+                snippets = Helper.getSnippets(statementCluster)
                 # check all data
                 if not (statement and rumors and snippets):
                     continue
@@ -94,7 +94,17 @@ class LoadData(object):
                         continue
                     tableEvent_Cluster.rumors.append(tableRumor)
                     tableStatement.rumors.append(tableRumor)
+                    
+                # # news
+                # for indexSnippet, snippet in enumerate(snippets):
+                #     snippet_id = statement_id + "_" + str(indexSnippet)
+                #     tableSnippet = CreateDatabaseTable.create_snippet(
+                #         snippet_id, snippet)
+                #     if not tableSnippet:
+                #         continue
+                #     tableStatement.snippets.append(tableSnippet)
 
+                # snippets
                 for indexSnippet, snippet in enumerate(snippets):
                     snippet_id = statement_id + "_" + str(indexSnippet)
                     tableSnippet = CreateDatabaseTable.create_snippet(

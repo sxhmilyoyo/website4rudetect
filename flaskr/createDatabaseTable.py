@@ -79,6 +79,7 @@ class CreateDatabaseTable(object):
         Returns:
             table -- Rumor table
         """
+        # print("rumor ", rumor)
         if db_session.query(exists().where(Rumor.tweet_id == rumorID)).scalar():
             tableRumor = db_session.query(Rumor).filter(
                 Rumor.tweet_id == rumorID).first()
@@ -130,6 +131,65 @@ class CreateDatabaseTable(object):
                 return None
         return tableStatement
 
+    # @classmethod
+    # def create_snippet(cls, snippet_id, snippet):
+    #     """Create Snippet Table.
+
+    #     Arguments:
+    #         snippet_id {str} -- the id of snippet
+    #         snippet {list} -- the list contains snippet information
+
+    #     Returns:
+    #         table -- Snippet table
+    #     """
+    #     if db_session.query(exists().where(Snippet.id == snippet_id)).scalar():
+    #         tableSnippet = db_session.query(Snippet).filter(
+    #             Snippet.id == snippet_id).first()
+    #     else:
+    #         if snippet:
+    #             body = snippet["body"]
+    #             bodyList = []
+    #             # splitBody = body.split("\n")
+    #             # tokenBody = [sent_tokenize(sb) for sb in splitBody]
+    #             # bodyList = [j for i in tokenBody if i != [] for j in i]
+
+    #             highLightIndices = []
+    #             sentences = snippet["summary"]["sentences"]
+
+    #             end = 0
+    #             preEnd = 0
+    #             for sentence in sentences:
+    #                 # print("sentence ", sentence)
+    #                 # print("bodyList ", bodyList)
+    #                 if sentence in body:
+    #                     start = body.find(sentence)
+    #                     bodyList.append(body[preEnd:start])
+    #                     end = body.find(sentence)+len(sentence)
+    #                     bodyList.append(body[start:end])
+    #                     highLightIndex = len(bodyList)-1
+    #                     preEnd = end
+    #                     highLightIndices.append(highLightIndex)
+    #                 else:
+    #                     print("missing sentence.")
+    #             bodyList.append(body[end:])
+    #             if len(sentences) == 0:
+    #                 highLightIndices.append(0)
+    #             # print("bodyList ==========")
+    #             # print(bodyList)
+    #             # print("highLightIndices ==========")
+    #             # print(highLightIndices)
+
+    #             content = {"content": bodyList}
+    #             summary = {"hightlight": highLightIndices}
+    #             title_stance = snippet["sentiment"]["body"]["polarity"]
+    #             body_stance = snippet["sentiment"]["body"]["polarity"]
+
+    #             tableSnippet = Snippet(
+    #                 id=snippet_id, content=content, summary=summary, title_stance=title_stance, body_stance=body_stance)
+    #         else:
+    #             # print("invalid snippet.")
+    #             return None
+    #     return tableSnippet
     @classmethod
     def create_snippet(cls, snippet_id, snippet):
         """Create Snippet Table.
@@ -145,47 +205,16 @@ class CreateDatabaseTable(object):
             tableSnippet = db_session.query(Snippet).filter(
                 Snippet.id == snippet_id).first()
         else:
-            if snippet:
-                body = snippet["body"]
-                bodyList = []
-                # splitBody = body.split("\n")
-                # tokenBody = [sent_tokenize(sb) for sb in splitBody]
-                # bodyList = [j for i in tokenBody if i != [] for j in i]
-
-                highLightIndices = []
-                sentences = snippet["summary"]["sentences"]
-
-                end = 0
-                preEnd = 0
-                for sentence in sentences:
-                    # print("sentence ", sentence)
-                    # print("bodyList ", bodyList)
-                    if sentence in body:
-                        start = body.find(sentence)
-                        bodyList.append(body[preEnd:start])
-                        end = body.find(sentence)+len(sentence)
-                        bodyList.append(body[start:end])
-                        highLightIndex = len(bodyList)-1
-                        preEnd = end
-                        highLightIndices.append(highLightIndex)
-                    else:
-                        print("missing sentence.")
-                bodyList.append(body[end:])
-                if len(sentences) == 0:
-                    highLightIndices.append(0)
-                # print("bodyList ==========")
-                # print(bodyList)
-                # print("highLightIndices ==========")
-                # print(highLightIndices)
-
-                content = {"content": bodyList}
-                summary = {"hightlight": highLightIndices}
-                title_stance = snippet["sentiment"]["body"]["polarity"]
-                body_stance = snippet["sentiment"]["body"]["polarity"]
-
+            if len(snippet) == 4:
+                topic = snippet[1]
+                content = snippet[2]
+                stance = snippet[3]
+                # print("stance ", stance)
                 tableSnippet = Snippet(
-                    id=snippet_id, content=content, summary=summary, title_stance=title_stance, body_stance=body_stance)
+                    id=snippet_id, content=content, topic=topic, stance=stance)
             else:
-                # print("invalid snippet.")
+                print("invalid statement.")
+                print("length ", len(snippet))
+                print("statement ", snippet)
                 return None
         return tableSnippet
