@@ -489,34 +489,16 @@ def getSupportOpposeSnippetsFromDB(statement_id):
 
 def getSnippetsFromDB(statement_id, stance=None):
     if stance:
-        if stance == 'FAVOR':
-            snippets = [(snippet.id, [snippet.content['content'][index]
-                                      for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
-                        for snippet in Snippet.query.filter_by(statement_id=statement_id,
-                                                               body_stance='positive').all()]
-            snippets += [(snippet.id, [snippet.content['content'][index]
-                                       for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
-                         for snippet in Snippet.query.filter_by(statement_id=statement_id,
-                                                                title_stance='negative',
-                                                                body_stance='neutral').all()]
-            snippets += [(snippet.id, [snippet.content['content'][index]
-                                       for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
-                         for snippet in Snippet.query.filter_by(statement_id=statement_id,
-                                                                title_stance='neutral',
-                                                                body_stance='neutral').all()]
-        elif stance == 'AGAINST':
-            snippets = [(snippet.id, [snippet.content['content'][index]
-                                      for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
-                        for snippet in Snippet.query.filter_by(statement_id=statement_id,
-                                                               body_stance='negative').all()]
-            snippets += [(snippet.id, [snippet.content['content'][index]
-                                       for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
-                         for snippet in Snippet.query.filter_by(statement_id=statement_id,
-                                                                title_stance='positive',
-                                                                body_stance='neutral').all()]
+        # if stance == 'FAVOR':
+        snippets = [(snippet.id, snippet.content)
+                    for snippet in Snippet.query.filter_by(statement_id=statement_id,
+                                                            stance=stance).all()]
+        # elif stance == 'AGAINST':
+        #     snippets = [(snippet.id, snippet.content)
+        #                 for snippet in Snippet.query.filter_by(statement_id=statement_id,
+        #                                                        stance='AGAINST').all()]
     else:
-        snippets = [(snippet.id, [snippet.content['content'][index]
-                                  for index in snippet.summary['hightlight']], ''.join(snippet.content['content']))
+        snippets = [(snippet.id, snippet.content)
                     for snippet in Snippet.query.filter_by(statement_id=statement_id).all()]
     return snippets
 

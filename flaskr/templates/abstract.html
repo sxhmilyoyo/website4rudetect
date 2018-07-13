@@ -237,15 +237,10 @@
                     {{ loop.index }}
                   </p>
                 </div>
-                <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-                <p>
-                  <!-- <strong class="d-block text-gray-dark">{{ item[0] }}</strong> -->
-                  <ul class="text-justify media-body pb-3 mb-0 small lh-50">
-                    {% for summary in item[1] %}
-                    <li>{{ summary }}</li>
-                    {% endfor %}
-                  </ul>
+                <p class="tsp d-inline-block text-justify media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;">
+                  {{ item[1] }}
                 </p>
+                
               </div>
             </a>
             <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
@@ -304,13 +299,8 @@
                     {{ loop.index }}
                   </p>
                 </div>
-                <p>
-                  <!-- <strong class="d-block text-gray-dark">{{ item[0] }}</strong> -->
-                  <ul class="text-justify media-body pb-3 mb-0 small lh-50">
-                    {% for summary in item[1] %}
-                    <li>{{ summary }}</li>
-                    {% endfor %}
-                  </ul>
+                <p class="tsp d-inline-block text-justify media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;">
+                  {{ item[1] }}
                 </p>
               </div>
             </a>
