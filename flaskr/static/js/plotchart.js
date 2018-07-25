@@ -28,7 +28,7 @@ $('#nav-tab #nav-chart-tab').on('shown.bs.tab', function (e) {
 
   var data_snippet = {
     datasets: [{
-        label: "Percentage of Stance for Google Snippets",
+        label: "Percentage of Stance for News",
         // data: [parseInt(num_support_tweets), parseInt(num_oppose_tweets)],
         data: [parseInt(num_support_snippets), parseInt(num_oppose_snippets)],        
         backgroundColor: [
@@ -86,7 +86,7 @@ $('#nav-tab #nav-chart-tab').on('shown.bs.tab', function (e) {
     },
     title: {
             display: true,
-            text: 'Percentage of Stance for Google Snippets',
+            text: 'Percentage of Stance for News',
             padding: 20,
             fontSize: 20,
             lineHeight: 2.0
