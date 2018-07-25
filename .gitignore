@@ -25,6 +25,7 @@
 *.log
 *.sql
 *.sqlite
+*.db
 *.bk
 
 # OS generated files #
@@ -40,7 +41,6 @@ Thumbs.db
 # Folder #
 ##########
 .vscode
-data
 event*
 db_repository_bk
 flaskenvpy3
