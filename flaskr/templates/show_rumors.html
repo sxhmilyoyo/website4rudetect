@@ -16,8 +16,8 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
   <div class="container">
-    <h1 class="display-3">Rumour Explorer</h1>
-    <p>Rumour Explorer is a system that aims to extract claims that might be rumours from tweets and aggregate the detected stances towards claims from different information resources for users.</p>
+    <h1 class="display-3">StanceComp</h1>
+    <p>StanceComp is a system that aims to aggregate stances from multiple sources for rumor detection.</p>
     <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
   </div>
 </div>
@@ -42,8 +42,8 @@
                 <p class="text-left media-body pb-3 mb-0 small lh-50">
                   <div class="container">
                     <div class='row'>
-                      <div class="col-2 mt-3">
-                        <p class='lead mb-4'>Topic{{loop.index0}}:</p>
+                      <div class="ml-3">
+                        <p class='lead'>Candidate Rumors</p>
                       </div>
                       <div class="col-6 mt-3">
                         {% for topic in items[i+j]['topics'][k]%}

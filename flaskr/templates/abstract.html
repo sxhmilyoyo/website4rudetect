@@ -13,9 +13,9 @@
   <nav>
     <div class="nav ml-3" id="nav-tab" role="tablist">
       <a class="nav-link nav-small active font-weight-light my-auto" id="nav-abstract-tab" data-toggle="tab" href="#nav-abstract"
-        role="tab" aria-controls="nav-abstract" aria-selected="true">TWITTER</a>
+        role="tab" aria-controls="nav-abstract" aria-selected="true">TWEETS</a>
       <a class="nav-link nav-small font-weight-light my-auto" id="nav-statement-tab" data-toggle="tab" href="#nav-statement" role="tab"
-        aria-controls="nav-statement" aria-selected="false">GOOGLE</a>
+        aria-controls="nav-statement" aria-selected="false">NEWS</a>
       <a class="nav-link nav-small font-weight-light my-auto" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab"
         aria-controls="nav-chart" aria-selected="false">CHART</a>
       <a class="nav-link nav-small font-weight-light my-auto" id="nav-timeline-tab" data-toggle="tab" href="#nav-timeline" role="tab"
@@ -29,7 +29,7 @@
   <div class="tab-pane fade show active" id="nav-abstract" role="tabpanel" aria-labelledby="nav-abstract-tab">
     <div class="jumbotron">
       <div class="container">
-        <h1 class="display-4">TWITTER</h1>
+        <h1 class="display-4">TWEETS</h1>
         <p class="lead">This page shows statement-relevant tweets from Twitter. Left side presents tweets that support the statement and
           right side presents tweets that oppose the statement. You can give us feedback and see the original content by
           clicking relevant buttons below the tweet.</p>
@@ -206,9 +206,9 @@
   <div class="tab-pane fade" id="nav-statement" role="tabpanel" aria-labelledby="nav-statement-tab">
     <div class="jumbotron">
       <div class="container">
-        <h1 class="display-4">GOOGLE</h1>
-        <p class="lead">This page shows statement-relevant google snippets from Google Search. Left side presents google snippets that support
-          the statement and right side presents google snippets that oppose the statement. You can give us feedback and see
+        <h1 class="display-4">NEWS</h1>
+        <p class="lead">This page shows statement-relevant news from Google snippets. Left side presents news that support
+          the statement and right side presents news that oppose the statement. You can give us feedback and see
           the original content by clicking relevant buttons below the tweet.</p>
       </div>
     </div>
@@ -223,7 +223,7 @@
       <div class="col-md-6">
         <!-- Content Pro -->
         <div class="my-3 p-3 bg-white rounded box-shadow">
-          <h6 class="border-bottom border-gray pb-2 mb-0">Supported Google Snippets</h6>
+          <h6 class="border-bottom border-gray pb-2 mb-0">Supported News</h6>
           <!-- {{ pro | length }} -->
           <span id=listSupportOriginSnippet class="{{chart_support_snippets}}">
             {% for item in support_snippets %}
@@ -291,7 +291,7 @@
       <div class="col-md-6">
         <!-- Content Con -->
         <div class="my-3 p-3 bg-white rounded box-shadow">
-          <h6 class="border-bottom border-gray pb-2 mb-0">Opposed Google Snippets</h6>
+          <h6 class="border-bottom border-gray pb-2 mb-0">Opposed News</h6>
           <span id=listOpposeOriginSnippet class="{{chart_oppose_snippets}}">
             {% for item in oppose_snippets %}
             <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false"
