@@ -248,7 +248,7 @@ def show_rumors():
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('show_rumors.html', items=res, events=events, current_user=current_user)
+    return render_template('root.html', items=res, events=events, current_user=current_user)
 
 
 def getTweets(event, cluster):
