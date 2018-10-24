@@ -178,7 +178,7 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('show_rumors', current_user=current_user))
+                return redirect(url_for('show_events', current_user=current_user))
             else:
                 error = "Invalid password"
         else:
@@ -212,43 +212,78 @@ def signup():
 
 
 @app.route('/')
-def show_rumors():
+def show_events():
     """Show the rumors entries."""
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     events = Event.query.all()
+    events_names = [event.name for event in events]
+    # print(current_user.is_authenticated)
+    # print(current_user.username)
+    # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
+    print(events_names)
+    # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
+    #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
+    #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
+    #         ]
+    return render_template('events.html', events_names=events_names, current_user=current_user)
+
+@app.route('/candidate_rumors/<event_name>', methods=['GET'])
+def show_rumors(event_name):
+    """Show the rumors entries."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     # print(current_user.is_authenticated)
     # print(current_user.username)
     # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
     res = []
-    for event in events:
-        # head
-        head = "#" + event.name
-        # topics
-        clusters = sorted(set([c.cluster_name for c in event.clusters]))
-        statements = {}
-        topics = {}
-        for cluster in clusters:
-            # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
-            #     topic = json.load(fp)
-            statementsDB = getStatementsFromDB(event.name, cluster)
-            # event_cluster = Event_Cluster.query.filter_by(
-            #     event_name=event.name, cluster_name=cluster).first()
-            statements_cluster = [(statement.id, statement.content)
-                                  for statement in statementsDB]
-            topics_cluster = list(
-                set([statement.target for statement in statementsDB]))
-            print(event, cluster, statements)
-            statements[cluster] = statements_cluster
-            # topics[cluster] = topics_cluster
-            topics[cluster] = []
-        res.append({'head': head, 'statements': statements, 'topics': topics})
+    event = Event.query.filter_by(name=event_name).first()
+    print(event)
+    # topics
+    clusters = sorted(set([c.cluster_name for c in event.clusters]))
+    statements = {}
+    topics = {}
+    for cluster in clusters:
+        # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
+        #     topic = json.load(fp)
+        statementsDB = getStatementsFromDB(event.name, cluster)
+        # event_cluster = Event_Cluster.query.filter_by(
+        #     event_name=event.name, cluster_name=cluster).first()
+        statements_cluster = [(statement.id, statement.content)
+                                for statement in statementsDB]
+        topics_cluster = list(
+            set([statement.target for statement in statementsDB]))
+        print(event, cluster, statements)
+        statements[cluster] = statements_cluster
+        # topics[cluster] = topics_cluster
+        topics[cluster] = []
+        res.append({'statements': statements, 'topics': topics})
     print(res)
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('root.html', items=res, events=events, current_user=current_user)
+    return render_template('candidate_rumors.html', items=res, current_user=current_user)
+
+@app.route('/candidate_rumors/get_tweets_of_statement_chart/<statement_id>', methods=['GET'])
+def getTweetsofStatement4Chart(statement_id):
+    """Get the details for event."""
+    print("!!!!!!!!!!!", statement_id)
+    # print(session['per_page'])
+    statement = Statement.query.filter_by(id=statement_id).first().content
+    print("!!!!!!!!!!!", statement)
+    support_tweets, oppose_tweets = getSupportOpposeTweetsFromDB(statement_id)
+    support_tweets_len = len(support_tweets)
+    oppose_tweets_len = len(oppose_tweets)
+
+    support_snippets, oppose_snippets = getSupportOpposeSnippetsFromDB(
+        statement_id)
+    support_snippets_len = len(support_snippets)
+    oppose_snippets_len = len(oppose_snippets)
+
+    # res = {"support_tweets_len":support_tweets_len, "oppose_tweets_len":oppose_tweets_len, "support_snippets_len":support_snippets_len, "oppose_snippets_len":oppose_snippets_len}
+    return jsonify(support_tweets_len=support_tweets_len, oppose_tweets_len=oppose_tweets_len, support_snippets_len=support_snippets_len, oppose_snippets_len=oppose_snippets_len)
+
 
 
 def getTweets(event, cluster):

@@ -1,0 +1,31 @@
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block body %}
+<link href="{{url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='signin.css')}}" rel="stylesheet">
+<form class="form-signin" action="{{ url_for('login') }}" method=post>
+  <img class="mb-4 mx-auto d-block" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+  {% if error %}
+    <h1 class="h3 text-center font-weight-normal">{{ error }}</h1>
+  {% endif %}
+  {{ form.hidden_tag() }}
+  {{ wtf.form_field(form.username) }}
+  {{ wtf.form_field(form.password) }}
+  {{ wtf.form_field(form.remember) }}
+  <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+  <p class="mb-1 text-muted text-center font-italic">or</p>
+  <a class="btn btn-primary btn-block" href="{{ url_for('signup') }}", role="button">Sign up</button>
+  <!-- <label for="inputUsername" class="sr-only">Email address</label>
+  <input type="text" id="inputUsername" name=username class="form-control" placeholder="Username" required autofocus>
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" name=password class="form-control" placeholder="Password" required>
+  <div class="checkbox mb-3 pagination-centered">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  <p class="mt-5 mb-3 text-muted pagination-centered">&copy; 2017-2018</p> -->
+</form>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block candidate_rumors %}
+<!-- Portfolio Grid Section -->
+<section class="portfolio mt-5" id="portfolio">
+    <div class="container">
+        <h2 class="text-center text-uppercase text-secondary mb-0">Candidate Rumors</h2>
+        <hr class="star-dark mb-5">
+        <div class="row">
+            {% for i in range(items|length)%}
+                {% for j in items[i]['statements'].keys() if not (items[i]['statements'][j]|length == 1 and items[i]['statements'][j][0] == '') %}
+                    {% for k in range(items[i]['statements'][j]|length) %}
+
+                        <div class="col-md-12 col-lg-6 thumbnailaaa">
+                            <a id="click-rumor" class="portfolio-item d-block mx-auto" href="#{{ i|string + j|string + k|string }}">
+                            <span id=statement_id class="{{items[i]['statements'][j][k][0]}}"></span>
+                            <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                                <div class="portfolio-item-caption-content mt-3 mr-3 w-100 text-right text-white">
+                                <i class="fas fa-search-plus fa-3x"></i>
+                                </div>
+                            </div>
+                            
+                            <img class="img-fluid" src="../static/img/portfolio/cabin.png" alt="">
+                            <div class="captionaaa ml-2 px-3 text-left text-white">
+                                <h3>{{ items[i]['statements'][j][k][1] }}</h3>
+                            </div>
+                            
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-to-top d-lg-none position-fixed ">
+    <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+<!-- Portfolio Modals -->
+
+{% for i in range(items|length)%}
+    {% for j in items[i]['statements'].keys() if not (items[i]['statements'][j]|length == 1 and items[i]['statements'][j][0] == '') %}
+        {% for k in range(items[i]['statements'][j]|length) %}
+            <div class="portfolio-modal mfp-hide" id="{{ i|string + j|string + k|string}}">
+                <div class="portfolio-modal-dialog bg-white">
+                    <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+                        <i class="fa fa-3x fa-times"></i>
+                    </a>
+                    
+                    <div class="container text-center">
+                        <div class="row">
+                            <div class="col-lg-12 mx-auto">
+                                <h2 class="text-secondary text-uppercase mb-0">Stance Distributions</h2>
+                                <div class="card my-3">
+                                    <div class="card-header abstract-statement-bg">
+                                        <p class="lead text-white mt-2">
+                                            {{ items[i]['statements'][j][k][1] }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr class="star-dark mb-5">
+                                <!-- <img class="img-fluid mb-5" src="../static/img/portfolio/cabin.png" alt=""> -->
+                                <div class="row">
+                                    <div class="col-6">
+                                        <canvas id="myChartTweet" width="450px" height="450px"></canvas>
+                                    </div>
+                                    <div class="col-6">
+                                        <canvas id="myChartSnippet" width="450px" height="450px"></canvas>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss mr-4 mt-3" href="#">
+                                            <i class="fa fa-close"></i>
+                                            Details
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss mr-4 mt-3" href="#">
+                                            <i class="fa fa-close"></i>
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+<!-- Portfolio Modal 1 -->
+
+
+{% endblock %}

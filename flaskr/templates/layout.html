@@ -24,6 +24,9 @@
     <!-- Custom styles for this template -->
     <link href="../static/css/freelancer.min.css" rel="stylesheet">
 
+    <link href="../static/css/additional.css" rel="stylesheet">
+
+
   </head>
 
   <body id="page-top">
@@ -31,7 +34,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">StanceComp</a>
         <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fas fa-bars"></i>
@@ -52,16 +55,14 @@
       </div>
     </nav>
 
-    <main role="main">
-        <!-- Root Page Content -->
-        {% block header %} {% endblock %}
-        <!-- Content Title -->
-        {% block portfolio %} {% endblock %}
-        <!-- Other pages Content -->
-        {% block contact %} {% endblock %}
-        {% block about %} {% endblock %}
-        {% block footer %} {% endblock %}
-    </main>
+    <!-- Root Page Content -->
+    {% block header %} {% endblock %}
+    <!-- Content Title -->
+    {% block candidate_rumors %} {% endblock %}    
+    {% block events %} {% endblock %}
+    <!-- Other pages Content -->
+    {% block about %} {% endblock %}
+    {% block contact %} {% endblock %}
 
     <!-- Bootstrap core JavaScript -->
     <script src="../static/vendor/jquery/jquery.min.js"></script>
@@ -77,6 +78,9 @@
 
     <!-- Custom scripts for this template -->
     <script src="../static/js/freelancer.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script type="text/javascript" src="/static/js/plotchart.js"></script>
 
   </body>
 
