@@ -308,7 +308,7 @@ def getTweets4Statement(statement_id, per_page=5):
     """Get the details for event."""
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-        
+
     global PER_PAGE
     global SUPPORT_TWEETS
     global OPPOSE_TWEETS
@@ -330,9 +330,9 @@ def getTweets4Statement(statement_id, per_page=5):
                            oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets
                            )
 
-@app.route('/snippets/<statement_id>/<head>/<topics>')
-@app.route('/snippets/<statement_id>/<head>/<topics>/<int:per_page>')
-def getSnippets4Statement(statement_id, head, topics, per_page=5):
+@app.route('/snippets/<statement_id>')
+@app.route('/snippets/<statement_id>/<int:per_page>')
+def getSnippets4Statement(statement_id, per_page=5):
     """Get the details for event."""
     global PER_PAGE
     global SUPPORT_SNIPPETS
@@ -350,8 +350,8 @@ def getSnippets4Statement(statement_id, head, topics, per_page=5):
     OPPOSE_SNIPPETS = oppose_snippets[:]
     snippets = getSnippetsFromDB(statement_id)
 
-    topics = ast.literal_eval(topics)
-    return render_template('abstract.html', statement_id=statement_id, statement=statement, topics=topics, head=head,
+    # topics = ast.literal_eval(topics)
+    return render_template('contents_snippets.html', statement_id=statement_id, statement=statement,
                            oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE],
                            snippets=snippets
                            )
@@ -366,9 +366,9 @@ def get_tweets_for_page(data, page, per_page, count):
         return data[per_page * page:]
 
 
-@app.route('/detail/<statement_id>/<head>/<topics>/<attitude>', defaults={'page': 1}, methods=['GET', 'POST'])
-@app.route('/detail/<statement_id>/<head>/<topics>/<attitude>/<int:page>', methods=['GET', 'POST'])
-def show_tweets(statement_id, head, topics, attitude, page):
+@app.route('/biased_tweets/<attitude>/<statement_id>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/biased_tweets/<attitude>/<statement_id>/<int:page>', methods=['GET', 'POST'])
+def show_tweets(attitude, statement_id, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
     # pro, con = getTweets(event, cluster)
@@ -383,15 +383,13 @@ def show_tweets(statement_id, head, topics, attitude, page):
         tweets = get_tweets_for_page(oppose, page, per_page, count)
     pagination = Pagination(page=page, total=count, per_page=per_page,
                             search=False, css_framework='bootstrap4')
-    topics = ast.literal_eval(topics)
-    return render_template('detail.html',
-                           head=head,
+    # topics = ast.literal_eval(topics)
+    return render_template('biased_tweets.html',
                            data=tweets,
                            pagination=pagination,
                            statement_id=statement_id,
                            statement=statement,
                            attitude=attitude,
-                           topics=topics,
                            offset=(page-1)*per_page
                            )
 

@@ -11,29 +11,29 @@
     <title>Freelancer - Start Bootstrap Theme</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Plugin CSS -->
-    <link href="../static/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+    <link href="/static/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/freelancer.min.css" rel="stylesheet">
+    <link href="/static/css/freelancer.min.css" rel="stylesheet">
 
-    <link href="../static/css/additional.css" rel="stylesheet">
+    <link href="/static/css/additional.css" rel="stylesheet">
 
-    <link href="../static/css/offcanvas.css" rel="stylesheet">
-    <link href="../static/css/listlink.css" rel="stylesheet">
-    <link href="../static/css/jumbotron.css" rel="stylesheet">
-    <link href="../static/css/bage.css" rel="stylesheet">
-    <link href="../static/css/buttons.css" rel="stylesheet">
+    <link href="/static/css/offcanvas.css" rel="stylesheet">
+    <link href="/static/css/listlink.css" rel="stylesheet">
+    <link href="/static/css/jumbotron.css" rel="stylesheet">
+    <link href="/static/css/bage.css" rel="stylesheet">
+    <link href="/static/css/buttons.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
-    <link href="../static/css/timeline_style.css" rel="stylesheet">
-    <link href="../static/css/upload.css" rel="stylesheet">
+    <link href="/static/css/timeline_style.css" rel="stylesheet">
+    <link href="/static/css/upload.css" rel="stylesheet">
 
 
   </head>
@@ -75,25 +75,29 @@
     {% block contact %} {% endblock %}
 
     <!-- Bootstrap core JavaScript -->
-    <script src="../static/vendor/jquery/jquery.min.js"></script>
-    <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="../static/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="/static/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="../static/js/jqBootstrapValidation.js"></script>
-    <script src="../static/js/contact_me.js"></script>
+    <script src="/static/js/jqBootstrapValidation.js"></script>
+    <script src="/static/js/contact_me.js"></script>
 
     <!-- Custom scripts for this template -->
-    <script src="../static/js/freelancer.min.js"></script>
+    <script src="/static/js/freelancer.min.js"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script type="text/javascript" src="/static/js/plotchart.js"></script>
     <script type="text/javascript" src="/static/js/close.js"></script>
     <script type="text/javascript" src="/static/js/addopinion.js"></script>
+    <script type="text/javascript" src="/static/js/scroll2loadmore.js"></script>
 
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
   </body>
 
 </html>
