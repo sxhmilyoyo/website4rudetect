@@ -1,7 +1,7 @@
-$('#click-rumor').on('click', function (e) {
+$('.click-rumor').on('click', function (e) {
 // $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
   console.log("test");
-  var statement_id = $("#statement_id").attr('class');
+  var statement_id = $(this).children($("#statement_id")).attr('class');
   console.log(statement_id);
   // $.get( "get_tweets_of_statement_chart/" + statement_id);
 

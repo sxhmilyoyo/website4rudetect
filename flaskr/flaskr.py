@@ -267,6 +267,8 @@ def show_rumors(event_name):
 
 @app.route('/candidate_rumors/get_tweets_of_statement_chart/<statement_id>', methods=['GET'])
 def getTweetsofStatement4Chart(statement_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     """Get the details for event."""
     print("!!!!!!!!!!!", statement_id)
     # print(session['per_page'])
@@ -300,13 +302,14 @@ def getTweets(event, cluster):
 # @app.route('/abstract/<event>/<cluster>/<topics>')
 # @app.route('/abstract/<event>/<cluster>/<topics>/<int:per_page>')
 # def getTweets4Statement(event, cluster, topics, per_page=5):
-@app.route('/abstract/<statement_id>/<head>/<topics>')
-@app.route('/abstract/<statement_id>/<head>/<topics>/<int:per_page>')
-def getTweets4Statement(statement_id, head, topics, per_page=5):
+@app.route('/tweets/<statement_id>')
+@app.route('/tweets/<statement_id>/<int:per_page>')
+def getTweets4Statement(statement_id, per_page=5):
     """Get the details for event."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+        
     global PER_PAGE
-    global SUPPORT_TWEETS
-    global OPPOSE_TWEETS
     global SUPPORT_TWEETS
     global OPPOSE_TWEETS
     # session['event'] = event
@@ -322,6 +325,25 @@ def getTweets4Statement(statement_id, head, topics, per_page=5):
     tweets = getTweetsFromDB(statement_id)
     print(len(SUPPORT_TWEETS))
 
+    # topics = ast.literal_eval(topics)
+    return render_template('contents_tweets.html', statement_id=statement_id, statement=statement,
+                           oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets
+                           )
+
+@app.route('/snippets/<statement_id>/<head>/<topics>')
+@app.route('/snippets/<statement_id>/<head>/<topics>/<int:per_page>')
+def getSnippets4Statement(statement_id, head, topics, per_page=5):
+    """Get the details for event."""
+    global PER_PAGE
+    global SUPPORT_SNIPPETS
+    global OPPOSE_SNIPPETS
+    # session['event'] = event
+    # session['per_page'] = per_page
+    PER_PAGE = per_page
+    print(PER_PAGE)
+    # print(session['per_page'])
+    statement = Statement.query.filter_by(id=statement_id).first().content
+
     support_snippets, oppose_snippets = getSupportOpposeSnippetsFromDB(
         statement_id)
     SUPPORT_SNIPPETS = support_snippets[:]
@@ -330,11 +352,9 @@ def getTweets4Statement(statement_id, head, topics, per_page=5):
 
     topics = ast.literal_eval(topics)
     return render_template('abstract.html', statement_id=statement_id, statement=statement, topics=topics, head=head,
-                           oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets,
-                           chart_support_tweets=len(SUPPORT_TWEETS), chart_oppose_tweets=len(OPPOSE_TWEETS),
-                           oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[
-                               :PER_PAGE], snippets=snippets,
-                           chart_support_snippets=len(SUPPORT_SNIPPETS), chart_oppose_snippets=len(OPPOSE_SNIPPETS))
+                           oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE],
+                           snippets=snippets
+                           )
 
 
 def get_tweets_for_page(data, page, per_page, count):

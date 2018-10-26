@@ -12,7 +12,7 @@
                     {% for k in range(items[i]['statements'][j]|length) %}
 
                         <div class="col-md-12 col-lg-6 thumbnailaaa">
-                            <a id="click-rumor" class="portfolio-item d-block mx-auto" href="#{{ i|string + j|string + k|string }}">
+                            <a id="click-rumor" class="click-rumor portfolio-item d-block mx-auto" href="#{{ i|string + j|string + k|string }}">
                             <span id=statement_id class="{{items[i]['statements'][j][k][0]}}"></span>
                             <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
                                 <div class="portfolio-item-caption-content mt-3 mr-3 w-100 text-right text-white">
@@ -48,7 +48,7 @@
         {% for k in range(items[i]['statements'][j]|length) %}
             <div class="portfolio-modal mfp-hide" id="{{ i|string + j|string + k|string}}">
                 <div class="portfolio-modal-dialog bg-white">
-                    <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+                    <a id="close-chart" class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
                         <i class="fa fa-3x fa-times"></i>
                     </a>
                     
@@ -65,23 +65,23 @@
                                 </div>
                                 <hr class="star-dark mb-5">
                                 <!-- <img class="img-fluid mb-5" src="../static/img/portfolio/cabin.png" alt=""> -->
-                                <div class="row">
-                                    <div class="col-6">
+                                <div id="canvass" class="row">
+                                    <div id="tweet-canvass" class="col-6">
                                         <canvas id="myChartTweet" width="450px" height="450px"></canvas>
                                     </div>
-                                    <div class="col-6">
+                                    <div id="snippet-canvass" class="col-6">
                                         <canvas id="myChartSnippet" width="450px" height="450px"></canvas>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss mr-4 mt-3" href="#">
+                                        <a class="btn btn-primary btn-lg rounded-pill mr-4 mt-3" href="{{ url_for('getTweets4Statement', statement_id=items[i]['statements'][j][k][0]) }}">
                                             <i class="fa fa-close"></i>
                                             Details
                                         </a>
                                     </div>
                                     <div class="col-6">
-                                        <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss mr-4 mt-3" href="#">
+                                        <a class="btn btn-primary btn-lg rounded-pill mr-4 mt-3" href="#">
                                             <i class="fa fa-close"></i>
                                             Details
                                         </a>
