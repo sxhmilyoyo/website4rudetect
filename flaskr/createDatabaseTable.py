@@ -4,6 +4,7 @@ from flaskr.models import Event
 from flaskr.models import Rumor
 from flaskr.models import Event_Cluster
 from flaskr.models import Statement
+from flaskr.models import Origin_Statement
 from flaskr.models import User
 from flaskr.models import Snippet
 from sqlalchemy import exists
@@ -98,6 +99,38 @@ class CreateDatabaseTable(object):
 
         # print("statement id {}".format(statement_id))
         # print(db_session.query(exists().where(Statement.id == statement_id)).scalar())
+
+    @classmethod
+    def create_origin_statement(cls, origin_statement_id, statement):
+        """Create Original Statement Table.
+
+        Arguments:
+            origin_statement_id {str} -- the id of statement
+            index_statement {int} -- the index of statement
+            statement {list} -- the statement
+
+        Returns:
+            table -- Origin Statement table
+        """
+        if db_session.query(exists().where(Origin_Statement.id == origin_statement_id)).scalar():
+            tableOriginStatement = db_session.query(Origin_Statement).filter(
+                Origin_Statement.id == origin_statement_id).first()
+            # print("duplicated")
+        else:
+            # print("statement ", statement)
+            if len(statement) == 4:
+                topic = statement[1]
+                content = statement[2]
+                stance = statement[3]
+                # print("stance ", stance)
+                tableOriginStatement = Origin_Statement(
+                    id=origin_statement_id, content=content, target=topic, stance=stance)
+            else:
+                print("invalid statement.")
+                print("length ", len(statement))
+                print("statement ", statement)
+                return None
+        return tableOriginStatement
 
     @classmethod
     def create_statement(cls, statement_id, statement):

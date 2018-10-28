@@ -169,6 +169,22 @@ class Statement(Base):
     def __repr__(self):
         return '<Statement: id %r, event_cluster_id %r, content %r>' % (self.id, self.event_cluster_id, self.content)
 
+class Origin_Statement(Base):
+    """Original Statement Model."""
+
+    __tablename__ = 'origin_statement'
+    id = Column(String(200), primary_key=True)
+    content = Column(Text, unique=True)
+    target = Column(String(50))
+    stance = Column(String(20))
+    # snippets = Column(NestedMutable.as_mutable(JSONType))
+
+    # Statement to Event: One to One
+    event_id = Column(String(100), ForeignKey('event.id'))
+    event_cluster = relationship("Event", backref=backref("origin_statement", uselist=False))
+
+    def __repr__(self):
+        return '<Original Statement: id %r, event_id %r, content %r>' % (self.id, self.event_id, self.content)
 
 class Snippet(Base):
     """Snippet Model."""

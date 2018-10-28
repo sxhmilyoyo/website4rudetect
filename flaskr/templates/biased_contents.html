@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
 {% if attitude == 'support' %}
-            {% set color="#ee4d4d" %}
-            {% set title="Supported Tweets" %}
-        {% elif attitude == 'oppose' %}
-            {% set color="#2b2e48" %}
-            {% set title="Opposed Tweets" %}
-        {% endif %}
-        
+    {% set color="#ee4d4d" %}
+    {% set title="Supported Tweets" %}
+{% elif attitude == 'oppose' %}
+    {% set color="#2135282" %}
+    {% set title="Opposed Tweets" %}
+{% endif %}
+
 {% block contents %}
 <!-- Portfolio Grid Section -->
 <section class="portfolio mt-5" id="portfolio">
@@ -16,7 +16,7 @@
         <h2 class="text-center text-uppercase text-secondary mb-0">{{ title }}</h2>
         <hr class="star-dark mb-5">
         <div class="card my-3">
-            <div class="card-header abstract-statement-bg">
+            <div class="card-header bg-dark">
                 <p class="lead text-white mt-2">
                     {{ statement }}
                 </p>

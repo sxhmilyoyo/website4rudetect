@@ -36,8 +36,8 @@ class LoadData(object):
 
         # add data
         for e in events:
-            # if e.name != "BandyLee_0110_0115":
-            #     continue
+            if e.name[0] == ".":
+                continue
             self.add_data(e.name)
 
     def add_data(self, eventName):
@@ -51,6 +51,11 @@ class LoadData(object):
             '_') if not term.isdigit()]
         edited_event = " ".join(terms)
         tableEvent = CreateDatabaseTable.create_event(edited_event)
+
+        origin_statement_id = edited_event + "_" + "origin_statement"
+        origin_statement = Helper.getEventClaims(eventPath)
+        tableOriginStatement = CreateDatabaseTable.create_origin_statement(origin_statement_id, origin_statement)
+        tableEvent.origin_statement = tableOriginStatement
 
         clustersPath = eventPath / 'clusterData'
         clusters = [cluster for cluster in clustersPath.iterdir()

@@ -236,9 +236,10 @@ def show_rumors(event_name):
     # print(current_user.is_authenticated)
     # print(current_user.username)
     # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
-    res = []
     event = Event.query.filter_by(name=event_name).first()
+    origin_statements = (event.origin_statement.id, event.origin_statement.content, event.origin_statement.target, event.origin_statement.stance)
     print(event)
+    new_statements = []
     # topics
     clusters = sorted(set([c.cluster_name for c in event.clusters]))
     statements = {}
@@ -257,13 +258,13 @@ def show_rumors(event_name):
         statements[cluster] = statements_cluster
         # topics[cluster] = topics_cluster
         topics[cluster] = []
-        res.append({'statements': statements, 'topics': topics})
-    print(res)
+        new_statements.append({'statements': statements, 'topics': topics})
+    print(new_statements)
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('candidate_rumors.html', items=res, current_user=current_user)
+    return render_template('candidate_rumors.html', origin_statements=origin_statements, items=new_statements, current_user=current_user)
 
 @app.route('/candidate_rumors/get_tweets_of_statement_chart/<statement_id>', methods=['GET'])
 def getTweetsofStatement4Chart(statement_id):

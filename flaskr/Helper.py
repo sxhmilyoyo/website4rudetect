@@ -8,6 +8,25 @@ class Helper(object):
 
     """
     @classmethod
+    def getEventClaims(cls, folderPath):
+        """Get the original claim for each event.
+
+        Arguments:
+            folderPath {Path} -- the path of data folder
+
+        Returns:
+            list -- the list contains rumor information
+        """
+        if not (folderPath / "corpus_event_origin_claim.csv").exists():
+            return None
+        with (folderPath / "corpus_event_origin_claim.csv").open() as fp:
+            reader = csv.reader(fp, delimiter='\t')
+            next(reader)
+            for r in reader:
+                eventClaim = r
+        return eventClaim
+
+    @classmethod
     def getClusterClaims(cls, folderPath):
         """Get the cluster claims details for each cluster.
 
@@ -35,7 +54,7 @@ class Helper(object):
             folderPath {Path} -- the path of data folder
 
         Returns:
-            list -- the list contains statement inforamtion
+            list -- the list contains statement information
         """
         if not (folderPath / "corpus_representative_claims_classification.csv").exists():
             return None
