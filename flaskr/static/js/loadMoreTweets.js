@@ -1,6 +1,6 @@
-$("#loadmore").on('click', function (e) {
+$("#loadmore-tweets").on('click', function (e) {
  
-  $.getJSON('/loadmore',
+  $.getJSON('/loadmore/tweets',
     function (data) {
       // if (e.data.flag == 'pro') {
       //   var tweets = data.pro;
@@ -14,6 +14,11 @@ $("#loadmore").on('click', function (e) {
       var support = data.support;
       var oppose = data.oppose;
       var idx = data.idx;
+
+      if (support.length == 0 && oppose.length == 0){
+        console.log("replace");
+        $( "#loadmore-tweets" ).replaceWith( "<hr class='no-more'>" );
+      }
       for (var i = 0; i < support.length; i++) {
         var dom =
           `
@@ -55,7 +60,6 @@ $("#loadmore").on('click', function (e) {
                 <div class="wrapper float-right">
                   <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                   <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                  <a href="https://twitter.com/anyuser/status/${support[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                 </div>
               </div>
             </div>
@@ -80,7 +84,7 @@ $("#loadmore").on('click', function (e) {
             <div class="media text-muted pt-3">
               <!-- <img data-src="der.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
               <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
-              <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+              <div class="color-box my-1 mr-2 rounded text-white text-center" style="background-color: #135282;">
                 <p class="mt-1">
                   ${i + idx + 1}
                 </p>
@@ -114,7 +118,6 @@ $("#loadmore").on('click', function (e) {
                 <div class="wrapper float-right">
                   <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="FAVOR"><i class="fa fa-check"></i></button>
                   <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" stance="AGAINST"><i class="fa fa-times"></i></button>
-                  <a href="https://twitter.com/anyuser/status/${oppose[i][1]}" class="button button-3d button-circle mt-2 mb-3 mr-2"><i class="fa fa-info"></i></a>
                 </div>
               </div>
             </div>

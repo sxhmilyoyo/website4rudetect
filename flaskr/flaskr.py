@@ -327,7 +327,7 @@ def getTweets4Statement(statement_id, per_page=5):
     print(len(SUPPORT_TWEETS))
 
     # topics = ast.literal_eval(topics)
-    return render_template('contents_tweets.html', statement_id=statement_id, statement=statement,
+    return render_template('contents_tweets.html', data_type="tweet", statement_id=statement_id, statement=statement,
                            oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets
                            )
 
@@ -352,13 +352,13 @@ def getSnippets4Statement(statement_id, per_page=5):
     snippets = getSnippetsFromDB(statement_id)
 
     # topics = ast.literal_eval(topics)
-    return render_template('contents_snippets.html', statement_id=statement_id, statement=statement,
+    return render_template('contents_snippets.html', data_type="snippet", statement_id=statement_id, statement=statement,
                            oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE],
                            snippets=snippets
                            )
 
 
-def get_tweets_for_page(data, page, per_page, count):
+def get_data_for_page(data, page, per_page, count):
     """Get tweets for each page for pagination."""
     page -= 1
     if 5 * page + per_page < count:
@@ -378,15 +378,16 @@ def show_tweets(attitude, statement_id, page):
     # print(getTweets('gabapentin'))
     if attitude == 'support':
         count = len(support)
-        tweets = get_tweets_for_page(support, page, per_page, count)
+        tweets = get_data_for_page(support, page, per_page, count)
     elif attitude == 'oppose':
         count = len(oppose)
-        tweets = get_tweets_for_page(oppose, page, per_page, count)
+        tweets = get_data_for_page(oppose, page, per_page, count)
     pagination = Pagination(page=page, total=count, per_page=per_page,
                             search=False, css_framework='bootstrap4')
     # topics = ast.literal_eval(topics)
     return render_template('biased_tweets.html',
                            data=tweets,
+                           data_type="tweet",
                            pagination=pagination,
                            statement_id=statement_id,
                            statement=statement,
@@ -394,17 +395,44 @@ def show_tweets(attitude, statement_id, page):
                            offset=(page-1)*per_page
                            )
 
+@app.route('/biased_snippets/<attitude>/<statement_id>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/biased_snippets/<attitude>/<statement_id>/<int:page>', methods=['GET', 'POST'])
+def show_snippets(attitude, statement_id, page):
+    """Show all the snippets with attitude in pagination way."""
+    per_page = 10
+    # pro, con = getTweets(event, cluster)
+    statement = Statement.query.filter_by(id=statement_id).first().content
+    support, oppose = getSupportOpposeSnippetsFromDB(statement_id)
+    # print(getTweets('gabapentin'))
+    if attitude == 'support':
+        count = len(support)
+        snippets = get_data_for_page(support, page, per_page, count)
+    elif attitude == 'oppose':
+        count = len(oppose)
+        snippets = get_data_for_page(oppose, page, per_page, count)
+    pagination = Pagination(page=page, total=count, per_page=per_page,
+                            search=False, css_framework='bootstrap4')
+    # topics = ast.literal_eval(topics)
+    return render_template('biased_snippets.html',
+                           data=snippets,
+                           data_type="snippet",
+                           pagination=pagination,
+                           statement_id=statement_id,
+                           statement=statement,
+                           attitude=attitude,
+                           offset=(page-1)*per_page
+                           )
 
-@app.route('/loadmore')
-def load_more():
-    """Load more data and return jsonified data to js function."""
+@app.route('/loadmore/<content_type>')
+def load_more(content_type):
+    """Load more data and return jsonfied data to js function."""
     # if session.get('event') and session.get('per_page'):
     # print(session.get('per_page'))
     global PER_PAGE
     global SUPPORT_TWEETS
     global OPPOSE_TWEETS
-    global SUPPORT_TWEETS
-    global OPPOSE_TWEETS
+    global SUPPORT_SNIPPETS
+    global OPPOSE_SNIPPETS
     # print(PER_PAGE)
     # per_page = session.get('per_page')
     # pro_res = session['pro'][PER_PAGE:PER_PAGE+5]
@@ -412,19 +440,35 @@ def load_more():
     # session['per_page'] = per_page + 5
     idx = PER_PAGE
 
-    augment_support = PER_PAGE + 5
-    if augment_support > len(SUPPORT_TWEETS):
-        augment_support = len(SUPPORT_TWEETS)
-    print("PER_PAGE ", PER_PAGE)
-    print("augment_support ", augment_support)
-    support_res = SUPPORT_TWEETS[PER_PAGE:augment_support]
+    if content_type == "tweets":
+        augment_support = PER_PAGE + 5
+        if augment_support > len(SUPPORT_TWEETS):
+            augment_support = len(SUPPORT_TWEETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_support ", augment_support)
+        support_res = SUPPORT_TWEETS[PER_PAGE:augment_support]
 
-    augment_oppose = PER_PAGE + 5
-    if augment_oppose > len(OPPOSE_TWEETS):
-        augment_oppose = len(OPPOSE_TWEETS)
-    print("PER_PAGE ", PER_PAGE)
-    print("augment_oppose ", augment_oppose)
-    oppose_res = OPPOSE_TWEETS[PER_PAGE:augment_oppose]
+        augment_oppose = PER_PAGE + 5
+        if augment_oppose > len(OPPOSE_TWEETS):
+            augment_oppose = len(OPPOSE_TWEETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_oppose ", augment_oppose)
+        oppose_res = OPPOSE_TWEETS[PER_PAGE:augment_oppose]
+
+    if content_type == "snippets":
+        augment_support = PER_PAGE + 5
+        if augment_support > len(SUPPORT_SNIPPETS):
+            augment_support = len(SUPPORT_SNIPPETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_support ", augment_support)
+        support_res = SUPPORT_SNIPPETS[PER_PAGE:augment_support]
+
+        augment_oppose = PER_PAGE + 5
+        if augment_oppose > len(OPPOSE_SNIPPETS):
+            augment_oppose = len(OPPOSE_SNIPPETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_oppose ", augment_oppose)
+        oppose_res = OPPOSE_SNIPPETS[PER_PAGE:augment_oppose]
 
     print("support_res", support_res)
     print("oppose_res", oppose_res)

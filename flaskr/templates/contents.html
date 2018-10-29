@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
 
 {% block contents %}
+{% if data_type == 'tweet' %}
+    {% set title="Tweets" %}
+{% elif data_type == 'snippet' %}
+    {% set title="News" %}
+{% endif %}
 <!-- Portfolio Grid Section -->
 <section class="portfolio mt-5" id="portfolio">
     <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">Tweets</h2>
+        <h2 class="text-center text-uppercase text-secondary mb-0">{{ title }}</h2>
         <hr class="star-dark mb-5">
         <div class="card my-3">
             <div class="card-header bg-dark">

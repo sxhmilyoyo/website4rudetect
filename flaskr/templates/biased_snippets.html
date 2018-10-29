@@ -13,7 +13,7 @@
             </p>
         </div>
         </a> -->
-        <a class="list-link-item" data-toggle="collapse" href="#{{ item[1] }}" aria-expanded="false">
+        <a class="list-link-item" data-toggle="collapse" href="#{{ item[0] }}" aria-expanded="false">
         <div class="media text-muted pt-3">
             <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
             <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
@@ -23,18 +23,13 @@
                 </p>
             </div>
             <p class="tsp text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">
-                <font size="3">
-                    {{ item[0] }}
-                </font>
-            </strong>
             <font size="4">
-                {{ item[2] }}
+                {{ item[1] }}
             </font>
             </p>
         </div>
         </a>
-        <div id="{{ item[1] }}" class="collapse border-bottom border-gray bg-light">
+        <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light">
         <div class="row">
             <div class="col-7 alert_add">
             <div class="inserted alert-inline alert-success" role="alert" style="display: none">

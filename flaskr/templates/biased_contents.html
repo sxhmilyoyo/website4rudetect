@@ -2,10 +2,18 @@
 
 {% if attitude == 'support' %}
     {% set color="#ee4d4d" %}
-    {% set title="Supported Tweets" %}
+    {% if data_type=="tweet" %}
+        {% set title="Supported Tweets" %}
+    {% else %}
+        {% set title="Supported News" %}
+    {% endif %}
 {% elif attitude == 'oppose' %}
-    {% set color="#2135282" %}
-    {% set title="Opposed Tweets" %}
+    {% set color="#135282" %}
+    {% if data_type=="tweet" %}
+        {% set title="Opposed Tweets" %}
+    {% else %}
+        {% set title="Opposed News" %}
+    {% endif %}
 {% endif %}
 
 {% block contents %}

@@ -56,9 +56,9 @@
                 <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
                     <i class="fa fa-times"></i>
                 </button>
-                <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                <!-- <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
                     <i class="fa fa-info"></i>
-                </a>
+                </a> -->
                 </div>
             </div>
             </div>
@@ -71,7 +71,7 @@
             <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
         </div> -->
         <p class="d-block text-right mt-3">
-            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='support') }}">All Supported Google Snippets</a>
+            <a href="{{ url_for('show_snippets', statement_id=statement_id, head=head, attitude='support') }}">All Supported News</a>
         </p>
     </div>
     </div>
@@ -119,9 +119,9 @@
                 <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
                     <i class="fa fa-times"></i>
                 </button>
-                <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                <!-- <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
                     <i class="fa fa-info"></i>
-                </a>
+                </a> -->
                 </div>
             </div>
             </div>
@@ -130,20 +130,14 @@
         </span>
         <span id=listOpposeSnippet>
         </span>
-        <!-- <div class="text-center mt-4">
-        <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
-        </div> -->
-        <!-- <form action="{{ url_for('load_more') }}" method=get>
-        <button type="submit" class="btn btn-primary">Primary</button>
-        </form> -->
         <p class="d-block text-right mt-3">
-            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='oppose') }}">All Opposed Google Snippets</a>
+            <a href="{{ url_for('show_snippets', statement_id=statement_id, attitude='oppose') }}">All Opposed News</a>
         </p>
     </div>
     </div>
     <div class="col-md-12">
     <div class="text-center my-4">
-        <button id=loadmore class="btn btn-outline-secondary">Loadmore</button>
+        <button id=loadmore-snippets class="btn btn-outline-secondary">Loadmore</button>
     </div>
     </div>
 
