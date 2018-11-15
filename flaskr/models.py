@@ -175,30 +175,6 @@ class Event_Cluster(Base):
     def __repr__(self):
         return '<Event_Cluster: cluster_name %r, event_name %r>' % (self.cluster_name, self.event_name)
 
-
-class Statement(Base):
-    """Statement Model."""
-
-    __tablename__ = 'statement'
-    __table_args__ = (
-        ForeignKeyConstraint(['event_id', 'cluster_id'], 
-        ['event_cluster.event_id', 'event_cluster.cluster_id']),
-    )
-    id = Column(String(200), primary_key=True)
-    cluster_id = Column(Integer, nullable=False)
-    event_id = Column(Integer, nullable=False)
-    content = Column(Text, unique=True)
-    target = Column(String(50))
-    stance = Column(String(20))
-    # snippets = Column(NestedMutable.as_mutable(JSONType))
-
-    # Statement to Event_Cluster: Many to One
-    # event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
-    # event_cluster = relationship("Event_Cluster", backref="statements")
-    event = association_proxy("cluster_association", "event")
-    def __repr__(self):
-        return '<Statement: id %r, content %r>' % (self.id, self.content)
-
 class Origin_Statement(Base):
     """Original Statement Model."""
 
@@ -230,3 +206,26 @@ class Snippet(Base):
 
     def __repr__(self):
         return '<Snippet : id %r, statement_id %r, content %r>' % (self.id, self.statement_id, self.content)
+
+class Statement(Base):
+    """Statement Model."""
+
+    __tablename__ = 'statement'
+    __table_args__ = (
+        ForeignKeyConstraint(['event_id', 'cluster_id'], 
+        ['event_cluster.event_id', 'event_cluster.cluster_id']),
+    )
+    id = Column(String(200), primary_key=True)
+    cluster_id = Column(Integer, nullable=False)
+    event_id = Column(Integer, nullable=False)
+    content = Column(Text, unique=True)
+    target = Column(String(50))
+    stance = Column(String(20))
+    # snippets = Column(NestedMutable.as_mutable(JSONType))
+
+    # Statement to Event_Cluster: Many to One
+    # event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
+    # event_cluster = relationship("Event_Cluster", backref="statements")
+    event = association_proxy("cluster_association", "event")
+    def __repr__(self):
+        return '<Statement: id %r, content %r>' % (self.id, self.content)
