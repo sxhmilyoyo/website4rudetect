@@ -222,11 +222,12 @@ def show_events():
     # print(current_user.username)
     # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
     print(events_names)
+    events_names = ['germanwings-crash', 'TexasVotes', 'Gabapentin', 'Capriccio', 'ebola-essien', 'BandyLee', 'TrumpSalary', 'dogjealousy', 'Irma', 'JackBreuer', 'ItsJustAJacket', 'JetLi', 'Ingraham', 'SouthwestKey', 'gurlitt', 'prince-toronto', 'charliehebdo', 'sydneysiege', 'ferguson', 'putinmissing']
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('events.html', events_names=events_names, current_user=current_user)
+    return render_template('events.html', root_flag=True, events_names=events_names, current_user=current_user)
 
 @app.route('/candidate_rumors/<event_name>', methods=['GET'])
 def show_rumors(event_name):
@@ -264,7 +265,7 @@ def show_rumors(event_name):
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('candidate_rumors.html', origin_statements=origin_statements, items=new_statements, current_user=current_user)
+    return render_template('candidate_rumors.html', root_flag=False, origin_statements=origin_statements, items=new_statements, current_user=current_user)
 
 @app.route('/candidate_rumors/get_tweets_of_statement_chart/<statement_id>', methods=['GET'])
 def getTweetsofStatement4Chart(statement_id):
@@ -327,7 +328,7 @@ def getTweets4Statement(statement_id, per_page=5):
     print(len(SUPPORT_TWEETS))
 
     # topics = ast.literal_eval(topics)
-    return render_template('contents_tweets.html', data_type="tweet", statement_id=statement_id, statement=statement,
+    return render_template('contents_tweets.html', root_flag=False, data_type="tweet", statement_id=statement_id, statement=statement,
                            oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets
                            )
 
@@ -352,7 +353,7 @@ def getSnippets4Statement(statement_id, per_page=5):
     snippets = getSnippetsFromDB(statement_id)
 
     # topics = ast.literal_eval(topics)
-    return render_template('contents_snippets.html', data_type="snippet", statement_id=statement_id, statement=statement,
+    return render_template('contents_snippets.html', root_flag=False, data_type="snippet", statement_id=statement_id, statement=statement,
                            oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE],
                            snippets=snippets
                            )
@@ -386,6 +387,7 @@ def show_tweets(attitude, statement_id, page):
                             search=False, css_framework='bootstrap4')
     # topics = ast.literal_eval(topics)
     return render_template('biased_tweets.html',
+                            root_flag=False,
                            data=tweets,
                            data_type="tweet",
                            pagination=pagination,
@@ -414,6 +416,7 @@ def show_snippets(attitude, statement_id, page):
                             search=False, css_framework='bootstrap4')
     # topics = ast.literal_eval(topics)
     return render_template('biased_snippets.html',
+                            root_flag=False,
                            data=snippets,
                            data_type="snippet",
                            pagination=pagination,

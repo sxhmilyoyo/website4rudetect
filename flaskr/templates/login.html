@@ -1,9 +1,10 @@
 
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block body %}
-<link href="{{url_for('static', filename='css/bootstrap.css')}}" rel="stylesheet">
-<link href="{{url_for('static', filename='signin.css')}}" rel="stylesheet">
+{% extends "layout.html" %}
+{% block login %}
+
+<div class="row">
 <form class="form-signin" action="{{ url_for('login') }}" method=post>
   <img class="mb-4 mx-auto d-block" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
   {% if error %}
@@ -13,9 +14,9 @@
   {{ wtf.form_field(form.username) }}
   {{ wtf.form_field(form.password) }}
   {{ wtf.form_field(form.remember) }}
-  <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+  <button class="btn btn-secondary btn-block" type="submit">Sign in</button>
   <p class="mb-1 text-muted text-center font-italic">or</p>
-  <a class="btn btn-primary btn-block" href="{{ url_for('signup') }}", role="button">Sign up</button>
+  <a class="btn btn-secondary btn-block" href="{{ url_for('signup') }}", role="button">Sign up</button>
   <!-- <label for="inputUsername" class="sr-only">Email address</label>
   <input type="text" id="inputUsername" name=username class="form-control" placeholder="Username" required autofocus>
   <label for="inputPassword" class="sr-only">Password</label>

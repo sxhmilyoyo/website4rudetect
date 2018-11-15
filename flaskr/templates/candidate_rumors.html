@@ -9,8 +9,13 @@
 {% block candidate_rumors %}
 {% if origin_statements[3] == 'SUPPORT' %}
     {% set color="#ee4d4d" %}
+    {% set truth="True" %}
 {% elif origin_statements[3] == 'AGAINST' %}
     {% set color="#135282" %}
+    {% set truth="False" %}
+{% elif origin_statements[3] == "NEUTRAL" %}
+    {% set color="#333740" %}
+    {% set truth="Mixture" %}
 {% endif %}
 <!-- Portfolio Grid Section -->
 <section class="portfolio mt-5" id="portfolio">
@@ -31,7 +36,7 @@
                 <div class="card" style="background-color: {{ color }}">
                     <div class="card-header">
                         <p class="lead text-white text-center mt-3">
-                            {{ origin_statements[3] }}
+                            {{ truth }}
                         </p>
                     </div>
                 </div>
@@ -122,6 +127,29 @@
                             </div>
                         </div>
                         
+                        {% if k == 0 %}
+                        <hr class="star-dark mb-5">
+                        <div class="row my-5 mx-5">
+                            <div class="col-10">
+                                <div class="card bg-dark">
+                                    <div class="card-header">
+                                        <p class="lead mt-3 text-white">
+                                            {{ origin_statements[1] }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="card" style="background-color: {{ color }}">
+                                    <div class="card-header">
+                                        <p class="lead text-white text-center mt-3">
+                                            {{ truth }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

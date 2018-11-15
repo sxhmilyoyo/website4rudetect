@@ -118,7 +118,7 @@ class CreateDatabaseTable(object):
             # print("duplicated")
         else:
             # print("statement ", statement)
-            if len(statement) == 4:
+            if len(statement) == 4 or len(statement) == 5:
                 topic = statement[1]
                 content = statement[2]
                 stance = statement[3]
@@ -150,7 +150,7 @@ class CreateDatabaseTable(object):
             # print("duplicated")
         else:
             # print("statement ", statement)
-            if len(statement) == 4:
+            if len(statement) == 4 or len(statement) == 5:
                 topic = statement[1]
                 content = statement[2]
                 stance = statement[3]
@@ -238,7 +238,7 @@ class CreateDatabaseTable(object):
             tableSnippet = db_session.query(Snippet).filter(
                 Snippet.id == snippet_id).first()
         else:
-            if len(snippet) == 4:
+            if len(snippet) == 4 or len(snippet) == 5:
                 topic = snippet[1]
                 content = snippet[2]
                 stance = snippet[3]
