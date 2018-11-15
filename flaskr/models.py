@@ -141,7 +141,7 @@ class Event_Cluster(Base):
     """Association table between cluster and event"""
 
     __tablename__ = 'event_cluster'
-    id = Column(String(100), primary_key=True, unique=True)
+    id = Column(String(100), primary_key=True)
     cluster_name = Column(String(5), ForeignKey(
         'cluster.name'), primary_key=True)
     event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)

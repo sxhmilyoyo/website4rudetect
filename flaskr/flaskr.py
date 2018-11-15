@@ -63,6 +63,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 Bootstrap(app)
 
+
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flask.db'),
     SECRET_KEY='test',
