@@ -49,6 +49,13 @@ Library
 RuDetect27
 tests
 bk_data
+finalData
+data
+backup_database
+backup_newest_database
+db_repository
+bk_bk_data
+tests
 
 
 # Byte-compiled / optimized / DLL files
