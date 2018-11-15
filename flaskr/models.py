@@ -186,7 +186,7 @@ class Origin_Statement(Base):
     # snippets = Column(NestedMutable.as_mutable(JSONType))
 
     # Statement to Event: One to One
-    event_id = Column(String(100), ForeignKey('event.id'))
+    event_id = Column(Integer, ForeignKey('event.id'))
     event_cluster = relationship("Event", backref=backref("origin_statement", uselist=False))
 
     def __repr__(self):
