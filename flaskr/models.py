@@ -160,9 +160,9 @@ class Event_Cluster(Base):
 
     __tablename__ = 'event_cluster'
     # id = Column(String(100), primary_key=True)
-    cluster_name = Column(String(5), ForeignKey(
-        'cluster.name'), primary_key=True)
-    event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
+    cluster_id = Column(Integer, ForeignKey(
+        'cluster.id'), primary_key=True)
+    event_id = Column(Integer, ForeignKey('event.id'), primary_key=True)
 
     cluster = relationship("Cluster", backref="event_associations")
     event = relationship("Event", backref="cluster_associations")
@@ -181,12 +181,12 @@ class Statement(Base):
 
     __tablename__ = 'statement'
     __table_args__ = (
-        ForeignKeyConstraint(['cluster_name', 'event_name'], 
-        ['event_cluster.cluster_name', 'event_cluster.event_name']),
+        ForeignKeyConstraint(['cluster_id', 'event_id'], 
+        ['event_cluster.cluster_id', 'event_cluster.event_id']),
     )
     id = Column(String(200), primary_key=True)
-    cluster_name = Column(String(5), unique=True)
-    event_name = Column(String(50), unique=True)
+    cluster_id = Column(Integer, unique=True)
+    event_id = Column(Integer, unique=True)
     content = Column(Text, unique=True)
     target = Column(String(50))
     stance = Column(String(20))
