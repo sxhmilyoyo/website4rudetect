@@ -39,7 +39,7 @@ from sqlalchemy import desc
 import shutil
 from werkzeug.utils import secure_filename
 
-from flaskr.LoadData import LoadData
+from flaskr.loadData import LoadData
 
 import sys
 sys.path.append("..")
@@ -62,6 +62,7 @@ UPLOADED_FILES_URL = 'http://localhost:5000/data/'
 app = Flask(__name__)
 app.config.from_object(__name__)
 Bootstrap(app)
+
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flask.db'),
@@ -102,7 +103,7 @@ def reinitd_command():
 
 @app.cli.command('initdata')
 @click.option('--rootpath', '-r')
-def addevent_command(rootpath):
+def initevent_command(rootpath):
     """Add event data to DB."""
     loadData = LoadData(rootpath)
     try:
@@ -132,6 +133,7 @@ def addevent_command(rootpath, event):
         db_session.remove()
     print("Load event{} to DB.".format(event))
 
+
 @app.cli.command('addadmin')
 def addadmin_command():
     """Add admin to DB."""
@@ -145,9 +147,10 @@ def addadmin_command():
         db_session.remove()
     print("Add admin: {} to DB.".format('admin'))
 
+
 @app.cli.command('deletedata')
 @click.option('--event', '-e')
-def addevent_command(event):
+def deleteevent_command(event):
     """Delete event data to DB."""
     try:
         db_session.remove()
@@ -158,6 +161,7 @@ def addevent_command(event):
         db_session.rollback()
         db_session.remove()
     print("Delete event{} to DB.".format(event))
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -175,7 +179,7 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-                return redirect(url_for('show_rumors', current_user=current_user))
+                return redirect(url_for('show_events', current_user=current_user))
             else:
                 error = "Invalid password"
         else:
@@ -209,40 +213,83 @@ def signup():
 
 
 @app.route('/')
-def show_rumors():
+def show_events():
     """Show the rumors entries."""
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     events = Event.query.all()
-    print(current_user.is_authenticated)
-    print(current_user.username)
+    events_names = [event.name for event in events]
+    # print(current_user.is_authenticated)
+    # print(current_user.username)
     # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
-    res = []
-    for event in events:
-        # head
-        head = "#" + event.name
-        # topics
-        clusters = sorted(set([c.cluster_name for c in event.clusters]))
-        statements = {}
-        topics = {}
-        for cluster in clusters:
-            # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
-            #     topic = json.load(fp)
-            statementsDB = getStatementsFromDB(event.name, cluster)
-            # event_cluster = Event_Cluster.query.filter_by(
-            #     event_name=event.name, cluster_name=cluster).first()
-            statements_cluster = [(statement.id, statement.content) for statement in statementsDB]
-            topics_cluster = list(set([statement.target for statement in statementsDB]))
-            print(event, cluster, statements)
-            statements[cluster] = statements_cluster
-            topics[cluster] = topics_cluster
-        res.append({'head': head, 'statements': statements, 'topics': topics})
-    print(res)
+    print(events_names)
+    events_names = ['germanwings-crash', 'TexasVotes', 'Gabapentin', 'Capriccio', 'ebola-essien', 'BandyLee', 'TrumpSalary', 'dogjealousy', 'Irma', 'JackBreuer', 'ItsJustAJacket', 'JetLi', 'Ingraham', 'SouthwestKey', 'gurlitt', 'prince-toronto', 'charliehebdo', 'sydneysiege', 'ferguson', 'putinmissing']
     # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
     #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
     #         ]
-    return render_template('show_rumors.html', items=res, events=events, current_user=current_user)
+    return render_template('events.html', root_flag=True, events_names=events_names, current_user=current_user)
+
+@app.route('/candidate_rumors/<event_name>', methods=['GET'])
+def show_rumors(event_name):
+    """Show the rumors entries."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    # print(current_user.is_authenticated)
+    # print(current_user.username)
+    # events = [event for event in os.listdir("../data") if os.path.isdir('../data/'+event)]
+    event = Event.query.filter_by(name=event_name).first()
+    origin_statements = (event.origin_statement.id, event.origin_statement.content, event.origin_statement.target, event.origin_statement.stance)
+    print(event)
+    new_statements = []
+    # topics
+    clusters = sorted(set([c.name for c in event.clusters]))
+    statements = {}
+    topics = {}
+    for cluster in clusters:
+        # with open('../data/'+event.name+'/'+cluster+'/targets.json') as fp:
+        #     topic = json.load(fp)
+        statementsDB = getStatementsFromDB(event.name, cluster)
+        # event_cluster = Event_Cluster.query.filter_by(
+        #     event_name=event.name, cluster_name=cluster).first()
+        statements_cluster = [(statement.id, statement.content)
+                                for statement in statementsDB]
+        statements_cluster.sort(key=lambda x: x[0])
+        topics_cluster = list(
+            set([statement.target for statement in statementsDB]))
+        print(event, cluster, statements)
+        statements[cluster] = statements_cluster
+        # topics[cluster] = topics_cluster
+        topics[cluster] = []
+        new_statements.append({'statements': statements, 'topics': topics})
+    print(new_statements)
+    # test = [{'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
+    #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]},
+    #         {'head': 'head1', 'topics': [['test1', 'test1', 'test1'], ['test2', 'test2', 'test2']]}
+    #         ]
+    return render_template('candidate_rumors.html', root_flag=False, origin_statements=origin_statements, items=new_statements, current_user=current_user)
+
+@app.route('/candidate_rumors/get_tweets_of_statement_chart/<statement_id>', methods=['GET'])
+def getTweetsofStatement4Chart(statement_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    """Get the details for event."""
+    print("!!!!!!!!!!!", statement_id)
+    # print(session['per_page'])
+    statement = Statement.query.filter_by(id=statement_id).first().content
+    print("!!!!!!!!!!!", statement)
+    support_tweets, oppose_tweets = getSupportOpposeTweetsFromDB(statement_id)
+    support_tweets_len = len(support_tweets)
+    oppose_tweets_len = len(oppose_tweets)
+
+    support_snippets, oppose_snippets = getSupportOpposeSnippetsFromDB(
+        statement_id)
+    support_snippets_len = len(support_snippets)
+    oppose_snippets_len = len(oppose_snippets)
+
+    # res = {"support_tweets_len":support_tweets_len, "oppose_tweets_len":oppose_tweets_len, "support_snippets_len":support_snippets_len, "oppose_snippets_len":oppose_snippets_len}
+    return jsonify(support_tweets_len=support_tweets_len, oppose_tweets_len=oppose_tweets_len, support_snippets_len=support_snippets_len, oppose_snippets_len=oppose_snippets_len)
+
 
 
 def getTweets(event, cluster):
@@ -259,13 +306,14 @@ def getTweets(event, cluster):
 # @app.route('/abstract/<event>/<cluster>/<topics>')
 # @app.route('/abstract/<event>/<cluster>/<topics>/<int:per_page>')
 # def getTweets4Statement(event, cluster, topics, per_page=5):
-@app.route('/abstract/<statement_id>/<head>/<topics>')
-@app.route('/abstract/<statement_id>/<head>/<topics>/<int:per_page>')
-def getTweets4Statement(statement_id, head, topics, per_page=5):
-    """Get the details for event gabapentin."""
+@app.route('/tweets/<statement_id>')
+@app.route('/tweets/<statement_id>/<int:per_page>')
+def getTweets4Statement(statement_id, per_page=5):
+    """Get the details for event."""
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     global PER_PAGE
-    global SUPPORT_TWEETS
-    global OPPOSE_TWEETS
     global SUPPORT_TWEETS
     global OPPOSE_TWEETS
     # session['event'] = event
@@ -281,20 +329,39 @@ def getTweets4Statement(statement_id, head, topics, per_page=5):
     tweets = getTweetsFromDB(statement_id)
     print(len(SUPPORT_TWEETS))
 
-    support_snippets, oppose_snippets = getSupportOpposeSnippetsFromDB(statement_id)
+    # topics = ast.literal_eval(topics)
+    return render_template('contents_tweets.html', root_flag=False, data_type="tweet", statement_id=statement_id, statement=statement,
+                           oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets
+                           )
+
+@app.route('/snippets/<statement_id>')
+@app.route('/snippets/<statement_id>/<int:per_page>')
+def getSnippets4Statement(statement_id, per_page=5):
+    """Get the details for event."""
+    global PER_PAGE
+    global SUPPORT_SNIPPETS
+    global OPPOSE_SNIPPETS
+    # session['event'] = event
+    # session['per_page'] = per_page
+    PER_PAGE = per_page
+    print(PER_PAGE)
+    # print(session['per_page'])
+    statement = Statement.query.filter_by(id=statement_id).first().content
+
+    support_snippets, oppose_snippets = getSupportOpposeSnippetsFromDB(
+        statement_id)
     SUPPORT_SNIPPETS = support_snippets[:]
     OPPOSE_SNIPPETS = oppose_snippets[:]
     snippets = getSnippetsFromDB(statement_id)
 
-    topics = ast.literal_eval(topics)
-    return render_template('abstract.html', statement_id=statement_id, statement=statement, topics=topics, head=head,
-                           oppose_tweets=oppose_tweets[:PER_PAGE], support_tweets=support_tweets[:PER_PAGE], tweets=tweets,
-                           chart_support_tweets=len(SUPPORT_TWEETS), chart_oppose_tweets=len(OPPOSE_TWEETS),
-                           oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE], snippets=snippets,
-                           chart_support_snippets=len(SUPPORT_SNIPPETS), chart_oppose_snippets=len(OPPOSE_SNIPPETS))
+    # topics = ast.literal_eval(topics)
+    return render_template('contents_snippets.html', root_flag=False, data_type="snippet", statement_id=statement_id, statement=statement,
+                           oppose_snippets=oppose_snippets[:PER_PAGE], support_snippets=support_snippets[:PER_PAGE],
+                           snippets=snippets
+                           )
 
 
-def get_tweets_for_page(data, page, per_page, count):
+def get_data_for_page(data, page, per_page, count):
     """Get tweets for each page for pagination."""
     page -= 1
     if 5 * page + per_page < count:
@@ -303,60 +370,117 @@ def get_tweets_for_page(data, page, per_page, count):
         return data[per_page * page:]
 
 
-@app.route('/detail/<statement_id>/<head>/<topics>/<attitude>', defaults={'page': 1}, methods=['GET', 'POST'])
-@app.route('/detail/<statement_id>/<head>/<topics>/<attitude>/<int:page>', methods=['GET', 'POST'])
-def show_tweets(statement_id, head, topics, attitude, page):
+@app.route('/biased_tweets/<attitude>/<statement_id>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/biased_tweets/<attitude>/<statement_id>/<int:page>', methods=['GET', 'POST'])
+def show_tweets(attitude, statement_id, page):
     """Show all the tweets with attitude in pagination way."""
     per_page = 10
     # pro, con = getTweets(event, cluster)
-    statement = Statement.query.filter_by(id=statement_id).first().content    
+    statement = Statement.query.filter_by(id=statement_id).first().content
     support, oppose = getSupportOpposeTweetsFromDB(statement_id)
     # print(getTweets('gabapentin'))
     if attitude == 'support':
         count = len(support)
-        tweets = get_tweets_for_page(support, page, per_page, count)
+        tweets = get_data_for_page(support, page, per_page, count)
     elif attitude == 'oppose':
         count = len(oppose)
-        tweets = get_tweets_for_page(oppose, page, per_page, count)
+        tweets = get_data_for_page(oppose, page, per_page, count)
     pagination = Pagination(page=page, total=count, per_page=per_page,
                             search=False, css_framework='bootstrap4')
-    topics = ast.literal_eval(topics)
-    return render_template('detail.html',
-                           head=head,
+    # topics = ast.literal_eval(topics)
+    return render_template('biased_tweets.html',
+                            root_flag=False,
                            data=tweets,
+                           data_type="tweet",
                            pagination=pagination,
                            statement_id=statement_id,
                            statement=statement,
                            attitude=attitude,
-                           topics=topics,
                            offset=(page-1)*per_page
                            )
 
+@app.route('/biased_snippets/<attitude>/<statement_id>', defaults={'page': 1}, methods=['GET', 'POST'])
+@app.route('/biased_snippets/<attitude>/<statement_id>/<int:page>', methods=['GET', 'POST'])
+def show_snippets(attitude, statement_id, page):
+    """Show all the snippets with attitude in pagination way."""
+    per_page = 10
+    # pro, con = getTweets(event, cluster)
+    statement = Statement.query.filter_by(id=statement_id).first().content
+    support, oppose = getSupportOpposeSnippetsFromDB(statement_id)
+    # print(getTweets('gabapentin'))
+    if attitude == 'support':
+        count = len(support)
+        snippets = get_data_for_page(support, page, per_page, count)
+    elif attitude == 'oppose':
+        count = len(oppose)
+        snippets = get_data_for_page(oppose, page, per_page, count)
+    pagination = Pagination(page=page, total=count, per_page=per_page,
+                            search=False, css_framework='bootstrap4')
+    # topics = ast.literal_eval(topics)
+    return render_template('biased_snippets.html',
+                            root_flag=False,
+                           data=snippets,
+                           data_type="snippet",
+                           pagination=pagination,
+                           statement_id=statement_id,
+                           statement=statement,
+                           attitude=attitude,
+                           offset=(page-1)*per_page
+                           )
 
-@app.route('/loadmore')
-def load_more():
-    """Load more data and return jsonified data to js function."""
+@app.route('/loadmore/<content_type>')
+def load_more(content_type):
+    """Load more data and return jsonfied data to js function."""
     # if session.get('event') and session.get('per_page'):
     # print(session.get('per_page'))
     global PER_PAGE
     global SUPPORT_TWEETS
     global OPPOSE_TWEETS
-    global SUPPORT_TWEETS
-    global OPPOSE_TWEETS
+    global SUPPORT_SNIPPETS
+    global OPPOSE_SNIPPETS
     # print(PER_PAGE)
     # per_page = session.get('per_page')
     # pro_res = session['pro'][PER_PAGE:PER_PAGE+5]
     # con_res = session['con'][PER_PAGE:PER_PAGE+5]
     # session['per_page'] = per_page + 5
     idx = PER_PAGE
-    augument = PER_PAGE + 5
-    if augument > len(SUPPORT_TWEETS):
-        augument = len(SUPPORT_TWEETS)
-    support_res = SUPPORT_TWEETS[PER_PAGE:augument]
-    oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
-    support_res = SUPPORT_TWEETS[PER_PAGE:augument]
-    oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
-    PER_PAGE = augument
+
+    if content_type == "tweets":
+        augment_support = PER_PAGE + 5
+        if augment_support > len(SUPPORT_TWEETS):
+            augment_support = len(SUPPORT_TWEETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_support ", augment_support)
+        support_res = SUPPORT_TWEETS[PER_PAGE:augment_support]
+
+        augment_oppose = PER_PAGE + 5
+        if augment_oppose > len(OPPOSE_TWEETS):
+            augment_oppose = len(OPPOSE_TWEETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_oppose ", augment_oppose)
+        oppose_res = OPPOSE_TWEETS[PER_PAGE:augment_oppose]
+
+    if content_type == "snippets":
+        augment_support = PER_PAGE + 5
+        if augment_support > len(SUPPORT_SNIPPETS):
+            augment_support = len(SUPPORT_SNIPPETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_support ", augment_support)
+        support_res = SUPPORT_SNIPPETS[PER_PAGE:augment_support]
+
+        augment_oppose = PER_PAGE + 5
+        if augment_oppose > len(OPPOSE_SNIPPETS):
+            augment_oppose = len(OPPOSE_SNIPPETS)
+        print("PER_PAGE ", PER_PAGE)
+        print("augment_oppose ", augment_oppose)
+        oppose_res = OPPOSE_SNIPPETS[PER_PAGE:augment_oppose]
+
+    print("support_res", support_res)
+    print("oppose_res", oppose_res)
+
+    # support_res = SUPPORT_TWEETS[PER_PAGE:augument]
+    # oppose_res = OPPOSE_TWEETS[PER_PAGE:augument]
+    PER_PAGE = max(augment_support, augment_oppose)
     print("=" * 100)
     print(PER_PAGE)
     return jsonify(support=support_res, oppose=oppose_res, idx=idx)
@@ -450,7 +574,7 @@ def getTweetsFromDB(statement_id, stance=None, order='asc'):
                    for r in Rumor.query.filter_by(statement_id=statement_id
                                                   ).order_by(desc(Rumor.date)).all()
                    ]
-    
+
     return res
 
 
@@ -463,7 +587,8 @@ def getStatementsFromDB(event, cluster):
 
 def getSupportOpposeSnippetsFromDB(statement_id):
     """Get Snippets for event_cluster from database."""
-    statement_stance = Statement.query.filter_by(id=statement_id).first().stance
+    statement_stance = Statement.query.filter_by(
+        id=statement_id).first().stance
     support = []
     oppose = []
     if statement_stance == 'FAVOR':
@@ -473,20 +598,30 @@ def getSupportOpposeSnippetsFromDB(statement_id):
         support = getSnippetsFromDB(statement_id, 'AGAINST')
         oppose = getSnippetsFromDB(statement_id, 'FAVOR')
     elif statement_stance == 'NONE':
-        support = getSnippetsFromDB(statement_id, 'AGAINST')
-        oppose = getSnippetsFromDB(statement_id, 'FAVOR')
+        support = getSnippetsFromDB(statement_id, 'FAVOR')
+        oppose = getSnippetsFromDB(statement_id, 'AGAINST')
     return support, oppose
+
 
 def getSnippetsFromDB(statement_id, stance=None):
     if stance:
-        snippets = [(snippet.id, snippet.content, snippet.target) for snippet in Snippet.query.filter_by(statement_id=statement_id, stance=stance).all()]
+        # if stance == 'FAVOR':
+        snippets = [(snippet.id, snippet.content)
+                    for snippet in Snippet.query.filter_by(statement_id=statement_id,
+                                                            stance=stance).all()]
+        # elif stance == 'AGAINST':
+        #     snippets = [(snippet.id, snippet.content)
+        #                 for snippet in Snippet.query.filter_by(statement_id=statement_id,
+        #                                                        stance='AGAINST').all()]
     else:
-        snippets = [(snippet.id, snippet.content, snippet.target) for snippet in Snippet.query.filter_by(statement_id=statement_id).all()]        
+        snippets = [(snippet.id, snippet.content)
+                    for snippet in Snippet.query.filter_by(statement_id=statement_id).all()]
     return snippets
 
 
 def getSupportOpposeTweetsFromDB(statement_id):
-    statement_stance = Statement.query.filter_by(id=statement_id).first().stance
+    statement_stance = Statement.query.filter_by(
+        id=statement_id).first().stance
     support = []
     oppose = []
     if statement_stance == 'FAVOR':
@@ -496,9 +631,10 @@ def getSupportOpposeTweetsFromDB(statement_id):
         support = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
         oppose = getTweetsFromDB(statement_id, 'FAVOR', 'desc')
     elif statement_stance == 'NONE':
-        support = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
-        oppose = getTweetsFromDB(statement_id, 'FAVOR', 'desc')        
+        support = getTweetsFromDB(statement_id, 'FAVOR', 'desc')
+        oppose = getTweetsFromDB(statement_id, 'AGAINST', 'desc')
     return support, oppose
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -524,7 +660,7 @@ def copyFile():
     """Copy uploaded file to process folder."""
     user = User.query.filter_by(id=current_user.id).first()
     filename = user.file_name
-    print ("filename", filename)
+    print("filename", filename)
     uploadFilePath = UPLOADED_DATA_DIR / 'docs' / filename
     noSuffixFilname = filename.split(".")[0]
     processFolderPath = PROCESS_DATA_DIR / noSuffixFilname

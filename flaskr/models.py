@@ -7,6 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Table
 from sqlalchemy import UniqueConstraint
 from sqlalchemy import DateTime
+from sqlalchemy import ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import backref
 from flaskr.database import Base
@@ -16,7 +17,9 @@ from flask_login import UserMixin
 from sqlalchemy_utils import JSONType
 from sqlalchemy_utils import force_auto_coercion
 from sqlalchemy_json import NestedMutable
-
+from sqlalchemy_utils import ScalarListType
+from sqlalchemy.ext.associationproxy import association_proxy
+from itertools import chain
 
 # class MyMixin(object):
 #
@@ -50,8 +53,9 @@ class Rumor(Base):
     # event = relationship('Event', back_populates='rumors')
 
     # Rumor to Event_Cluster: Many to One
-    event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
-    event_cluster = relationship("Event_Cluster", backref="rumors")
+    # event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
+    # event_cluster = relationship("Event_Cluster", backref="rumors")
+    event = association_proxy("cluster_association", "event")
 
     # Rumor to Statement: Many to One
     statement_id = Column(String(100), ForeignKey('statement.id'))
@@ -77,7 +81,16 @@ class Cluster(Base):
     #     self.target = target
     #     self.tweet = tweet
     #     self.stance = stance
-    events = relationship('Event_Cluster', backref=backref('cluster', lazy=True))
+
+    # events = relationship(
+    #     'Event_Cluster', backref=backref('cluster', lazy=True))
+
+    events = association_proxy("event_associations", "event", 
+                        creator=lambda c: Event_Cluster(event=c))
+
+    @property
+    def statements(self):
+        return list(chain(*[c.statements for c in self.event_associations]))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -91,7 +104,15 @@ class Event(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     # clusters = relationship('Rumor', backref=backref('event', lazy=True))
-    clusters = relationship('Event_Cluster', backref=backref('event', lazy=True))
+    # clusters = relationship(
+    #     'Event_Cluster', backref=backref('event', lazy=True))
+
+    clusters = association_proxy("cluster_associations", "cluster", 
+                        creator=lambda s: Event_Cluster(cluster=s))
+
+    @property
+    def statements(self):
+        return list(chain(*[s.statements for s in self.cluster_associations]))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -120,12 +141,14 @@ class Opinion(Base):
     """Opinion association model."""
 
     __tablename__ = 'opinion'
-    user_name = Column(String(50), ForeignKey('user.username'), primary_key=True)
-    rumor_id = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
+    user_name = Column(String(50), ForeignKey(
+        'user.username'), primary_key=True)
+    rumor_id = Column(Integer, ForeignKey('rumor.id'), primary_key=True)
     flag = Column(String(10), primary_key=True)
     stance = Column(String(10), primary_key=True)
 
-    __table__args__ = (UniqueConstraint('user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
+    __table__args__ = (UniqueConstraint(
+        'user_name', 'rumor_id', 'stance', name='_user_rumor_stance_ck'))
 
     def __repr__(self):
         """Show entries in this format."""
@@ -136,44 +159,73 @@ class Event_Cluster(Base):
     """Association table between cluster and event"""
 
     __tablename__ = 'event_cluster'
-    id = Column(String(100), primary_key=True)
-    cluster_name = Column(String(5), ForeignKey('cluster.name'), primary_key=True)
+    # id = Column(String(100), primary_key=True)
+    cluster_name = Column(String(5), ForeignKey(
+        'cluster.name'), primary_key=True)
     event_name = Column(String(50), ForeignKey('event.name'), primary_key=True)
+
+    cluster = relationship("Cluster", backref="event_associations")
+    event = relationship("Event", backref="cluster_associations")
+
+    statements = relationship("Statement")
+
     # svo_dict = Column(NestedMutable.as_mutable(JSONType))
     # snippets = Column(NestedMutable.as_mutable(JSONType))
 
     def __repr__(self):
-        return '<Event_Cluster: id %r, cluster_name %r, event_name %r>' % (self.id, self.cluster_name, self.event_name)
+        return '<Event_Cluster: cluster_id %r, event_id %r>' % (self.cluster_id, self.event_id)
 
-class Statement(Base):
-    """Statement Model."""
+class Origin_Statement(Base):
+    """Original Statement Model."""
 
-    __tablename__ = 'statement'
+    __tablename__ = 'origin_statement'
     id = Column(String(200), primary_key=True)
     content = Column(Text, unique=True)
     target = Column(String(50))
     stance = Column(String(20))
     # snippets = Column(NestedMutable.as_mutable(JSONType))
 
-    # Statement to Event_Cluster: Many to One
-    event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
-    event_cluster = relationship("Event_Cluster", backref="statements")
+    # Statement to Event: One to One
+    event_id = Column(Integer, ForeignKey('event.id'))
+    event_cluster = relationship("Event", backref=backref("origin_statement", uselist=False))
 
     def __repr__(self):
-        return '<Statement: id %r, event_cluster_id %r, content %r>' % (self.id, self.event_cluster_id, self.content)
+        return '<Original Statement: id %r, event_id %r, content %r>' % (self.id, self.event_id, self.content)
 
 class Snippet(Base):
     """Snippet Model."""
 
     __tablename__ = 'snippet'
     id = Column(String(200), primary_key=True)
+    topic = Column(String(20))
     content = Column(Text)
-    target = Column(String(50))
     stance = Column(String(20))
-
     # Snippet to Statement: Many to One
     statement_id = Column(String(200), ForeignKey('statement.id'))
     statement = relationship("Statement", backref="snippets")
 
     def __repr__(self):
         return '<Snippet : id %r, statement_id %r, content %r>' % (self.id, self.statement_id, self.content)
+
+class Statement(Base):
+    """Statement Model."""
+
+    __tablename__ = 'statement'
+    __table_args__ = (
+        ForeignKeyConstraint(['event_name', 'cluster_name'], 
+        ['event_cluster.event_name', 'event_cluster.cluster_name']),
+    )
+    id = Column(String(200), primary_key=True)
+    cluster_name = Column(String(5), nullable=False)
+    event_name = Column(String(50), nullable=False)
+    content = Column(Text, unique=True)
+    target = Column(String(50))
+    stance = Column(String(20))
+    # snippets = Column(NestedMutable.as_mutable(JSONType))
+
+    # Statement to Event_Cluster: Many to One
+    # event_cluster_id = Column(String(100), ForeignKey('event_cluster.id'))
+    # event_cluster = relationship("Event_Cluster", backref="statements")
+    event = association_proxy("cluster_association", "event")
+    def __repr__(self):
+        return '<Statement: id %r, content %r>' % (self.id, self.content)

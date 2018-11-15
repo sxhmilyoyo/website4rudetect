@@ -1,0 +1,154 @@
+{% extends "contents.html" %}
+
+{% block content %}
+
+<!-- <div class="card my-3">
+    <div class="card-header abstract-statement-bg">
+    <h4 class="text-white mt-2">
+        {{ statement }}
+    </h4>
+    </div>
+</div> -->
+<div class="row">
+    <div class="col-md-6">
+    <!-- Content Pro -->
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h5 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h5>
+        <!-- {{ pro | length }} -->
+        <span id=listSupportOriginTweets class="{{chart_support_tweets}}">
+        {% for item in support_tweets %}
+        <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[1] }}"> -->
+        <a class="list-link-item border-bottom border-gray" data-toggle="collapse" href="#{{ item[1] }}" aria-expanded="false"
+            aria-controls="{{ item[1] }}">
+            <div class="media text-muted pt-3">
+            <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+            <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                <p class="mt-1">
+                {{ loop.index }}
+                </p>
+            </div>
+            <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+            <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                <strong class="d-block text-gray-dark">
+                    <font size="3">
+                    {{ item[0] }}
+                    </font>
+                </strong>
+                <font size="4">
+                {{ item[2] }}
+                </font>
+            </p>
+            </div>
+        </a>
+        <div id="{{ item[1] }}" class="collapse border-bottom border-gray bg-light">
+            <div class="row">
+            <div class="col-7 alert_add">
+                <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                submitted successfully!
+                </div>
+                <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                updated successfully!
+                </div>
+                <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                duplicate action!
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="wrapper float-right">
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                    <i class="fa fa-check"></i>
+                </button>
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                    <i class="fa fa-times"></i>
+                </button>
+                <!-- <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                    <i class="fa fa-info"></i>
+                </a> -->
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+        </span>
+        <span id=listSupportTweets>
+        </span>
+        <!-- <div class="text-center mt-4">
+            <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
+        </div> -->
+        <p class="d-block text-right mt-3">
+        <a href="{{ url_for('show_tweets', statement_id=statement_id, attitude='support') }}">All Supported Tweets</a>
+        </p>
+    </div>
+    </div>
+    <div class="col-md-6">
+    <!-- Content Con -->
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h5 class="border-bottom border-gray pb-2 mb-0">Opposed Tweets</h5>
+        <span id=listOpposeOriginTweets class="{{chart_oppose_tweets}}">
+        {% for item in oppose_tweets %}
+        <a class="list-link-item border-bottom border-gray" data-toggle="collapse" href="#{{ item[1] }}" aria-expanded="false">
+            <div class="media text-muted pt-3">
+            <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+            <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+            <div class="color-box mr-2 rounded text-white text-center" style="background-color: #135282;">
+                <p class="mt-1">
+                {{ loop.index }}
+                </p>
+            </div>
+            <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                <strong class="d-block text-gray-dark">
+                <font size="3">
+                    {{ item[0] }}
+                </font>
+                </strong>
+                <font size="4">
+                {{ item[2] }}
+                </font>
+            </p>
+            </div>
+        </a>
+        <div id="{{ item[1] }}" class="collapse border-bottom border-gray bg-light">
+            <div class="row">
+            <div class="col-7 alert_add">
+                <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                submitted successfully!
+                </div>
+                <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                updated successfully!
+                </div>
+                <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                duplicate action!
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="wrapper float-right">
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                    <i class="fa fa-check"></i>
+                </button>
+                <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                    <i class="fa fa-times"></i>
+                </button>
+                <!-- <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                    <i class="fa fa-info"></i>
+                </a> -->
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+        </span>
+        <span id=listOpposeTweets>
+        </span>
+        <p class="d-block text-right mt-3">
+            <a href="{{ url_for('show_tweets', statement_id=statement_id, attitude='oppose') }}">All Opposed Tweets</a>
+        </p>
+    </div>
+    </div>
+    <div class="col-md-12">
+    <div class="text-center my-4">
+        <button id=loadmore-tweets class="btn btn-outline-secondary">Loadmore</button>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

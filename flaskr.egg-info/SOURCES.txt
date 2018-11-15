@@ -1,8 +1,10 @@
 MANIFEST.in
 README.md
+flaskr/Helper.py
 flaskr/Pagination.py
 flaskr/__init__.py
 flaskr/config.py
+flaskr/createDatabaseTable.py
 flaskr/database.py
 flaskr/flaskr.py
 flaskr/forms.py

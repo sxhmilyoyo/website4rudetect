@@ -1,0 +1,6 @@
+.list-link-item{
+  display: block;
+}
+.list-link-item:hover,
+.list-link-item:active{text-decoration: none;}
+.item{cursor: pointer;}

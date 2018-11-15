@@ -1,0 +1,440 @@
+{% extends "layout.html" %} {% block page_title %} {% endblock %} {% block content %}
+<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-darkblue rounded box-shadow">
+  <img class="mr-3" src="https://getbootstrap.com/assets/brand/bootstrap-outline.svg" alt="" width="48" height="48">
+  <div class="lh-100">
+    <h6 class="mb-0 text-white lh-100 mb-1">{{ head }}</h6>
+    <small>
+      {% for topic in topics %}
+      <!-- <span class="btn btn-primary btn-sm disabled" aria-disabled="true"> {{ topic }} </span> -->
+      <span class="my-auto badge badge-default badge-outlined"> {{ topic }} </span>
+      {% endfor%}
+    </small>
+  </div>
+  <nav>
+    <div class="nav ml-3" id="nav-tab" role="tablist">
+      <a class="nav-link nav-small active font-weight-light my-auto" id="nav-abstract-tab" data-toggle="tab" href="#nav-abstract"
+        role="tab" aria-controls="nav-abstract" aria-selected="true">TWEETS</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-statement-tab" data-toggle="tab" href="#nav-statement" role="tab"
+        aria-controls="nav-statement" aria-selected="false">NEWS</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab"
+        aria-controls="nav-chart" aria-selected="false">CHART</a>
+      <a class="nav-link nav-small font-weight-light my-auto" id="nav-timeline-tab" data-toggle="tab" href="#nav-timeline" role="tab"
+        aria-controls="nav-timeline" aria-selected="false">TIMELINE</a>
+    </div>
+  </nav>
+
+</div>
+
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-abstract" role="tabpanel" aria-labelledby="nav-abstract-tab">
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">TWEETS</h1>
+        <p class="lead">This page shows statement-relevant tweets from Twitter. Left side presents tweets that support the statement and
+          right side presents tweets that oppose the statement. You can give us feedback and see the original content by
+          clicking relevant buttons below the tweet.</p>
+      </div>
+    </div>
+    <div class="card my-3">
+      <div class="card-header abstract-statement-bg">
+        <h4 class="text-white mt-2">
+          {{ statement }}
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Content Pro -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h5 class="border-bottom border-gray pb-2 mb-0">Supported Tweets</h5>
+          <!-- {{ pro | length }} -->
+          <span id=listSupportOriginTweets class="{{chart_support_tweets}}">
+            {% for item in support_tweets %}
+            <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[1] }}"> -->
+            <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false"
+              aria-controls="{{ item[1] }}">
+              <div class="media text-muted pt-3">
+                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                  <p class="mt-1">
+                    {{ loop.index }}
+                  </p>
+                </div>
+                <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                  <strong class="d-block text-gray-dark">
+                      <font size="3">
+                        {{ item[0] }}
+                      </font>
+                  </strong>
+                  <font size="4">
+                    {{ item[2] }}
+                  </font>
+                </p>
+              </div>
+            </a>
+            <div id="{{ item[1] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                      <i class="fa fa-times"></i>
+                    </button>
+                    <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                      <i class="fa fa-info"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </span>
+          <span id=listSupportTweets>
+          </span>
+          <!-- <div class="text-center mt-4">
+              <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
+            </div> -->
+          <small class="d-block text-right mt-3">
+            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='support') }}">All Supported Tweets</a>
+          </small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- Content Con -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h5 class="border-bottom border-gray pb-2 mb-0">Opposed Tweets</h5>
+          <span id=listOpposeOriginTweets class="{{chart_oppose_tweets}}">
+            {% for item in oppose_tweets %}
+            <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[1] }}" aria-expanded="false"
+              aria-controls="{{ item[1] }}">
+              <div class="media text-muted pt-3">
+                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+                  <p class="mt-1">
+                    {{ loop.index }}
+                  </p>
+                </div>
+                <p class="tsp text-left media-body pb-3 mb-0 small lh-50">
+                  <strong class="d-block text-gray-dark">
+                    <font size="3">
+                        {{ item[0] }}
+                    </font>
+                  </strong>
+                  <font size="4">
+                    {{ item[2] }}
+                  </font>
+                </p>
+              </div>
+            </a>
+            <div id="{{ item[1] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                      <i class="fa fa-times"></i>
+                    </button>
+                    <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                      <i class="fa fa-info"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </span>
+          <span id=listOpposeTweets>
+          </span>
+          <!-- <div class="text-center mt-4">
+            <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
+          </div> -->
+          <!-- <form action="{{ url_for('load_more') }}" method=get>
+            <button type="submit" class="btn btn-primary">Primary</button>
+          </form> -->
+          <small class="d-block text-right mt-3">
+            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='oppose') }}">All Opposed Tweets</a>
+          </small>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="text-center my-4">
+          <button id=loadmore class="btn btn-outline-secondary">Loadmore</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">CHART</h1>
+        <p class="lead">This page shows two pie charts: the left one represents the percentage of tweets that support and oppose the statement;
+          the right one represents the percentage of google snippets that support and oppose the statement.</p>
+      </div>
+    </div>
+    <div class="card my-3">
+      <div class="card-header abstract-statement-bg">
+        <h4 class="text-white mt-2">
+          {{ statement }}
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <canvas id="myChartTweet" width="545px" height="500px"></canvas>
+      </div>
+      <div class="col-6">
+        <canvas id="myChartSnippet" width="545px" height="500px"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="nav-statement" role="tabpanel" aria-labelledby="nav-statement-tab">
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">NEWS</h1>
+        <p class="lead">This page shows statement-relevant news from Google snippets. Left side presents news that support
+          the statement and right side presents news that oppose the statement. You can give us feedback and see
+          the original content by clicking relevant buttons below the tweet.</p>
+      </div>
+    </div>
+    <div class="card my-3">
+      <div class="card-header abstract-statement-bg">
+        <h4 class="text-white mt-2">
+          {{ statement }}
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Content Pro -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h5 class="border-bottom border-gray pb-2 mb-0">Supported News</h5>
+          <!-- {{ pro | length }} -->
+          <span id=listSupportOriginSnippet class="{{chart_support_snippets}}">
+            {% for item in support_snippets %}
+            <!-- <a class="list-link-item" href="https://twitter.com/anyuser/status/{{ item[1] }}"> -->
+            <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false"
+              aria-controls="{{ item[0] }}">
+              <div class="media text-muted pt-3">
+                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <div class="color-box mr-2 rounded text-white text-center" style="background-color: #ee4d4d;">
+                  <p class="mt-1">
+                    {{ loop.index }}
+                  </p>
+                </div>
+                <p class="tsp d-inline-block text-justify media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;">
+                  <font size="4">
+                    {{ item[1] }}
+                  </font>
+                </p>
+                
+              </div>
+            </a>
+            <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                      <i class="fa fa-times"></i>
+                    </button>
+                    <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                      <i class="fa fa-info"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </span>
+          <span id=listSupportSnippet>
+          </span>
+          <!-- <div class="text-center mt-4">
+              <button id=loadmore-pro class="btn btn-outline-secondary">Loadmore</button>
+            </div> -->
+          <small class="d-block text-right mt-3">
+            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='support') }}">All Supported Google Snippets</a>
+          </small>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- Content Con -->
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+          <h5 class="border-bottom border-gray pb-2 mb-0">Opposed News</h5>
+          <span id=listOpposeOriginSnippet class="{{chart_oppose_snippets}}">
+            {% for item in oppose_snippets %}
+            <a class="list-link-item border-bottom border-gray" data-toggle="collapse" data-target="#{{ item[0] }}" aria-expanded="false"
+              aria-controls="{{ item[0] }}">
+              <div class="media text-muted pt-3">
+                <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+                <!-- <p class="d-inline-block text-truncate text-left media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;"> -->
+                <div class="color-box mr-2 rounded text-white text-center" style="background-color: #2b2e48;">
+                  <p class="mt-1">
+                    {{ loop.index }}
+                  </p>
+                </div>
+                <p class="tsp d-inline-block text-justify media-body pb-3 mb-0 small lh-50 border-bottom border-gray" style="max-width: 1200px;">
+                  <font size="4">
+                    {{ item[1] }}
+                  </font>
+                </p>
+              </div>
+            </a>
+            <div id="{{ item[0] }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="row">
+                <div class="col-7 alert_add">
+                  <div class="inserted alert-inline alert-success" role="alert" style="display: none">
+                    submitted successfully!
+                  </div>
+                  <div class="updated alert-inline alert-warning" role="alert" style="display: none">
+                    updated successfully!
+                  </div>
+                  <div class="existed alert-inline alert-danger" role="alert" style="display: none">
+                    duplicate action!
+                  </div>
+                </div>
+                <div class="col-5">
+                  <div class="wrapper float-right">
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="AGREE">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="opinion button button-3d button-circle mt-2 mb-3 mr-2" flag="abstract" stance="DISAGREE">
+                      <i class="fa fa-times"></i>
+                    </button>
+                    <a href="https://twitter.com/anyuser/status/{{ item[1] }}" class="button button-3d button-circle mt-2 mb-3 mr-2">
+                      <i class="fa fa-info"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </span>
+          <span id=listOpposeSnippet>
+          </span>
+          <!-- <div class="text-center mt-4">
+            <button id=loadmore-con class="btn btn-outline-secondary">Loadmore</button>
+          </div> -->
+          <!-- <form action="{{ url_for('load_more') }}" method=get>
+            <button type="submit" class="btn btn-primary">Primary</button>
+          </form> -->
+          <small class="d-block text-right mt-3">
+            <a href="{{ url_for('show_tweets', statement_id=statement_id, head=head, topics=topics, attitude='oppose') }}">All Opposed Google Snippets</a>
+          </small>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="text-center my-4">
+          <button id=loadmore class="btn btn-outline-secondary">Loadmore</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="tab-pane fade" id="nav-timeline" role="tabpanel" aria-labelledby="nav-timeline-tab">
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-4">TIMELINE</h1>
+        <p class="lead">This page shows the whole tweets about topics chronologically. You can judge the data about the topics.</p>
+      </div>
+    </div>
+    <div class="card my-3">
+      <div class="card-header abstract-statement-bg">
+        <h4 class="text-white mt-2">
+          {{ statement }}
+        </h4>
+      </div>
+    </div>
+    <div id="timeline">
+      {% for i in range(tweets|length) %} {% if i % 2 != 0 %} {% set oren = "right" %} {% endif %}
+      <div class="timeline-item">
+        <div class="timeline-icon">
+          <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="21px" height="20px" viewBox="0 0 21 20" enable-background="new 0 0 21 20" xml:space="preserve">
+            <path fill="#FFFFFF" d="M17.92,3.065l-1.669-2.302c-0.336-0.464-0.87-0.75-1.479-0.755C14.732,0.008,7.653,0,7.653,0v5.6
+                  c0,0.096-0.047,0.185-0.127,0.237c-0.081,0.052-0.181,0.06-0.268,0.02l-1.413-0.64C5.773,5.183,5.69,5.183,5.617,5.215l-1.489,0.65
+                  c-0.087,0.038-0.19,0.029-0.271-0.023c-0.079-0.052-0.13-0.141-0.13-0.235V0H2.191C1.655,0,1.233,0.434,1.233,0.97
+                  c0,0,0.025,15.952,0.031,15.993c0.084,0.509,0.379,0.962,0.811,1.242l2.334,1.528C4.671,19.905,4.974,20,5.286,20h10.307
+                  c1.452,0,2.634-1.189,2.634-2.64V4.007C18.227,3.666,18.12,3.339,17.92,3.065z M16.42,17.36c0,0.464-0.361,0.833-0.827,0.833H5.341
+                  l-1.675-1.089h10.341c0.537,0,0.953-0.44,0.953-0.979V2.039l1.459,2.027V17.36L16.42,17.36z" />
+          </svg>
+        </div>
+        <div class="timeline-content {{ oren }} na">
+          <!-- <h1 class="display-4">{{ tweets[i][0] }}</h1> -->
+          <h5>{{ tweets[i][0] }}</h5>
+          <!-- <a href="https://twitter.com/anyuser/status/{{ tweets[i][1] }}" style="text-decoration:none">{{ tweets[i][2] }}</a> -->
+          <a href="https://twitter.com/anyuser/status/{{ tweets[i][1] }}" id="{{ tweets[i][1] }}">
+            <p class="font-weight-light my-2 text-muted inner tsp">
+              {{ tweets[i][2] }}
+            </p>
+          </a>
+          <div class="row">
+            <div class="col-8">
+              <button class="tsbtn na mt-2 mr-2" flag="timeline" stance="SUPPORT"> SUPPORT </button>
+              <button class="tsbtn mt-2 mr-2" flag="timeline" stance="OPPOSE"> OPPOSE </button>
+              <button class="tsbtn mt-2 mr-2" flag="timeline" stance="NONE"> NONE </button>
+            </div>
+            <div class="col-4 alert_add">
+              <div class="inserted alert-inline-timeline alert-success" role="alert" style="display: none">
+                submitted!
+              </div>
+              <div class="updated alert-inline-timeline alert-warning" role="alert" style="display: none">
+                updated!
+              </div>
+              <div class="existed alert-inline-timeline alert-danger" role="alert" style="display: none">
+                duplicated!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"></script>
+<!-- <script src="/static/js/bootstrap.min.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script> -->
+<script src="/static/js/scroll2loadmore.js?1613"></script> {% endblock %}

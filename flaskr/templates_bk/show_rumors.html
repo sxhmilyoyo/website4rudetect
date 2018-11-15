@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block loginuser %}
+  <form class="form-inline my-2 my-lg-0">
+    <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"> -->
+    {% if current_user.is_authenticated %}
+      <p class="lead text-white text-center my-auto mr-4">{{ current_user.username }}</p>
+    {% endif %}
+    <!-- <label class="form-control mr-sm-2"></label> -->
+    <a class="btn btn-outline-danger my-2 my-sm-0" href="{{ url_for('logout') }}" role="button">Logout</a>
+  </form>
+{% endblock %}
+
+{% block root_page %}
+<!-- <link rel="stylesheet" href="{{ url_for('.static', filename = 'css/bootstrap.css') }}"> -->
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-4">Rumour Explorer</h1>
+    <p class="lead">Rumour Explorer is a system that aims to extract claims that might be rumours from tweets and aggregate the detected stances towards claims from different information resources for users.</p>
+    <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p> -->
+  </div>
+</div>
+
+<div class="container">
+  <!-- Example row of columns -->
+  <div class="card">
+  <h5 class="card-header">Featured</h5>
+    {% for i in range(items|length)%}
+    <!-- <span id="origin"> -->
+      <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <hr>
+      </div>
+        <!-- <div class="row">
+          <div class="col-md-6">
+            <p class='display-4'>{{ items[i]['head'] }}</p>
+            {#
+            <div class="list-group list-group-flush">
+              {% for k in items[i+j]['statements'].keys() if not (items[i+j]['statements'][k]|length == 1 and items[i+j]['statements'][k][0] == '') %}
+                <a class="mb-1 list-link-item home-statement-bg" data-toggle="collapse" data-target="#{{ items[i+j]['head']+loop.index0|string }}" aria-expanded="false" aria-controls="{{ items[1] }}">
+                  <div class="media text-muted pt-3">
+                    <p class="text-left media-body pb-3 mb-0 small lh-50">
+                      <div class="container">
+                        <div class='row'>
+                          <div class="ml-3">
+                            <p class='lead'>Candidate Rumors</p>
+                          </div>
+                          <div class="col-6 mt-3">
+                            {% for topic in items[i+j]['topics'][k]%}
+                              <span class="badge badge-secondary badge-outlined"> {{ topic }} </span>
+                            {% endfor%}
+                          </div>
+                        </div>
+                      </div>
+                    </p>
+                  </div>
+                </a>
+                <div id="{{ items[i+j]['head']+loop.index0|string }}" class="collapse border-bottom border-gray bg-light" aria-labelledby="headingOne" data-parent="#accordion">
+                  <ul class="list-group list-group-flush">
+                    {% for statement in items[i+j]['statements'][k] %}
+                      <a href="{{ url_for('getTweets4Statement', statement_id=statement[0], topics=items[i+j]['topics'][k], head=items[i+j]['head']) }}" class="list-group-item list-group-item-action text-truncate">
+                        {{ statement[1] }}
+                      </a>
+                    {% endfor %}
+                    </ul>
+                </div>
+              {% endfor %}
+            </div>
+            #}
+          </div>
+        </div> -->
+    <!-- </span> -->
+    {% endfor %}
+
+    <span id="new">
+    </span>
+
+    <hr>
+
+</div> <!-- /container -->
+{% endblock %}
