@@ -143,7 +143,7 @@ class Opinion(Base):
     __tablename__ = 'opinion'
     user_name = Column(String(50), ForeignKey(
         'user.username'), primary_key=True)
-    rumor_id = Column(String(100), ForeignKey('rumor.id'), primary_key=True)
+    rumor_id = Column(Integer, ForeignKey('rumor.id'), primary_key=True)
     flag = Column(String(10), primary_key=True)
     stance = Column(String(10), primary_key=True)
 
