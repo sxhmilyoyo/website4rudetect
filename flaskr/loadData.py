@@ -62,9 +62,10 @@ class LoadData(object):
                     if cluster.is_dir()]
         for cluster in clusters:
             clusterTable = CreateDatabaseTable.create_cluster(cluster)
+            tableEvent.clusters.append(clusterTable)
             event_cluster_id = edited_event + "_" + cluster.name
-            tableEvent_Cluster = CreateDatabaseTable.combine_event_cluster(
-                event_cluster_id, tableEvent, clusterTable)
+            # tableEvent_Cluster = CreateDatabaseTable.combine_event_cluster(
+                # event_cluster_id, tableEvent, clusterTable)
             # get statements
             statementClusters = [statementCluster for statementCluster in (
                 cluster / "classification").iterdir() if statementCluster.is_dir()]
@@ -97,7 +98,7 @@ class LoadData(object):
                         rumor, rumor_id)
                     if not tableRumor:
                         continue
-                    tableEvent_Cluster.rumors.append(tableRumor)
+                    # tableEvent_Cluster.rumors.append(tableRumor)
                     tableStatement.rumors.append(tableRumor)
                     
                 # # news
@@ -118,8 +119,9 @@ class LoadData(object):
                         continue
                     tableStatement.snippets.append(tableSnippet)
 
-                tableEvent_Cluster.statements.append(tableStatement)
-                db_session.add(tableEvent_Cluster)
+                # tableEvent_Cluster.statements.append(tableStatement)
+                tableEvent.cluster_associations[-1].statements.append(tableStatement)
+                db_session.add(clusterTable)
                 # print("commit")
                 db_session.commit()
 

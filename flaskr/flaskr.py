@@ -243,7 +243,7 @@ def show_rumors(event_name):
     print(event)
     new_statements = []
     # topics
-    clusters = sorted(set([c.cluster_name for c in event.clusters]))
+    clusters = sorted(set([c.name for c in event.clusters]))
     statements = {}
     topics = {}
     for cluster in clusters:
