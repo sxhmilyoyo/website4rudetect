@@ -254,6 +254,7 @@ def show_rumors(event_name):
         #     event_name=event.name, cluster_name=cluster).first()
         statements_cluster = [(statement.id, statement.content)
                                 for statement in statementsDB]
+        statements_cluster.sort(key=lambda x: x[0])
         topics_cluster = list(
             set([statement.target for statement in statementsDB]))
         print(event, cluster, statements)
