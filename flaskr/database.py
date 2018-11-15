@@ -16,7 +16,7 @@ Base.query = db_session.query_property()
 
 def init_db():
     """Import all modules that might define models."""
-    import flaskr.models
+    # import flaskr.models
     # import flaskr.loadData
     Base.metadata.create_all(bind=engine)
     if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
