@@ -181,12 +181,12 @@ class Statement(Base):
 
     __tablename__ = 'statement'
     __table_args__ = (
-        ForeignKeyConstraint(['cluster_id', 'event_id'], 
-        ['event_cluster.cluster_id', 'event_cluster.event_id']),
+        ForeignKeyConstraint(['event_id', 'cluster_id'], 
+        ['event_cluster.event_id', 'event_cluster.cluster_id']),
     )
     id = Column(String(200), primary_key=True)
-    cluster_id = Column(Integer, unique=True)
-    event_id = Column(Integer, unique=True)
+    cluster_id = Column(Integer, nullable=False)
+    event_id = Column(Integer, nullable=False)
     content = Column(Text, unique=True)
     target = Column(String(50))
     stance = Column(String(20))
