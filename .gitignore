@@ -41,7 +41,8 @@ Thumbs.db
 # Folder #
 ##########
 .vscode
-event*
+events
+events_*
 db_repository_bk
 flaskenvpy3
 Library
